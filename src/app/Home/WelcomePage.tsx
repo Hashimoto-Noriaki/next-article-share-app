@@ -1,4 +1,4 @@
-export default function WelcomePage() {
+export default function WelcomePage(){
     return (
         <div>WelcomePage</div>
     )
