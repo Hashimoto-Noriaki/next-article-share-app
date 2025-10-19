@@ -5,13 +5,13 @@ export default function WelcomePage(){
                 <div className="flex justify-between">
                     <div className="font-bold">
                         <h1 className="text-3xl text-amber-500 mb-5">テックブログ共有アプリ</h1>
-                        <p className="text-white text-2xl">エンジニア同士で有益な記事を共有しよう</p>
+                        <p className="text-white text-2xl">×エンジニア同士で有益な記事を共有しよう</p>
                     </div>
                     <nav>
                         <ul className="flex gap-5 text-white font-bold p-10">
-                            <li>利用説明</li>
-                            <li>新規登録</li>
-                            <li>ログイン</li>
+                            <li className="hover:text-amber-400">利用説明</li>
+                            <li className="hover:text-amber-400">新規登録</li>
+                            <li className="hover:text-amber-400">ログイン</li>
                         </ul>
                     </nav>
                 </div>
