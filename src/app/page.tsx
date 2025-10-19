@@ -1,11 +1,5 @@
-import { Button } from "@/shared/components/ui/button"
+import WelcomePage from './Home/WelcomePage'
 
 export default function Home() {
-  return (
-    <div className="flex flex-col items-center justify-center h-screen">
-        <Button className="bg-sky-500 h-[80px]">
-        プロジェクトスタート
-        </Button>
-    </div>
-  );
+  return <WelcomePage/>
 }
