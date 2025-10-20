@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function WelcomePage(){
     return (
         <div>
@@ -8,10 +10,22 @@ export default function WelcomePage(){
                         <p className="text-white text-2xl">×エンジニア同士で有益な記事を共有しよう</p>
                     </div>
                     <nav>
-                        <ul className="flex gap-5 text-white font-bold p-10">
-                            <li className="hover:text-amber-400">利用説明</li>
-                            <li className="hover:text-amber-400">新規登録</li>
-                            <li className="hover:text-amber-400">ログイン</li>
+                        <ul className="flex gap-5 text-white text-lg font-bold p-10">
+                            <li>
+                                <Link href="/guide" className="hover:text-amber-400">
+                                    利用説明
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/signup" className="hover:text-amber-400">
+                                    新規登録
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/login" className="hover:text-amber-400">
+                                    ログイン
+                                </Link>
+                            </li>
                         </ul>
                     </nav>
                 </div>
