@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function WelcomePage(){
     return (
-        <div>
+        <div className="flex flex-col min-h-screen">
             <header className="bg-gradient-to-br from-cyan-500 to-cyan-600 h-[15vh] p-3">
                 <div className="flex justify-between">
                     <div className="font-bold">
@@ -30,6 +30,17 @@ export default function WelcomePage(){
                     </nav>
                 </div>
             </header>
+            <main className="flex-grow flex flex-col items-center justify-center">
+                <div className="bg-gradient-to-r from-rose-300 to-cyan-600 px-16 py-24 font-bold text-white w-full max-w-5xl text-center rounded-lg shadow-lg">
+                    <h1 className="text-5xl">
+                        テックブログ共有アプリ
+                    </h1>
+                    <p className="text-3xl mt-5">
+                        ×エンジニア同士で有益な記事を共有しよう
+                    </p>
+                </div>
+                <p className="text-center text-2xl p-5">お気に入りの技術記事があれば投稿しよう🎵</p>
+            </main>
         </div>
     )
 }
