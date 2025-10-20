@@ -1,9 +1,9 @@
 export default function LoginPage() {
     return (
-        <div className="flex items-center justify-center p-10 max-h-screen">
-            <div className="bg-gradient-to-r from-cyan-400 to-cyan-600 px-16 py-24 text-center w-full  max-w-md rounded-md">
-                <h1 className="text-3xl text-white font-bold">テックブログ共有アプリ</h1>
-                <h2 className="text-2xl text-white font-bold mt-3">ログイン</h2>
+        <div className="flex items-center justify-center p-20 max-h-screen">
+            <div className="bg-gradient-to-r from-cyan-400 to-cyan-500 px-16 py-24 text-center w-full  max-w-md rounded-md">
+                <h1 className="text-2xl text-white font-bold">テックブログ共有アプリ</h1>
+                <h2 className="text-xl text-white font-bold mt-3">ログイン</h2>
                 <form className="flex flex-col gap-5 text-left">
                     <div>
                         <p className="font-bold mb-3">メールアドレス</p>
@@ -21,6 +21,9 @@ export default function LoginPage() {
                             placeholder="パスワード"
                         />
                     </div>
+                    <button className="bg-emerald-600 text-white  font-bold rounded-lg p-5 mt-5 hover:bg-emerald-500">
+                        ログイン
+                    </button>
                 </form>
             </div>
         </div>
