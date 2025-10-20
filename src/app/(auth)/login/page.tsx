@@ -16,7 +16,7 @@ export default function LoginPage() {
                     <div>
                         <p className="font-bold mb-3">パスワード</p>
                         <input
-                            name="password"
+                            type="password"
                             className="w-full p-3 border border-cyan-800 bg-white rounded-lg focus:outline-none qfocus:ring-cyan-800"
                             placeholder="パスワード"
                         />
