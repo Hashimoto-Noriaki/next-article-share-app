@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { FaLaptopCode } from 'react-icons/fa';
 
 export default function LoginPage() {
@@ -28,6 +29,9 @@ export default function LoginPage() {
                     <button className="bg-emerald-600 text-white  font-bold rounded-lg p-5 mt-5 hover:bg-emerald-500">
                         ログイン
                     </button>
+                    <Link href="/" className="text-center underline mt-5 hover:text-cyan-800">
+                        新規登録はこちら
+                    </Link>
                 </form>
             </div>
         </div>
