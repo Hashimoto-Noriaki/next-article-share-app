@@ -1,3 +1,7 @@
+## このプロジェクトをNext.jsのAppRouterへのリプレイス
+
+https://github.com/Hashimoto-Noriaki/Article-Share-App
+
 ## 技術構成
 - TypeScript
 - React
