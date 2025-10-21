@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Footer from '../../shared/components/footer'
 
 export default function WelcomePage() {
   return (
@@ -45,11 +46,7 @@ export default function WelcomePage() {
           お気に入りの技術記事があれば投稿しよう🎵
         </p>
       </main>
-      <footer className="bg-gradient-to-r from-cyan-500 to-cyan-600 p-4">
-        <p className="text-white text-center font-bold">
-          © 2025 テックブログ共有アプリ
-        </p>
-      </footer>
+      <Footer/>
     </div>
   );
 }
