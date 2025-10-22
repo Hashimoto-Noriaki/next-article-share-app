@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
-import LoginButton from '../../../shared/components/atoms/AuthButton'
+import LoginButton from '../../../shared/components/atoms/LoginButton'
 
 export default function LoginPage() {
   return (
