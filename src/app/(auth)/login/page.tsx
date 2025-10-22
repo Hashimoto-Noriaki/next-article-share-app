@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
+import LoginButton from '../../../shared/components/atoms/AuthButton'
 
 export default function LoginPage() {
   return (
@@ -27,9 +28,7 @@ export default function LoginPage() {
               placeholder="パスワード"
             />
           </div>
-          <button className="bg-emerald-600 text-white  font-bold rounded-lg p-5 mt-5 hover:bg-emerald-500">
-            ログイン
-          </button>
+          <LoginButton>ログイン</LoginButton>
           <Link
             href="/signup"
             className="text-center underline mt-5 hover:text-cyan-800"
