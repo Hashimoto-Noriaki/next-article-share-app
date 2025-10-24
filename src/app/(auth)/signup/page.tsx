@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
-import InputForm from '../../../shared/components/atoms/InputForm'
+import InputForm from '../../../shared/components/atoms/InputForm';
 
 export default function SignUpPage() {
   return (
@@ -14,24 +14,15 @@ export default function SignUpPage() {
         <form className="flex flex-col gap-5 text-left">
           <div>
             <p className="font-bold mb-3">名前</p>
-            <InputForm
-              name="name"
-              placeholder="例)山田太郎(ニックネーム可)"
-            />
+            <InputForm name="name" placeholder="例)山田太郎(ニックネーム可)" />
           </div>
           <div>
             <p className="font-bold mb-3">メールアドレス</p>
-            <InputForm
-              name="email"
-              placeholder="メールアドレス"
-            />
+            <InputForm name="email" placeholder="メールアドレス" />
           </div>
           <div>
             <p className="font-bold mb-3">パスワード</p>
-            <InputForm
-              type="password"
-              placeholder="パスワード"
-            />
+            <InputForm type="password" placeholder="パスワード" />
           </div>
           <button className="bg-amber-500 text-white  font-bold rounded-lg p-5 mt-5 hover:bg-amber-400">
             新規登録
