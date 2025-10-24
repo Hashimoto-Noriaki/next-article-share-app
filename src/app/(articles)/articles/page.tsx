@@ -22,7 +22,7 @@ export default function ArticleList() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/" className="hover:text-amber-400">
+                                <Link href="/articles/new" className="hover:text-amber-400">
                                     新規投稿
                                 </Link>
                             </li>
