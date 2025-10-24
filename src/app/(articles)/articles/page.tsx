@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Footer from '../../shared/components/footer';
+import Footer from '../../../shared/components/footer';
 
-export default function WelcomePage() {
+export default function ArticleList() {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-gradient-to-br from-cyan-500 to-cyan-600 h-[15vh] p-3">
@@ -22,29 +22,42 @@ export default function WelcomePage() {
                 </Link>
               </li>
               <li>
-                <Link href="/signup" className="hover:text-amber-400">
-                  新規登録
+                <Link href="/articles/new" className="hover:text-amber-400">
+                  新規投稿
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-amber-400">
-                  ログイン
+                <Link href="/" className="hover:text-amber-400">
+                  マイページ
+                </Link>
+              </li>
+              <li>
+                <Link href="/" className="hover:text-amber-400">
+                  ログアウト
                 </Link>
               </li>
             </ul>
           </nav>
         </div>
       </header>
-      <main className="flex-grow flex flex-col items-center justify-center">
-        <div className="bg-gradient-to-r from-rose-300 to-cyan-600 px-16 py-24 font-bold text-white w-full max-w-5xl text-center rounded-lg shadow-lg">
+      <main className="flex-grow flex flex-col items-center justify-start mt-5">
+        <div className="bg-gradient-to-r from-rose-300 to-cyan-600 px-8 py-12 font-bold text-white w-full max-w-5xl text-center rounded-lg shadow-lg">
           <h1 className="text-5xl">テックブログ共有アプリ</h1>
           <p className="text-3xl mt-5">
             ×エンジニア同士で有益な記事を共有しよう
           </p>
         </div>
-        <p className="text-center text-2xl p-5">
-          お気に入りの技術記事があれば投稿しよう🎵
-        </p>
+        <div className="flex flex-wrap justify-center gap-5 mt-5">
+          <p className="w-64 h-40 bg-rose-200 rounded-xl flex items-center justify-center">
+            記事カード1
+          </p>
+          <p className="w-64 h-40 bg-cyan-200 rounded-xl flex items-center justify-center">
+            記事カード2
+          </p>
+          <p className="w-64 h-40 bg-emerald-200 rounded-xl flex items-center justify-center">
+            記事カード3
+          </p>
+        </div>
       </main>
       <Footer />
     </div>

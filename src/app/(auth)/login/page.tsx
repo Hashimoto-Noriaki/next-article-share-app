@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
+import LoginButton from '../../../shared/components/atoms/LoginButton';
+import InputForm from '../../../shared/components/atoms/InputForm';
 
 export default function LoginPage() {
   return (
@@ -13,23 +15,13 @@ export default function LoginPage() {
         <form className="flex flex-col gap-5 text-left">
           <div>
             <p className="font-bold mb-3">メールアドレス</p>
-            <input
-              name="email"
-              className="w-full p-3 border border-cyan-900 bg-white rounded-lg focus:outline-none focus:ring-cyan-900"
-              placeholder="メールアドレス"
-            />
+            <InputForm name="email" placeholder="メールアドレス" />
           </div>
           <div>
             <p className="font-bold mb-3">パスワード</p>
-            <input
-              type="password"
-              className="w-full p-3 border border-cyan-800 bg-white rounded-lg focus:outline-none qfocus:ring-cyan-800"
-              placeholder="パスワード"
-            />
+            <InputForm type="password" placeholder="パスワード" />
           </div>
-          <button className="bg-emerald-600 text-white  font-bold rounded-lg p-5 mt-5 hover:bg-emerald-500">
-            ログイン
-          </button>
+          <LoginButton>ログイン</LoginButton>
           <Link
             href="/signup"
             className="text-center underline mt-5 hover:text-cyan-800"
