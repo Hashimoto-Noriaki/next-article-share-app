@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Footer from '../../shared/components/footer'
+import Footer from '../../shared/components/footer';
 
 export default function WelcomePage() {
   return (
@@ -46,7 +46,7 @@ export default function WelcomePage() {
           お気に入りの技術記事があれば投稿しよう🎵
         </p>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
