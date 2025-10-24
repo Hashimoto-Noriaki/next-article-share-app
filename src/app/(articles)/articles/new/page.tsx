@@ -1,68 +1,47 @@
-// import { Button } from '@/shared/components/ui/button'
-// import { Input } from '@/shared/components/ui/input'
-import Footer from '@/shared/components/footer'
-
 export default function NewArticlePage() {
-    return (
-        <div className="flex flex-col min-h-screen">
-            <main className="flex-grow container mx-auto px-4 py-8 max-w-4xl">
-            <h1 className="text-3xl font-bold mb-8">記事を投稿</h1>
-
-            <form className="space-y-6">
-                {/* タイトル */}
-                <div>
-                <label className="block text-lg font-medium mb-2">
-                    タイトル
-                </label>
-                <input
-                    placeholder="記事のタイトルを入力"
-                    className="text-lg"
-                />
-                </div>
-
-                {/* タグ */}
-                <div>
-                <label className="block text-lg font-medium mb-2">
-                    タグ
-                </label>
-                <input
-                    placeholder="Next.js, React, TypeScript（カンマ区切り）"
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                    カンマ（,）で区切って複数のタグを入力できます
-                </p>
-                </div>
-
-                {/* 本文 */}
-                <div>
-                <label className="block text-lg font-medium mb-2">
-                    本文（Markdown記法）
-                </label>
-                <textarea
-                    placeholder="# 見出し&#10;&#10;本文を入力してください..."
-                    className="w-full min-h-[400px] p-3 border rounded-md font-mono"
-                />
-                </div>
-
-                {/* ボタン */}
-                <div className="flex gap-4">
-                <button
-                    type="submit"
-                    className="flex-1 bg-green-600 hover:bg-green-700"
-                >
-                    投稿する
-                </button>
-                <button
-                    type="button"
-                    variant="outline"
-                    className="flex-1"
-                >
-                    キャンセル
-                </button>
-                </div>
-            </form>
-            </main>
-            <Footer />
+  return (
+    <div className="flex flex-col min-h-screen bg-white">
+      <main className="w-full max-x-10xl px-6 py-8">
+        {/* ヘッダー */}
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold">記事を投稿</h1>
+          <button
+            type="submit"
+            className="rounded-md px-6 py-2.5 font-semibold text-white bg-emerald-600 hover:bg-emerald-500 shadow-sm transition"
+          >
+            投稿する
+          </button>
         </div>
-    )
+
+        <form className="space-y-6">
+          {/* タイトル */}
+          <input
+            name="title"
+            placeholder="タイトルを入力してください"
+            className="w-full text-xl p-3 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
+
+          {/* タグ */}
+          <input
+            name="tags"
+            placeholder="タグを入力してください。スペース区切りで複数入力できます"
+            className="w-full text-base p-3 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
+
+          {/* 本文（Markdown） */}
+          <div className="flex flex-col lg:flex-row gap-4">
+            <textarea
+              name="body"
+              placeholder="エンジニアに関わる知識をMarkdown記法で書いて共有しよう"
+              className="w-full min-h-[600px] p-4 border border-slate-200 rounded-md font-mono text-base leading-7 focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-slate-50"
+            />
+            {/* プレビューエリア（後で追加する用） */}
+            {/* <div className="hidden lg:block w-1/2 border border-slate-200 rounded-md p-4 bg-white overflow-auto">
+              <MarkdownPreview content={watch("body")} />
+            </div> */}
+          </div>
+        </form>
+      </main>
+    </div>
+  )
 }
