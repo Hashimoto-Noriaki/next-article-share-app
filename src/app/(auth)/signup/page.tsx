@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
 import InputForm from '../../../shared/components/atoms/InputForm';
+import SignupButton from '../../../shared/components/atoms/SignupButton';
 
 export default function SignUpPage() {
   return (
@@ -24,9 +25,9 @@ export default function SignUpPage() {
             <p className="font-bold mb-3">パスワード</p>
             <InputForm type="password" placeholder="パスワード" />
           </div>
-          <button className="bg-amber-500 text-white  font-bold rounded-lg p-5 mt-5 hover:bg-amber-400">
+          <SignupButton>
             新規登録
-          </button>
+          </SignupButton>
           <Link
             href="/login"
             className="text-center underline mt-5 hover:text-cyan-800"
