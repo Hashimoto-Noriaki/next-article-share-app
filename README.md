@@ -23,6 +23,10 @@ https://github.com/Hashimoto-Noriaki/Article-Share-App
 - ESLint Prettier
 - Vercel
 
+### 使用したAI
+- Claude Code
+- ChatGPT
+
 ## サーバー起動
 ```bash
 npm run dev
