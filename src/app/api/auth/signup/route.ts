@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { registerSchema } from '@/shared/lib/validations/auth'
+import { signupSchema } from '@/shared/lib/validations/auth'
 import { createToken } from '@/lib/jwt'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
@@ -8,7 +8,7 @@ import { z } from 'zod'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const validatedData = registerSchema.parse(body)
+    const validatedData = signupSchema.parse(body)
 
     // 重複チェック
     const existingUser = await prisma.user.findUnique({
