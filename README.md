@@ -11,7 +11,7 @@ https://github.com/Hashimoto-Noriaki/Article-Share-App
 - Shadcn/ui
 - React-Hook-Form
 - Zod
-- ContextAPI
+- TanstackQuery
 - StoryBook
 - Jest
 - Testing Library
