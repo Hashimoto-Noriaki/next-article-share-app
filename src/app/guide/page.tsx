@@ -31,6 +31,11 @@ export default function GuidePage() {
           </p>
         </div>
       </div>
+      <button
+      className="w-[20%] bg-amber-500 text-white  font-semibold rounded-lg p-5 mt-5 hover:bg-amber-400"
+    >
+      戻る
+    </button>
     </div>
   );
 }
