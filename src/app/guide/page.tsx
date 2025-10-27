@@ -1,3 +1,5 @@
+import ReturnButton from '../../shared/components/atoms/ReturnButton';
+
 export default function GuidePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
@@ -31,11 +33,9 @@ export default function GuidePage() {
           </p>
         </div>
       </div>
-      <button
-      className="w-[20%] bg-amber-500 text-white  font-semibold rounded-lg p-5 mt-5 hover:bg-amber-400"
-    >
-      戻る
-    </button>
+      <ReturnButton>
+        戻る
+      </ReturnButton>
     </div>
   );
 }
