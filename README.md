@@ -1,6 +1,5 @@
-## このプロジェクトをNext.jsのAppRouterへのリプレイス
-
-https://github.com/Hashimoto-Noriaki/Article-Share-App
+# 画面構成
+<img width="1437" height="787" alt="スクリーンショット 2025-10-29 14 47 02" src="https://github.com/user-attachments/assets/0fa79583-cfab-4d44-a4e7-d3deac320715" />
 
 ## 技術構成
 - TypeScript
@@ -31,6 +30,10 @@ https://github.com/Hashimoto-Noriaki/Article-Share-App
 ```bash
 npm run dev
 ```
+
+## このプロジェクトをNext.jsのAppRouterへのリプレイス
+
+https://github.com/Hashimoto-Noriaki/Article-Share-App
 
 # NextAuth.js
 https://next-auth.js.org/getting-started/example
