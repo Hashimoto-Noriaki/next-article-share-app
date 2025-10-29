@@ -1,5 +1,8 @@
 import Link from 'next/link';
+import { FaLaptopCode } from 'react-icons/fa';
 import Footer from '../../shared/components/footer';
+import LoginButton from '../../shared/components/atoms/LoginButton';
+import SignupLeadButton from '../../shared/components/atoms/SignupLeadButton';
 
 export default function WelcomePage() {
   return (
@@ -37,14 +40,27 @@ export default function WelcomePage() {
       </header>
       <main className="flex-grow flex flex-col items-center justify-center">
         <div className="bg-gradient-to-r from-rose-300 to-cyan-600 px-16 py-24 font-bold text-white w-full max-w-5xl text-center rounded-lg shadow-lg">
-          <h1 className="text-5xl">テックブログ共有アプリ</h1>
+          <h1 className="text-5xl">
+            <FaLaptopCode />
+            テックブログ共有アプリ
+          </h1>
           <p className="text-3xl mt-5">
             ×エンジニア同士で有益な記事を共有しよう
           </p>
         </div>
-        <p className="text-center text-2xl p-5">
+        <p className="text-center text-xl p-5">
           お気に入りの技術記事があれば投稿しよう🎵
         </p>
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-3">
+          <Link href="/login" className="w-64">
+            <LoginButton>ログインはこちら</LoginButton>
+          </Link>
+          <Link href="/signup" className="w-64">
+            <SignupLeadButton>
+              新規登録はこちら
+            </SignupLeadButton>
+          </Link>
+        </div>
       </main>
       <Footer />
     </div>
