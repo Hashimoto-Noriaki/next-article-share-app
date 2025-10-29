@@ -40,8 +40,8 @@ export default function WelcomePage() {
       </header>
       <main className="flex-grow flex flex-col items-center justify-center">
         <div className="bg-gradient-to-r from-rose-300 to-cyan-600 px-16 py-24 font-bold text-white w-full max-w-5xl text-center rounded-lg shadow-lg">
-          <h1 className="text-5xl">
-            <FaLaptopCode />
+          <h1 className="text-5xl flex items-center justify-center gap-3">
+            <FaLaptopCode className="text-white" />
             テックブログ共有アプリ
           </h1>
           <p className="text-3xl mt-5">
