@@ -17,7 +17,7 @@ export default function ArticleList() {
           <nav>
             <ul className="flex gap-5 text-white text-lg font-bold p-10">
               <li>
-                <Link href="/guide" className="hover:text-amber-400">
+                <Link href="/tutorial" className="hover:text-amber-400">
                   利用説明
                 </Link>
               </li>
