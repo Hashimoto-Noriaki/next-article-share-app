@@ -1,7 +1,24 @@
+'use client'
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'
 import Footer from '../../../shared/components/footer';
+import { logout } from '../../../actions/auth'
 
 export default function ArticleList() {
+  const router = useRouter()
+  const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+      router.push('/login')
+      router.refresh()
+    } catch (error) {
+      console.error('ログアウトエラー:', error)
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-gradient-to-br from-cyan-500 to-cyan-600 h-[15vh] p-3">
@@ -32,9 +49,14 @@ export default function ArticleList() {
                 </Link>
               </li>
               <li>
-                <Link href="/" className="hover:text-amber-400">
-                  ログアウト
-                </Link>
+                <form action={logout}>
+                  <Link 
+                    href="/"
+                    onClick={handleLogout}
+                    className="hover:text-amber-400">
+                      ログアウト
+                  </Link>
+                </form>
               </li>
             </ul>
           </nav>
