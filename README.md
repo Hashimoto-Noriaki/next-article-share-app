@@ -31,6 +31,11 @@
 npm run dev
 ```
 
+### Prisma Studio
+```
+npx prisma studio
+```
+
 ## このプロジェクトをNext.jsのAppRouterへのリプレイス
 
 https://github.com/Hashimoto-Noriaki/Article-Share-App
