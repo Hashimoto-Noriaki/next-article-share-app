@@ -12,7 +12,7 @@ export default function SignupButton({ children, ...props }: PropsType) {
   return (
     <button
         onClick={()=> router.push('/')}
-        className="w-[20%] bg-amber-500 text-white  font-semibold rounded-lg p-5 mt-5 hover:bg-amber-400"
+        className="w-[20%] bg-amber-500 text-white  font-semibold rounded-full p-5 mt-5 hover:bg-amber-400"
         {...props}
     >
         {children}
