@@ -36,8 +36,10 @@ npm run dev
 npx prisma studio
 ```
 
-### 
+### StoryBook起動
+```
 npm run story book
+```
 
 ## このプロジェクトをNext.jsのAppRouterへのリプレイス
 
