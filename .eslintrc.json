@@ -1,0 +1,31 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/recommended",
+    "plugin:unused-imports/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "eqeqeq": ["error", "always"],
+    "no-console": "error",
+    "no-debugger": "error",
+    "no-duplicate-imports": "error",
+    "no-empty": "error",
+    "no-shadow": "error",
+    "no-unused-vars": "warn",
+    "unused-imports/no-unused-imports": "error",
+    "no-unreachable": "error",
+    "no-constant-condition": "error"
+  }
+}
