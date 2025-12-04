@@ -1,19 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
-import 'github-markdown-css/github-markdown.css';
 import { ArticleHeader,MarkdownEditor } from '@/features/articles/components'
 
 export default function NewArticlePage() {
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
   const [body, setBody] = useState('');
-  const [activeTab, setActiveTab] = useState<'edit' | 'preview' | 'split'>(
-    'edit',
-  );
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
