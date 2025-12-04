@@ -5,8 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import 'github-markdown-css/github-markdown.css';
-import { ArticleHeader } from '@/features/articles/components/ArticleHeader'
-import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor'
+import { ArticleHeader,MarkdownEditor } from '@/features/articles/components'
 
 export default function NewArticlePage() {
   const [title, setTitle] = useState('');
