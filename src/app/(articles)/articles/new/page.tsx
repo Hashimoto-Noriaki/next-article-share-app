@@ -12,7 +12,7 @@ export default function NewArticlePage() {
     <div className="flex flex-col min-h-screen bg-gray-100">
       <NewArticleHeader onPublish={()=> {}} />
         {/* TODO: 公開設定の実装は後ほど追加する */}
-      <main className="flex-grow container mx-auto px-5 py-5 pt-1 w-[100%]">
+      <main className="grow container mx-auto px-5 py-5 pt-1">
         <MarkdownEditor
           title={title}
           onTitleChange={setTitle}
