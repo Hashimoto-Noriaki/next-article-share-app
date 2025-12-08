@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { FaLaptopCode } from 'react-icons/fa'
 import InputForm from '../../../shared/components/atoms/InputForm'
-import SignupButton from '../../../shared/components/atoms/SignupButton'
+import { Button } from '../../../shared/components/atoms/Button'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -92,9 +92,9 @@ export default function SignUpPage() {
               minLength={8}
             />
           </div>
-          <SignupButton>
+          <Button variant="secondary">
             新規登録
-          </SignupButton>
+          </Button>
           <Link
             href="/login"
             className="text-center underline mt-5 hover:text-cyan-800"
