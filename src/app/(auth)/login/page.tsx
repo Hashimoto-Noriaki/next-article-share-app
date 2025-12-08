@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { FaLaptopCode } from 'react-icons/fa'
-import LoginButton from '../../../shared/components/atoms/LoginButton'
+import { Button } from '../../../shared/components/atoms/Button'
 import InputForm from '../../../shared/components/atoms/InputForm'
 
 export default function LoginPage() {
@@ -78,9 +78,9 @@ export default function LoginPage() {
               required
             />
           </div>
-          <LoginButton>
+          <Button variant="primary">
             ログイン
-          </LoginButton>
+          </Button>
           <Link
             href="/signup"
             className="text-center underline mt-5 hover:text-cyan-800"

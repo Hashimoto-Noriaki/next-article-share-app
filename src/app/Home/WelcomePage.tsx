@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
 import Footer from '../../shared/components/footer';
-import LoginButton from '../../shared/components/atoms/LoginButton';
-import SignupLeadButton from '../../shared/components/atoms/SignupLeadButton';
+import { Button } from '../../shared/components/atoms/Button';
 import WelcomeHeader from '../../features/home/WelcomeHeader';
 
 export default function WelcomePage() {
@@ -24,12 +23,12 @@ export default function WelcomePage() {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-3">
           <Link href="/login" className="w-64">
-            <LoginButton>ログインはこちら</LoginButton>
+            <Button>ログインはこちら</Button>
           </Link>
           <Link href="/signup" className="w-64">
-            <SignupLeadButton>
+            <Button variant="secondary">
               新規登録はこちら
-            </SignupLeadButton>
+            </Button>
           </Link>
         </div>
       </main>
