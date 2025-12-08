@@ -78,7 +78,7 @@ export default function LoginPage() {
               required
             />
           </div>
-          <Button>
+          <Button variant="primary">
             ログイン
           </Button>
           <Link
