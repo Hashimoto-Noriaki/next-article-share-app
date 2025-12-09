@@ -36,6 +36,16 @@ npm run dev
 npx prisma studio
 ```
 
+### ESLintとPrettier
+- ESLint
+```
+npm run lint
+```
+- Prettier
+```
+npm run format
+```
+
 ### StoryBook起動
 ```
 npm run story book
