@@ -37,8 +37,10 @@ export default function LoginPage() {
       // 成功したらトップページへ
       router.push('/articles')
       router.refresh()
-    } catch (err) {
-      setError('ログインに失敗しました')
+    } 
+    catch (error) {
+      console.error('ログインエラー:', error)
+      setServerError('ログインに失敗しました')
     }
   }
 

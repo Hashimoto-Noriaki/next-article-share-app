@@ -38,8 +38,10 @@ export default function SignUpPage() {
 
       // 成功したら記事一覧ページへ
       router.push('/articles')
-    } catch (err) {
-      setErrorMessage('登録に失敗しました')
+    }
+    catch (error) {
+      console.error('ログインエラー:', error)
+      setServerError('ログインに失敗しました')
     }
   }
 
