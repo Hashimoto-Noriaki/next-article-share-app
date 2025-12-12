@@ -47,7 +47,7 @@ export default function SignUpPage() {
 
   return (
     <div className="flex items-center justify-center p-20 max-h-screen">
-      <div className="bg-gradient-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
+      <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
         <h1 className="text-2xl flex items-center text-white font-bold">
           <FaLaptopCode />
           テックブログ共有アプリ
