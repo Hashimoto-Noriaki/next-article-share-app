@@ -1,25 +1,25 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Tab } from '@/shared/components/atoms/Tab'
-import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview'
+import { useState } from 'react';
+import { Tab } from '@/shared/components/atoms/Tab';
+import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
 
-type TabType = 'edit' | 'preview' | 'split'
+type TabType = 'edit' | 'preview' | 'split';
 
 type Props = {
-  title: string
-  onTitleChange: (value: string) => void
-  tags: string
-  onTagsChange: (value: string) => void
-  body: string
-  onBodyChange: (value: string) => void
-}
+  title: string;
+  onTitleChange: (value: string) => void;
+  tags: string;
+  onTagsChange: (value: string) => void;
+  body: string;
+  onBodyChange: (value: string) => void;
+};
 
 const TABS: { key: TabType; label: string }[] = [
   { key: 'edit', label: '本文' },
   { key: 'preview', label: 'プレビュー' },
   { key: 'split', label: '2ペイン' },
-]
+];
 
 export function MarkdownEditor({
   title,
@@ -29,7 +29,7 @@ export function MarkdownEditor({
   body,
   onBodyChange,
 }: Props) {
-  const [activeTab, setActiveTab] = useState<TabType>('edit')
+  const [activeTab, setActiveTab] = useState<TabType>('edit');
 
   return (
     <>
@@ -93,5 +93,5 @@ export function MarkdownEditor({
         </div>
       )}
     </>
-  )
+  );
 }

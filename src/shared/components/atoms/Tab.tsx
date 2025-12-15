@@ -1,8 +1,8 @@
 type Props = {
-  label: string
-  isActive: boolean
-  onClick: () => void
-}
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+};
 
 export function Tab({ label, isActive, onClick }: Props) {
   return (
@@ -16,5 +16,5 @@ export function Tab({ label, isActive, onClick }: Props) {
     >
       {label}
     </button>
-  )
+  );
 }

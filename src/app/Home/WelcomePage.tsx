@@ -7,7 +7,7 @@ import WelcomeHeader from '../../features/home/WelcomeHeader';
 export default function WelcomePage() {
   return (
     <div className="flex flex-col min-h-screen">
-      <WelcomeHeader/>
+      <WelcomeHeader />
       <main className="grow flex flex-col items-center justify-center">
         <div className="bg-linear-to-r from-rose-300 to-cyan-600 px-16 py-24 font-bold text-white w-full max-w-5xl text-center rounded-lg shadow-lg">
           <h1 className="text-5xl flex items-center justify-center gap-3">
@@ -26,9 +26,7 @@ export default function WelcomePage() {
             <Button>ログインはこちら</Button>
           </Link>
           <Link href="/signup" className="w-64">
-            <Button variant="secondary">
-              新規登録はこちら
-            </Button>
+            <Button variant="secondary">新規登録はこちら</Button>
           </Link>
         </div>
       </main>

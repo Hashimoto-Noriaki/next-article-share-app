@@ -1,6 +1,6 @@
 type Props = {
-  onPublish: () => void
-}
+  onPublish: () => void;
+};
 
 export function NewArticleHeader({ onPublish }: Props) {
   return (
@@ -13,5 +13,5 @@ export function NewArticleHeader({ onPublish }: Props) {
         公開設定へ
       </button>
     </header>
-  )
+  );
 }

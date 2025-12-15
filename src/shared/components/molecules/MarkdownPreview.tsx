@@ -1,12 +1,12 @@
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import remarkBreaks from 'remark-breaks'
-import 'github-markdown-css/github-markdown.css'
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
+import 'github-markdown-css/github-markdown.css';
 
 type Props = {
-  content: string
-  className?: string
-}
+  content: string;
+  className?: string;
+};
 
 export function MarkdownPreview({ content, className }: Props) {
   return (
@@ -22,5 +22,5 @@ export function MarkdownPreview({ content, className }: Props) {
         {content || '_まだ本文が入力されていません_'}
       </ReactMarkdown>
     </div>
-  )
+  );
 }
