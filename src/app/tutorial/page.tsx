@@ -2,8 +2,8 @@ import ArticleReturnButton from '../../shared/components/atoms/ArticleReturnButt
 
 export default function TutorialPage() {
   return (
-    <div className="flex flex-col items-center justify-center h-[100vh] p-6">
-      <div className="p-5 font-bold text-white rounded-md shadow-md max-w-5xl w-full bg-gradient-to-r from-rose-300 to-cyan-400">
+    <div className="flex flex-col items-center justify-center h-screen p-6">
+      <div className="p-5 font-bold text-white rounded-md shadow-md max-w-5xl w-full bg-linear-to-r from-rose-300 to-cyan-400">
         <h1 className="text-3xl font-bold mb-8 text-center">
           テックブログ共有アプリの使い方ガイド
         </h1>
