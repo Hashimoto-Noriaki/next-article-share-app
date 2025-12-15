@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { logout } from '@/actions/auth'
+import Link from 'next/link';
+import { logout } from '@/actions/auth';
 
 export function ArticleListHeader() {
   const handleLogout = async () => {
-    await logout()
-  }
+    await logout();
+  };
 
   return (
     <header className="bg-linear-to-br from-cyan-500 to-cyan-600 h-[15vh] p-3">
@@ -37,10 +37,7 @@ export function ArticleListHeader() {
               </Link>
             </li>
             <li>
-              <button
-                onClick={handleLogout}
-                className="hover:text-amber-400"
-              >
+              <button onClick={handleLogout} className="hover:text-amber-400">
                 ログアウト
               </button>
             </li>
@@ -48,5 +45,5 @@ export function ArticleListHeader() {
         </nav>
       </div>
     </header>
-  )
+  );
 }

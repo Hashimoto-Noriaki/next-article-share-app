@@ -1,1 +1,1 @@
-export { WelcomeHeader } from './WelcomeHeader'
+export { WelcomeHeader } from './WelcomeHeader';

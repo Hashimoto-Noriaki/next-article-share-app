@@ -33,9 +33,7 @@ export default function GuidePage() {
           </p>
         </div>
       </div>
-      <ReturnButton>
-        戻る
-      </ReturnButton>
+      <ReturnButton>戻る</ReturnButton>
     </div>
   );
 }

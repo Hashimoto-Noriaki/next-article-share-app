@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 export default function WelcomeHeader() {
   return (
@@ -33,5 +33,5 @@ export default function WelcomeHeader() {
         </nav>
       </div>
     </header>
-  )
+  );
 }

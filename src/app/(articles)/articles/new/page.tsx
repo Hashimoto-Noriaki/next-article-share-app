@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { NewArticleHeader,MarkdownEditor } from '@/features/articles/components'
+import {
+  NewArticleHeader,
+  MarkdownEditor,
+} from '@/features/articles/components';
 
 export default function NewArticlePage() {
   const [title, setTitle] = useState('');
@@ -10,8 +13,8 @@ export default function NewArticlePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <NewArticleHeader onPublish={()=> {}} />
-        {/* TODO: 公開設定の実装は後ほど追加する */}
+      <NewArticleHeader onPublish={() => {}} />
+      {/* TODO: 公開設定の実装は後ほど追加する */}
       <main className="grow container mx-auto px-5 py-5 pt-1">
         <MarkdownEditor
           title={title}
