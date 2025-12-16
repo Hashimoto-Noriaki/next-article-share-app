@@ -40,7 +40,7 @@ export default function SignUpPage() {
       router.push('/articles');
     } catch (error) {
       console.error('ログインエラー:', error);
-      setServerError('ログインに失敗しました');
+      setErrorMessage('ログインに失敗しました');
     }
   };
 
@@ -53,7 +53,7 @@ export default function SignUpPage() {
         </h1>
         <h2 className="text-xl text-white font-bold mt-3">新規登録</h2>
 
-        {errorMessage && (
+        {error && (
           <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm">
             {errorMessage}
           </div>
