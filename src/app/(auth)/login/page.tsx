@@ -11,11 +11,11 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setErrorMessage('');
 
     try {
       const res = await fetch('/api/auth/login', {
@@ -30,7 +30,7 @@ export default function LoginPage() {
       });
 
       if (!res.ok) {
-        setError('ログインに失敗しました');
+        setErrorMessage('ログインに失敗しました');
         return;
       }
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
       router.refresh();
     } catch (error) {
       console.error('ログインエラー:', error);
-      setServerError('ログインに失敗しました');
+      setErrorMessage('ログインに失敗しました');
     }
   };
 
@@ -52,7 +52,7 @@ export default function LoginPage() {
         </h1>
         <h2 className="text-xl text-white font-bold mt-3">ログイン</h2>
 
-        {error && (
+        {errorMessage && (
           <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm">
             ログインに失敗しました
           </div>
