@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { ArticleListHeader } from '@/features/articles/components'
-import Footer from '@/shared/components/footer'
+import { ArticleListHeader } from '@/features/articles/components';
+import Footer from '@/shared/components/footer';
 
 export default function ArticleList() {
   return (
@@ -29,5 +29,5 @@ export default function ArticleList() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }

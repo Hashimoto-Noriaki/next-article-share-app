@@ -1,6 +1,6 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
-export default function WelcomeHeader() {
+export function WelcomeHeader() {
   return (
     <header className="bg-linear-to-br from-cyan-500 to-cyan-600 h-[15vh] p-3">
       <div className="flex justify-between">
@@ -33,5 +33,5 @@ export default function WelcomeHeader() {
         </nav>
       </div>
     </header>
-  )
+  );
 }

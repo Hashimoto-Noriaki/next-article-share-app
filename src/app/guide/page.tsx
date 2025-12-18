@@ -3,7 +3,7 @@ import ReturnButton from '../../shared/components/atoms/ReturnButton';
 export default function GuidePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6">
-      <div className="p-12 font-bold text-white rounded-lg shadow-md max-w-5xl w-full bg-gradient-to-r from-rose-300 to-cyan-400">
+      <div className="p-12 font-bold text-white rounded-lg shadow-md max-w-5xl w-full bg-linear-to-r from-rose-300 to-cyan-400">
         <h1 className="text-3xl font-bold mb-6 text-center">
           テックブログ共有アプリ について
         </h1>
@@ -33,9 +33,7 @@ export default function GuidePage() {
           </p>
         </div>
       </div>
-      <ReturnButton>
-        戻る
-      </ReturnButton>
+      <ReturnButton>戻る</ReturnButton>
     </div>
   );
 }

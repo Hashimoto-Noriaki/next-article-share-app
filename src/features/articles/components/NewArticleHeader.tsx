@@ -1,10 +1,10 @@
 type Props = {
-  onPublish: () => void
-}
+  onPublish: () => void;
+};
 
 export function NewArticleHeader({ onPublish }: Props) {
   return (
-    <header className="bg-gradient-to-r from-cyan-500 to-cyan-600 border-slate-200 px-5 py-4 flex justify-between shadow-sm">
+    <header className="bg-linear-to-r from-cyan-500 to-cyan-600 border-slate-200 px-5 py-4 flex justify-between shadow-sm">
       <h1 className="text-2xl font-bold text-white">記事を投稿</h1>
       <button
         onClick={onPublish}
@@ -13,5 +13,5 @@ export function NewArticleHeader({ onPublish }: Props) {
         公開設定へ
       </button>
     </header>
-  )
+  );
 }

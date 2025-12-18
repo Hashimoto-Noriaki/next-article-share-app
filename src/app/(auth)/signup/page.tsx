@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { FaLaptopCode } from 'react-icons/fa'
-import InputForm from '../../../shared/components/atoms/InputForm'
-import { Button } from '../../../shared/components/atoms/Button'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { FaLaptopCode } from 'react-icons/fa';
+import InputForm from '../../../shared/components/atoms/InputForm';
+import { Button } from '../../../shared/components/atoms/Button';
 
 export default function SignUpPage() {
-  const router = useRouter()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setErrorMessage('')
+    e.preventDefault();
+    setErrorMessage('');
 
     try {
       const res = await fetch('/api/auth/signup', {
@@ -29,23 +29,24 @@ export default function SignUpPage() {
           email,
           password,
         }),
-      })
+      });
 
       if (!res.ok) {
-        setErrorMessage('登録に失敗しました')
-        return
+        setErrorMessage('登録に失敗しました');
+        return;
       }
 
       // 成功したら記事一覧ページへ
-      router.push('/articles')
-    } catch (err) {
-      setErrorMessage('登録に失敗しました')
+      router.push('/articles');
+    } catch (error) {
+      console.error('ログインエラー:', error);
+      setErrorMessage('ログインに失敗しました');
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center p-20 max-h-screen">
-      <div className="bg-gradient-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
+      <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
         <h1 className="text-2xl flex items-center text-white font-bold">
           <FaLaptopCode />
           テックブログ共有アプリ
@@ -58,7 +59,10 @@ export default function SignUpPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-left mt-5">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-5 text-left mt-5"
+        >
           <div>
             <p className="font-bold mb-3">名前</p>
             <InputForm
@@ -92,9 +96,7 @@ export default function SignUpPage() {
               minLength={8}
             />
           </div>
-          <Button variant="secondary">
-            新規登録
-          </Button>
+          <Button variant="secondary">新規登録</Button>
           <Link
             href="/login"
             className="text-center underline mt-5 hover:text-cyan-800"
@@ -104,5 +106,5 @@ export default function SignUpPage() {
         </form>
       </div>
     </div>
-  )
+  );
 }
