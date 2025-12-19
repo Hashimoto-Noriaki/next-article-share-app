@@ -7,8 +7,8 @@ on:
     branches: [develop, master]
 
 env:
-  DATABASE_URL: 'postgresql://dummy:dummy@localhost:5432/dummy'
-  JWT_SECRET: 'dummy-secret-for-ci'
+  DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+  JWT_SECRET: "dummy-secret-for-ci"
 
 jobs:
   ci:
@@ -43,4 +43,4 @@ jobs:
         run: npm run test
 
       - name: Build
-        run: npx next build
+        run: npm run build:ci
