@@ -1,4 +1,5 @@
 ## 画面構成
+
 <img width="1437" height="787" alt="スクリーンショット 2025-10-29 14 47 02" src="https://github.com/user-attachments/assets/0fa79583-cfab-4d44-a4e7-d3deac320715" />
 
 ## 技術構成
@@ -33,12 +34,12 @@
 ## サーバー起動
 
 ## サーバー起動
+
 ```bash
 npm run dev
 ```
 
 ### Prisma Studio
-
 
 ```
 npx prisma studio
