@@ -32,11 +32,13 @@
 ## サーバー起動
 
 ## サーバー起動
+
 ```bash
 npm run dev
 ```
 
 ### Prisma Studio
+
 <<<<<<< HEAD
 
 ```
@@ -79,27 +81,34 @@ https://next-auth.js.org/getting-started/example
 
 - 次世代
   https://authjs.dev/?utm_source=
-=======
+  =======
+
 ```
 npx prisma studio
 ```
 
 ### ESLintとPrettier
+
 - ESLint
+
 ```
 npm run lint
 ```
+
 - Prettier
+
 ```
 npm run format
 ```
 
 ### StoryBook起動
+
 ```
 npm run story book
 ```
 
 ### テスト
+
 ```
 npm run test
 ```
@@ -109,7 +118,9 @@ npm run test
 https://github.com/Hashimoto-Noriaki/Article-Share-App
 
 # NextAuth.js
+
 https://next-auth.js.org/getting-started/example
+
 - 次世代
-https://authjs.dev/?utm_source=
->>>>>>> 346be4af8d4f5577e7d2bc71e9685843af05c664
+  https://authjs.dev/?utm_source=
+  > > > > > > > 346be4af8d4f5577e7d2bc71e9685843af05c664
