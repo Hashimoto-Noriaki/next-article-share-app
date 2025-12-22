@@ -31,10 +31,6 @@
 
 ## サーバー起動
 
-## サーバー起動
-
-## サーバー起動
-
 ```bash
 npm run dev
 ```
@@ -79,10 +75,6 @@ https://github.com/Hashimoto-Noriaki/Article-Share-App
 
 https://next-auth.js.org/getting-started/example
 
-- 次世代
-  https://authjs.dev/?utm_source=
-  =======
-
 ```
 npx prisma studio
 ```
@@ -123,4 +115,3 @@ https://next-auth.js.org/getting-started/example
 
 - 次世代
   https://authjs.dev/?utm_source=
-  > > > > > > > 346be4af8d4f5577e7d2bc71e9685843af05c664
