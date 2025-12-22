@@ -15,49 +15,49 @@ export default function NewArticlePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handlePublish = (async = () => {
+  const handlePublish = async () => {
     setError('');
     setIsSubmitting(true);
-  });
 
-  try {
+    try {
     /*
      * タグ文字列を配列に変換
      * trim(): 前後の空白を削除
      * split(/\s+/): 1つ以上の空白で分割
      * filter(): 空文字を除去
      */
-    const tagArray = tags
-      .trim()
-      .split(/\s+/)
-      .filter((tag) => tag.length > 0);
-    const res = await fetch('/api/articles', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        content: body,
-        tags: tagArray,
-      }),
-    });
+      const tagArray = tags
+        .trim()
+        .split(/\s+/)
+        .filter((tag) => tag.length > 0);
+      const res = await fetch('/api/auth/articles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          content: body,
+          tags: tagArray,
+        }),
+      });
 
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.message || '投稿に失敗しました');
-      return;
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.message || '投稿に失敗しました');
+        return;
+      }
+
+      // 成功したら記事一覧へ
+      router.push('/articles');
+      router.refresh();
+    } catch (err) {
+      console.error('投稿エラー:', err);
+      setError('投稿に失敗しました');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // 成功したら記事一覧へ
-    router.push('/articles');
-    router.refresh();
-  } catch (err) {
-    console.error('投稿エラー:', err);
-    setError('投稿に失敗しました');
-  } finally {
-    setIsSubmitting(false);
-  }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
