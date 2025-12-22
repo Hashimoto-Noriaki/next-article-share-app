@@ -23,7 +23,7 @@ export default function WelcomePage() {
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-3">
           <Link href="/login" className="w-64">
-            <Button>ログインはこちら</Button>
+            <Button variant="primary">ログインはこちら</Button>
           </Link>
           <Link href="/signup" className="w-64">
             <Button variant="secondary">新規登録はこちら</Button>
