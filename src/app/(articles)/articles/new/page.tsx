@@ -15,13 +15,18 @@ export default function NewArticlePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handlePublish = async = ()=> {
+  const handlePublish = (async = () => {
     setError('');
     setIsSubmitting(true);
-  }
+  });
 
   try {
-    // タグをスペース区切りで配列に変換
+    /*
+     * タグ文字列を配列に変換
+     * trim(): 前後の空白を削除
+     * split(/\s+/): 1つ以上の空白で分割
+     * filter(): 空文字を除去
+     */
     const tagArray = tags
       .trim()
       .split(/\s+/)
@@ -47,16 +52,16 @@ export default function NewArticlePage() {
     // 成功したら記事一覧へ
     router.push('/articles');
     router.refresh();
-  } catch(err) {
-      console.error('投稿エラー:', err);
-      setError('投稿に失敗しました');
+  } catch (err) {
+    console.error('投稿エラー:', err);
+    setError('投稿に失敗しました');
   } finally {
     setIsSubmitting(false);
-  };
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <NewArticleHeader onPublish={handlePublish} isSubmitting={isSubmitting}/>
+      <NewArticleHeader onPublish={handlePublish} isSubmitting={isSubmitting} />
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 mx-5 mt-2 rounded">
           {error}
