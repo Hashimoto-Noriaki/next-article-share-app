@@ -40,7 +40,7 @@ export default function SignUpPage() {
       router.push('/articles');
     } catch (error) {
       console.error('ログインエラー:', error);
-      setServerError('ログインに失敗しました');
+      setErrorMessage('ログインに失敗しました');
     }
   };
 
