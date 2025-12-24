@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 // 記事詳細取得
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const { id } = await params;
@@ -21,7 +21,7 @@ export async function GET(
     if (!article) {
       return NextResponse.json(
         { message: '記事が見つかりません' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -30,7 +30,7 @@ export async function GET(
     console.error('記事取得エラー:', error);
     return NextResponse.json(
       { message: '記事の取得に失敗しました' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
