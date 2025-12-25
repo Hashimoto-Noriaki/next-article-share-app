@@ -96,7 +96,7 @@ export default function ArticleEditPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <header className="bg-gradient-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
+      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
         <Link href={`/articles/${id}`} className="text-white hover:underline">
           ← 戻る
         </Link>
