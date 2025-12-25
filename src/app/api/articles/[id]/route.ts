@@ -112,3 +112,59 @@ export async function PUT(
     );
   }
 }
+
+// 記事削除
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+
+    // 認証チェック
+    const cookieStore = await cookies();
+    const token = cookieStore.get('token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
+    }
+
+    const payload = await verifyToken(token);
+    if (!payload) {
+      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
+    }
+    // 記事の存在確認と権限チェック
+    const existingArticle = await prisma.article.findUnique({
+      where: { id },
+    });
+
+    if (!existingArticle) {
+      return NextResponse.json(
+        { message: '記事が見つかりません' },
+        { status: 404 },
+      );
+    }
+
+    if (existingArticle.authorId !== payload.userId) {
+      return NextResponse.json(
+        { message: '削除権限がありません' },
+        { status: 403 },
+      );
+    }
+
+    // 記事削除
+    await prisma.article.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({
+      message: '記事を削除しました',
+    });
+  } catch (error) {
+    console.error('記事削除エラー:', error);
+    return NextResponse.json(
+      { message: '記事の削除に失敗しました' },
+      { status: 500 },
+    );
+  }
+}
