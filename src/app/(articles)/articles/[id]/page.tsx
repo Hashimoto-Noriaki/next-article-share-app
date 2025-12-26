@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { verifyToken } from '@/lib/jwt';
+import { DeleteButton } from '@/features/articles/components';
 
 type Props = {
   params: Promise<{ id: string }>; // sync-dynamic-apis 対策
@@ -87,14 +88,7 @@ export default async function ArticleDetailPage({ params }: Props) {
                 >
                   編集
                 </Link>
-
-                {/* 削除（※実処理は後で） */}
-                <button
-                  type="button"
-                  className="inline-flex items-center border border-red-500 text-red-600 text-sm font-medium px-5 py-3 rounded-md hover:bg-red-100 transition"
-                >
-                  削除
-                </button>
+                <DeleteButton articleId={id} />
               </div>
             )}
           </div>
