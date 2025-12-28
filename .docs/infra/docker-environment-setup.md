@@ -1,6 +1,7 @@
-
 ## Docker 環境構築メモ
+
 ### ファイル構成
+
 ```
 project/
 ├── docker-compose.yml   # DB + アプリ起動設定
@@ -28,13 +29,13 @@ docker compose down
 
 ## コマンド一覧
 
-| コマンド | 用途 |
-|---------|------|
-| `docker compose up db -d` | DB のみ起動（普段の開発） |
-| `docker compose up -d` | DB + アプリ起動（正確に言うと：本番に近い環境をローカルでテストする用） |
-| `docker compose down` | 停止 |
-| `docker compose logs -f` | ログ確認 |
-| `docker compose ps` | 状態確認 |
+| コマンド                  | 用途                                                                    |
+| ------------------------- | ----------------------------------------------------------------------- |
+| `docker compose up db -d` | DB のみ起動（普段の開発）                                               |
+| `docker compose up -d`    | DB + アプリ起動（正確に言うと：本番に近い環境をローカルでテストする用） |
+| `docker compose down`     | 停止                                                                    |
+| `docker compose logs -f`  | ログ確認                                                                |
+| `docker compose ps`       | 状態確認                                                                |
 
 ---
 
@@ -59,12 +60,14 @@ JWT_SECRET="your-secret-key"
 ## docker-compose.yml の構成
 
 ### db サービス
+
 - PostgreSQL 15 (Alpine)
 - ポート: 5432
 - ボリューム: postgres_data（永続化）
 - ヘルスチェック付き
 
 ### app サービス（オプション）
+
 - マルチステージビルド
 - ポート: 3000
 - ホットリロード対応
@@ -97,11 +100,13 @@ docker build --target production -t techblog:latest .
 ## トラブルシューティング
 
 ### ポート競合エラー
+
 ```
 Error: bind: address already in use
 ```
 
 解決策:
+
 ```bash
 # 使用中のプロセス確認
 lsof -i :3000
@@ -112,6 +117,7 @@ docker compose up db -d
 ```
 
 ### npm ci エラー
+
 → Dockerfile で `npm install` を使用（互換性のため）
 
 ---
