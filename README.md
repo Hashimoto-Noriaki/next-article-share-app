@@ -56,6 +56,12 @@ npm run lint
 npm run format
 ```
 
+### 型チェック
+
+```
+npm run type-check 
+```
+
 ### StoryBook起動
 
 ```
