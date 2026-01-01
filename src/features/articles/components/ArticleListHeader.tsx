@@ -2,8 +2,14 @@
 
 import Link from 'next/link';
 import { logout } from '@/actions/auth';
+import { UserDropdown } from './UserDropdown';
 
-export function ArticleListHeader() {
+type Props = {
+  userId: string;
+  userName: string;
+};
+
+export function ArticleListHeader({ userId, userName }: Props) {
   const handleLogout = async () => {
     await logout();
   };
@@ -32,9 +38,7 @@ export function ArticleListHeader() {
               </Link>
             </li>
             <li>
-              <Link href="/" className="hover:text-amber-400">
-                マイページ
-              </Link>
+              <UserDropdown userId={userId} userName={userName} />
             </li>
             <li>
               <button onClick={handleLogout} className="hover:text-amber-400">
