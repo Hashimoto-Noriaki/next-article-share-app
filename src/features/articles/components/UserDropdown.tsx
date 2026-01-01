@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 type Props = {
   userId: string;
-  username: string;
+  userName: string;
 };
 
 export function UserDropdown({ userId, userName }: Props) {
