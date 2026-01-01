@@ -1,9 +1,17 @@
-'use client';
-
-import { ArticleListHeader } from '@/features/articles/components';
+import { prisma } from '@/lib/prisma';
+import { ArticleListHeader, ArticleCard } from '@/features/articles/components';
 import Footer from '@/shared/components/footer';
 
-export default function ArticleList() {
+export default async function ArticleListPage() {
+  const articles = await prisma.article.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      author: {
+        select: { name: true },
+      },
+    },
+  });
+
   return (
     <div className="flex flex-col min-h-screen">
       <ArticleListHeader />
@@ -14,17 +22,22 @@ export default function ArticleList() {
             エンジニア同士で有益な記事を共有しよう
           </p>
         </div>
-        <div className="flex flex-wrap justify-center gap-5 mt-5">
-          {/* TODO: ArticleCard コンポーネントに置き換え */}
-          <p className="w-64 h-40 bg-rose-200 rounded-xl flex items-center justify-center">
-            記事カード1
-          </p>
-          <p className="w-64 h-40 bg-cyan-200 rounded-xl flex items-center justify-center">
-            記事カード2
-          </p>
-          <p className="w-64 h-40 bg-emerald-200 rounded-xl flex items-center justify-center">
-            記事カード3
-          </p>
+        <div className="flex flex-wrap justify-center gap-5 mt-5 pb-10">
+          {articles.length === 0 ? (
+            <p className="text-gray-500">まだ記事がありません</p>
+          ) : (
+            articles.map((article) => (
+              <ArticleCard
+                key={article.id}
+                id={article.id}
+                title={article.title}
+                tags={article.tags}
+                authorName={article.author.name || '名無し'}
+                createdAt={article.createdAt}
+                likeCount={article.likeCount}
+              />
+            ))
+          )}
         </div>
       </main>
       <Footer />
