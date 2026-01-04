@@ -63,7 +63,7 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4">
-        <Link href="/articles" className="text-white hover:underline">
+        <Link href="/articles" className="text-white font-bold text-xl hover:underline">
           ← 記事一覧に戻る
         </Link>
       </header>
