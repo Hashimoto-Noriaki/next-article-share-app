@@ -63,7 +63,10 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4">
-        <Link href="/articles" className="text-white font-bold text-xl hover:underline">
+        <Link
+          href="/articles"
+          className="text-white font-bold text-xl hover:underline"
+        >
           ← 記事一覧に戻る
         </Link>
       </header>
@@ -71,7 +74,10 @@ export default function SettingsPage() {
       <main className="container mx-auto px-5 py-8 max-w-md">
         <h1 className="text-2xl font-bold mb-8">設定</h1>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-lg shadow-md p-8"
+        >
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 mb-4 rounded">
               {error}
@@ -104,11 +110,7 @@ export default function SettingsPage() {
             />
           </div>
 
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            variant="primary"
-          >
+          <Button type="submit" disabled={isSubmitting} variant="primary">
             {isSubmitting ? '更新中...' : '更新する'}
           </Button>
         </form>
