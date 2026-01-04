@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 
-export default function InputForm(props: ComponentProps<'input'>) {
+export function InputForm(props: ComponentProps<'input'>) {
   return (
     <input
       {...props}
