@@ -39,13 +39,13 @@ describe('Button', () => {
     expect(button).toHaveClass('hover:bg-amber-400');
   });
 
-  it('slate variant のスタイルが付与される', () => {
-    render(<Button variant="slate">ボタン</Button>);
+  it('warning variant のスタイルが付与される', () => {
+    render(<Button variant="warning">ボタン</Button>);
 
     const button = screen.getByRole('button');
 
-    expect(button).toHaveClass('bg-slate-500');
-    expect(button).toHaveClass('hover:bg-slate-400');
+    expect(button).toHaveClass('bg-red-500');
+    expect(button).toHaveClass('hover:bg-red-400');
   });
 
   it('fullWidth=false のとき w-full が付与されない', () => {
