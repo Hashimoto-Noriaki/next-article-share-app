@@ -72,7 +72,7 @@ export default function SettingsPage() {
       </header>
 
       <main className="container mx-auto px-5 py-8 max-w-md">
-        <h1 className="text-2xl font-bold mb-8 text-center">設定</h1>
+        <h1 className="text-2xl font-bold mb-8 text-center">プロフィール</h1>
 
         <form
           onSubmit={handleSubmit}
