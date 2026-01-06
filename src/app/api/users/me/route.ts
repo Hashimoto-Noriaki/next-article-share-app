@@ -107,3 +107,40 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
+
+// 退会
+export async function DELETE() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
+    }
+
+    const payload = await verifyToken(token);
+    if (!payload) {
+      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
+    }
+
+    // ユーザーと関連記事を削除
+    await prisma.user.delete({
+      where: { id: payload.userId },
+    });
+
+    // Cookie削除
+    const response = NextResponse.json({
+      message: '退会が完了しました',
+    });
+
+    response.cookies.delete('token');
+
+    return response;
+  } catch (error) {
+    console.error('退会エラー:', error);
+    return NextResponse.json(
+      { message: '退会に失敗しました' },
+      { status: 500 },
+    );
+  }
+}
