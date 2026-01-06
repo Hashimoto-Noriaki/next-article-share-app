@@ -34,7 +34,7 @@ export function UserDropdown({ userId, userName }: Props) {
             </li>
             <li>
               <Link
-                href="/settings"
+                href="/settings/profile"
                 className="block px-4 py-2 hover:bg-gray-100"
                 onClick={() => setIsOpen(false)}
               >
