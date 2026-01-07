@@ -7,6 +7,7 @@ type Props = {
   tags: string[];
   authorName: string;
   createdAt: Date;
+  updatedAt?: Date;
   likeCount: number;
 };
 
@@ -16,8 +17,10 @@ export function ArticleCard({
   tags,
   authorName,
   createdAt,
+  updatedAt,
   likeCount,
 }: Props) {
+  const isUpdated = updatedAt && updatedAt > createdAt;
   return (
     <Link href={`/articles/${id}`}>
       <article className="w-90 bg-white rounded-xl shadow-md hover:shadow-lg transition p-5">
@@ -40,6 +43,11 @@ export function ArticleCard({
             <AiOutlineHeart className="w-5 h-5 text-red-500 transition hover:scale-120" />
             <span className="text-gray-500 text-sm">{likeCount}</span>
           </span>
+          <p className="text-xs text-gray-400 mt-2">
+            {isUpdated
+              ? `更新: ${updatedAt.toLocaleDateString('ja-JP')}`
+              : createdAt.toLocaleDateString('ja-JP')}
+          </p>
         </div>
         <p className="text-xs text-gray-400 mt-2">
           {createdAt.toLocaleDateString('ja-JP')}

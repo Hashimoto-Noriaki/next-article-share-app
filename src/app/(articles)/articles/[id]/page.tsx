@@ -69,8 +69,14 @@ export default async function ArticleDetailPage({ params }: Props) {
           <div className="flex flex-wrap items-center justify-between gap-4 text-gray-500 text-sm mb-8">
             <div className="flex flex-wrap items-center gap-4">
               <span>投稿者: {article.author.name || '名無し'}</span>
-              <span>{article.createdAt.toLocaleDateString('ja-JP')}</span>
-
+              <span>
+                投稿日:{article.createdAt.toLocaleDateString('ja-JP')}
+              </span>
+              {article.updatedAt > article.createdAt && (
+                <span>
+                  更新日: {article.updatedAt.toLocaleDateString('ja-JP')}
+                </span>
+              )}
               <span className="flex items-center gap-1">
                 <AiOutlineHeart className="w-5 h-5 text-red-500 transition-transform hover:scale-110" />
                 <span className="text-gray-500 text-sm">
