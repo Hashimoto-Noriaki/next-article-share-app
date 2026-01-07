@@ -56,6 +56,7 @@ export default async function ArticleListPage() {
                 tags={article.tags}
                 authorName={article.author.name || '名無し'}
                 createdAt={article.createdAt}
+                updatedAt={article.updatedAt}
                 likeCount={article.likeCount}
               />
             ))
