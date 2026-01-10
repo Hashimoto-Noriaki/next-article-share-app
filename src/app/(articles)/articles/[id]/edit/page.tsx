@@ -5,6 +5,12 @@ import { useRouter, useParams } from 'next/navigation';
 import { MarkdownEditor } from '@/features/articles/components';
 import Link from 'next/link';
 
+type FieldErrors = {
+  title?: string;
+  content?: string;
+  tags?: string;
+};
+
 export default function ArticleEditPage() {
   const router = useRouter();
   const params = useParams();
@@ -15,7 +21,7 @@ export default function ArticleEditPage() {
   const [body, setBody] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState<FieldErrors>({});
 
   // 記事データを取得
   useEffect(() => {
@@ -23,17 +29,16 @@ export default function ArticleEditPage() {
       try {
         const res = await fetch(`/api/articles/${id}`);
         if (!res.ok) {
-          setError('記事が見つかりません');
+          setErrors({ title: '記事が見つかりません' });
           return;
         }
-
         const article = await res.json();
         setTitle(article.title);
         setTags(article.tags.join(' '));
         setBody(article.content);
       } catch (err) {
         console.error('記事取得エラー:', err);
-        setError('記事の取得に失敗しました');
+        setErrors({ title: '記事の取得に失敗しました' });
       } finally {
         setIsLoading(false);
       }
@@ -43,7 +48,7 @@ export default function ArticleEditPage() {
   }, [id]);
 
   const handleUpdate = async () => {
-    setError('');
+    setErrors({});
     setIsSubmitting(true);
 
     try {
@@ -72,7 +77,17 @@ export default function ArticleEditPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.message || '更新に失敗しました');
+
+        if (data.errors && Array.isArray(data.errors)) {
+          const fieldErrors: FieldErrors = {};
+          data.errors.forEach((err: { path: string[]; message: string }) => {
+            const field = err.path[0] as keyof FieldErrors;
+            if (field && !fieldErrors[field]) {
+              fieldErrors[field] = err.message;
+            }
+          });
+          setErrors(fieldErrors);
+        }
         return;
       }
 
@@ -80,7 +95,7 @@ export default function ArticleEditPage() {
       router.refresh();
     } catch (err) {
       console.error('更新エラー:', err);
-      setError('更新に失敗しました');
+      setErrors({ title: '更新に失敗しました' });
     } finally {
       setIsSubmitting(false);
     }
@@ -110,11 +125,11 @@ export default function ArticleEditPage() {
         </button>
       </header>
 
-      {error && (
+      {/* {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 mx-5 mt-2 rounded">
           {error}
         </div>
-      )}
+      )} */}
 
       <main className="grow container mx-auto px-5 py-5">
         <MarkdownEditor
@@ -124,6 +139,7 @@ export default function ArticleEditPage() {
           onTagsChange={setTags}
           body={body}
           onBodyChange={setBody}
+          errors={errors}
         />
       </main>
     </div>
