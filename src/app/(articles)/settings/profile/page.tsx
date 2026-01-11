@@ -7,7 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
-import { updateUserSchema, UpdateUserInput } from '@/shared/lib/validations/user';
+import {
+  updateUserSchema,
+  UpdateUserInput,
+} from '@/shared/lib/validations/user';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -86,11 +89,7 @@ export default function SettingsPage() {
           )}
           <div className="mb-4">
             <label className="block font-bold mb-2">名前</label>
-            <InputForm
-              type="text"
-              placeholder="名前"
-              {...register('name')}
-            />
+            <InputForm type="text" placeholder="名前" {...register('name')} />
             {errors.name && (
               <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
             )}
@@ -103,7 +102,9 @@ export default function SettingsPage() {
               {...register('email')}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
           <Button type="submit" disabled={isSubmitting} variant="primary">
