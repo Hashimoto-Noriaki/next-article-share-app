@@ -2,45 +2,42 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
-import { Button } from '../../../shared/components/atoms/Button';
-import { InputForm } from '../../../shared/components/atoms/InputForm';
+import { Button } from '@/shared/components/atoms/Button';
+import { InputForm } from '@/shared/components/atoms/InputForm';
+import { loginSchema, LoginInput } from '@/shared/lib/validations/auth';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [serverError, setServerError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  });
 
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+  const onSubmit = async (data: LoginInput) => {
+    setServerError('');
 
-      if (!res.ok) {
-        setErrorMessage('ログインに失敗しました');
-        return;
-      }
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
 
-      // 成功したらトップページへ
-      router.push('/articles');
-      router.refresh();
-    } catch (error) {
-      console.error('ログインエラー:', error);
-      setErrorMessage('ログインに失敗しました');
+    if (!res.ok) {
+      setServerError('メールアドレスまたはパスワードが間違っています');
+      return;
     }
+
+    router.push('/articles');
+    router.refresh();
   };
 
   return (
@@ -51,15 +48,13 @@ export default function LoginPage() {
           テックブログ共有アプリ
         </h1>
         <h2 className="text-xl text-white font-bold mt-3">ログイン</h2>
-
-        {errorMessage && (
-          <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm">
-            ログインに失敗しました
+        {serverError && (
+          <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm mt-3">
+            {serverError}
           </div>
         )}
-
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 text-left mt-5"
         >
           <div>
@@ -67,22 +62,30 @@ export default function LoginPage() {
             <InputForm
               type="email"
               placeholder="メールアドレス"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              {...register('email')}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div>
             <p className="font-bold mb-3">パスワード</p>
             <InputForm
               type="password"
               placeholder="パスワード"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              {...register('password')}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
-          <Button variant="primary">ログイン</Button>
+          <Button type="submit" variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? 'ログイン中...' : 'ログイン'}
+          </Button>
           <Link
             href="/signup"
             className="text-center underline mt-5 hover:text-cyan-800"
