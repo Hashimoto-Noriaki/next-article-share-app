@@ -78,7 +78,9 @@ export default function SignUpPage() {
               {...register('email')}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
           <div>
@@ -89,7 +91,9 @@ export default function SignUpPage() {
               {...register('password')}
             />
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
             )}
           </div>
           <Button type="submit" variant="secondary" disabled={isSubmitting}>
