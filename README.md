@@ -1,8 +1,16 @@
-## このプロジェクトをNext.jsのAppRouterへのリプレイス
+# 画面構成
 
-https://github.com/Hashimoto-Noriaki/Article-Share-App
+<!-- markdownlint-disable MD033 -->
+<img
+  width="1437"
+  height="787"
+  alt="スクリーンショット 2025-10-29 14 47 02"
+  src="https://github.com/user-attachments/assets/0fa79583-cfab-4d44-a4e7-d3deac320715"
+/>
+<!-- markdownlint-enable MD033 -->
 
 ## 技術構成
+
 - TypeScript
 - React
 - Next.js(AppRouter)
@@ -11,7 +19,7 @@ https://github.com/Hashimoto-Noriaki/Article-Share-App
 - Shadcn/ui
 - React-Hook-Form
 - Zod
-- ContextAPI
+- TanstackQuery
 - StoryBook
 - Jest
 - Testing Library
@@ -23,12 +31,59 @@ https://github.com/Hashimoto-Noriaki/Article-Share-App
 - ESLint Prettier
 - Vercel
 
+### 使用したAI
+
+- Claude Code
+- ChatGPT
+
 ## サーバー起動
+
 ```bash
 npm run dev
 ```
 
-# NextAuth.js
+### Prisma Studio
+
+```bash
+npx prisma studio
+```
+
+### ESLintとPrettier
+
+- ESLint
+
+```bash
+npm run lint
+```
+
+- Prettier
+
+```bash
+npm run format
+```
+
+### 型チェック
+
+```bash
+npm run type-check 
+```
+
+### StoryBook起動
+
+```bash
+npm run story book
+```
+
+### テスト
+
+```bash
+npm run test
+```
+
+## このプロジェクトをNext.jsのAppRouterへのリプレイス
+
+https://github.com/Hashimoto-Noriaki/Article-Share-App
+
+## NextAuth.js
+
 https://next-auth.js.org/getting-started/example
-- 次世代
-https://authjs.dev/?utm_source=
