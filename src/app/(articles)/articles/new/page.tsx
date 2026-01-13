@@ -1,20 +1,69 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   NewArticleHeader,
   MarkdownEditor,
 } from '@/features/articles/components';
 
+type FieldErrors = {
+  title?: string;
+  content?: string;
+  tags?: string;
+};
+
 export default function NewArticlePage() {
+  const router = useRouter();
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState('');
   const [body, setBody] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FieldErrors>({});
+
+  const handlePublish = async () => {
+    setErrors({});
+    setIsSubmitting(true);
+
+    const tagArray = tags
+      .trim()
+      .split(/\s+/)
+      .filter((tag) => tag.length > 0);
+
+    const res = await fetch('/api/articles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title,
+        content: body,
+        tags: tagArray,
+      }),
+    });
+
+    const data = await res.json();
+    setIsSubmitting(false);
+
+    if (!res.ok) {
+      if (data.errors && Array.isArray(data.errors)) {
+        const fieldErrors: FieldErrors = {};
+        data.errors.forEach((err: { path: string[]; message: string }) => {
+          const field = err.path[0] as keyof FieldErrors;
+          if (field && !fieldErrors[field]) {
+            fieldErrors[field] = err.message;
+          }
+        });
+        setErrors(fieldErrors);
+      }
+      return;
+    }
+
+    router.push('/articles');
+    router.refresh();
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <NewArticleHeader onPublish={() => {}} />
-      {/* TODO: 公開設定の実装は後ほど追加する */}
+      <NewArticleHeader onPublish={handlePublish} isSubmitting={isSubmitting} />
       <main className="grow container mx-auto px-5 py-5 pt-1">
         <MarkdownEditor
           title={title}
@@ -23,6 +72,7 @@ export default function NewArticlePage() {
           onTagsChange={setTags}
           body={body}
           onBodyChange={setBody}
+          errors={errors}
         />
       </main>
     </div>

@@ -2,46 +2,44 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
-import InputForm from '../../../shared/components/atoms/InputForm';
-import { Button } from '../../../shared/components/atoms/Button';
+import { InputForm } from '@/shared/components/atoms/InputForm';
+import { Button } from '@/shared/components/atoms/Button';
+import { signupSchema, SignUpInput } from '@/shared/lib/validations/auth';
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [serverError, setServerError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage('');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpInput>({
+    resolver: zodResolver(signupSchema),
+  });
 
-    try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      });
+  const onSubmit = async (data: SignUpInput) => {
+    setServerError('');
 
-      if (!res.ok) {
-        setErrorMessage('登録に失敗しました');
-        return;
-      }
+    const res = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
 
-      // 成功したら記事一覧ページへ
-      router.push('/articles');
-    } catch (error) {
-      console.error('ログインエラー:', error);
-      setErrorMessage('ログインに失敗しました');
+    const result = await res.json();
+
+    if (!res.ok) {
+      setServerError(result.message || '登録に失敗しました');
+      return;
     }
+
+    router.push('/articles');
+    router.refresh();
   };
 
   return (
@@ -52,51 +50,55 @@ export default function SignUpPage() {
           テックブログ共有アプリ
         </h1>
         <h2 className="text-xl text-white font-bold mt-3">新規登録</h2>
-
-        {errorMessage && (
-          <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm">
-            {errorMessage}
+        {serverError && (
+          <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm mt-3">
+            {serverError}
           </div>
         )}
-
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 text-left mt-5"
         >
           <div>
             <p className="font-bold mb-3">名前</p>
             <InputForm
-              name="name"
+              type="text"
               placeholder="例)山田太郎(ニックネーム可)"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
+              {...register('name')}
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
           </div>
           <div>
             <p className="font-bold mb-3">メールアドレス</p>
             <InputForm
-              name="email"
               type="email"
               placeholder="メールアドレス"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              {...register('email')}
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
           <div>
             <p className="font-bold mb-3">パスワード</p>
             <InputForm
-              name="password"
               type="password"
               placeholder="パスワード"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={8}
+              {...register('password')}
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
-          <Button variant="secondary">新規登録</Button>
+          <Button type="submit" variant="secondary" disabled={isSubmitting}>
+            {isSubmitting ? '登録中...' : '新規登録'}
+          </Button>
           <Link
             href="/login"
             className="text-center underline mt-5 hover:text-cyan-800"
