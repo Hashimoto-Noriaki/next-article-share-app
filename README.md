@@ -1,14 +1,12 @@
 # 画面構成
 
 <!-- markdownlint-disable MD033 -->
-
 <img
   width="1437"
   height="787"
   alt="スクリーンショット 2025-10-29 14 47 02"
   src="https://github.com/user-attachments/assets/0fa79583-cfab-4d44-a4e7-d3deac320715"
 />
-
 <!-- markdownlint-enable MD033 -->
 
 ## 技術構成
@@ -45,7 +43,6 @@ npm run dev
 ```
 
 ### Prisma Studio
-
 ```bash
 npx prisma studio
 ```
@@ -53,7 +50,6 @@ npx prisma studio
 ### ESLintとPrettier
 
 - ESLint
-
 ```bash
 npm run lint
 ```
@@ -68,25 +64,23 @@ npm run format
 
 ```bash
 npm run type-check
-```
 
 ### StoryBook起動
 
-```bash
+```md
 npm run story book
 ```
 
 ### テスト
 
-```bash
+```
 npm run test
 ```
 
-## このプロジェクトを Next.js App Router へリプレイス
+## このプロジェクトをNext.jsのAppRouterへのリプレイス
 
-- [元プロジェクト（Article Share App）](https://github.com/Hashimoto-Noriaki/Article-Share-App)
+https://github.com/Hashimoto-Noriaki/Article-Share-App
 
-## NextAuth.js
+# NextAuth.js
 
-- [公式ドキュメント](https://next-auth.js.org/getting-started/example)
-- [Auth.js（次世代）公式サイト](https://authjs.dev/)
+https://next-auth.js.org/getting-started/example
