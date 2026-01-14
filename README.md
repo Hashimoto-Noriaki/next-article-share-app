@@ -89,3 +89,16 @@ npm run test
 ## NextAuth.js
 
 - [公式ドキュメント](https://next-auth.js.org/getting-started/example)
+
+## Docker
+
+```bash
+# 1. DB だけ起動
+docker compose up db -d
+
+# 2. アプリはローカルで起動
+npm run dev
+
+# 3. 終わるとき
+docker compose down
+```
