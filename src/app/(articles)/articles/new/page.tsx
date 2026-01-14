@@ -21,7 +21,7 @@ export default function NewArticlePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
 
-  const handlePublish = async () => {
+  const handleSubmit = async (isDraft: boolean) => {
     setErrors({});
     setIsSubmitting(true);
 
@@ -37,6 +37,7 @@ export default function NewArticlePage() {
         title,
         content: body,
         tags: tagArray,
+        isDraft,
       }),
     });
 
@@ -61,9 +62,16 @@ export default function NewArticlePage() {
     router.refresh();
   };
 
+  const handlePublish = () => handleSubmit(false);
+  const handleSaveDraft = () => handleSubmit(true);
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <NewArticleHeader onPublish={handlePublish} isSubmitting={isSubmitting} />
+      <NewArticleHeader
+        onPublish={handlePublish}
+        onSaveDraft={handleSaveDraft}
+        isSubmitting={isSubmitting}
+      />
       <main className="grow container mx-auto px-5 py-5 pt-1">
         <MarkdownEditor
           title={title}
