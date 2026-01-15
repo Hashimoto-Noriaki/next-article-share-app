@@ -26,6 +26,7 @@ export default async function ArticleListPage() {
   }
 
   const articles = await prisma.article.findMany({
+    where: { isDraft: false },
     orderBy: { createdAt: 'desc' },
     include: {
       author: {

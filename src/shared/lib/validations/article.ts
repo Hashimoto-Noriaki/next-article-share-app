@@ -10,6 +10,7 @@ export const createArticleSchema = z.object({
     .array(z.string())
     .min(1, 'タグは1つ以上指定してください')
     .max(5, 'タグは5つ以内にしてください'),
+  isDraft: z.boolean().optional().default(false),
   /*
    *未指定の場合は空配列にする（タグを必須にしない場合）
    *.default([]),
