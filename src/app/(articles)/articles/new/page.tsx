@@ -24,7 +24,7 @@ export default function NewArticlePage() {
 
   const handleSubmit = async (isDraft: boolean) => {
     setErrors({});
-    
+
     if (isDraft) {
       setIsDraftSubmitting(true);
     } else {

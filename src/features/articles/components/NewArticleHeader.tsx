@@ -2,7 +2,7 @@ type Props = {
   onPublish: () => void;
   onSaveDraft: () => void;
   isSubmitting?: boolean;
-  isDraftSubmitting?: boolean
+  isDraftSubmitting?: boolean;
 };
 
 export function NewArticleHeader({
@@ -20,7 +20,7 @@ export function NewArticleHeader({
           disabled={isSubmitting}
           className="bg-gray-500 hover:bg-gray-400 text-white font-semibold px-6 py-2.5 rounded-md shadow transition"
         >
-           {isDraftSubmitting ? '保存中...' : '下書き保存'}
+          {isDraftSubmitting ? '保存中...' : '下書き保存'}
         </button>
         <button
           onClick={onPublish}
