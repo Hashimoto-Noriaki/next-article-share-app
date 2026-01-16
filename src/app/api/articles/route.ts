@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
-import { createArticleSchema } from '@/shared/lib/validations/article';
+import {
+  createArticleSchema,
+  draftArticleSchema,
+} from '@/shared/lib/validations/article';
 import { z } from 'zod';
 
 export async function POST(request: NextRequest) {
@@ -20,14 +23,16 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const validatedData = createArticleSchema.parse(body);
+
+    const schema = body.isDraft ? draftArticleSchema : createArticleSchema;
+    const validatedData = schema.parse(body);
 
     const article = await prisma.article.create({
       data: {
-        title: validatedData.title,
-        content: validatedData.content,
-        tags: validatedData.tags,
-        isDraft: validatedData.isDraft,
+        title: validatedData.title || 'タイトル未設定',
+        content: validatedData.content || '本文未入力',
+        tags: validatedData.tags || [],
+        isDraft: validatedData.isDraft ?? false,
         authorId: payload.userId,
       },
     });
