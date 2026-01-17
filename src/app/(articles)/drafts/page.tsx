@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { verifyToken } from '@/lib/jwt';
 import Link from 'next/link';
 import { DraftSidebar } from '@/features/drafts/components/DraftSidebar';
+import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
 
 type Props = {
   searchParams: Promise<{ id?: string }>;
@@ -74,7 +75,7 @@ export default async function DraftsPage({ searchParams }: Props) {
                   {selectedDraft.title ? (
                     <span className="text-gray-900">{selectedDraft.title}</span>
                   ) : (
-                    <span className="text-gray-400">タイトル未設定</span>
+                    <span  className="text-gray-400">タイトル未設定</span>
                   )}
                 </h1>
 
@@ -94,11 +95,7 @@ export default async function DraftsPage({ searchParams }: Props) {
                 {selectedDraft.content && (
                   <>
                     <hr className="my-6" />
-                    <div className="prose prose-gray max-w-none">
-                      <div className="whitespace-pre-wrap">
-                        {selectedDraft.content}
-                      </div>
-                    </div>
+                    <MarkdownPreview content={selectedDraft.content} />
                   </>
                 )}
               </div>
