@@ -37,18 +37,23 @@ export function DraftSidebar({ drafts, selectedId }: Props) {
   const handleDelete = async (id: string) => {
     if (!confirm('この下書きを削除しますか？')) return;
 
-    // TODO: 削除APIを呼び出す
-    console.log('Delete draft:', id);
+    const res = await fetch(`/api/drafts/${id}`, { method: 'DELETE' });
+
+    if (res.ok) {
+      router.push('/drafts');
+      router.refresh();
+    } else {
+      const data = await res.json();
+      alert(data.message || '削除に失敗しました');
+    }
   };
 
   return (
     <aside className="w-[480px] bg-white border-r border-gray-200 flex-shrink-0 flex flex-col h-full">
       <div className="p-5 flex-1 overflow-hidden flex flex-col">
-        {/* ヘッダー */}
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold">下書き一覧</h1>
         </div>
-        {/* 下書きリスト */}
         <div className="flex-1 overflow-y-auto space-y-4 pr-2">
           {drafts.length === 0 ? (
             <p className="text-gray-500 text-center py-8">下書きはありません</p>
@@ -63,7 +68,6 @@ export function DraftSidebar({ drafts, selectedId }: Props) {
                 }`}
               >
                 <Link href={`/drafts?id=${draft.id}`} className="block">
-                  {/* 種別・日時 */}
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs bg-gray-700 text-white px-2 py-0.5 rounded">
                       記事
@@ -73,7 +77,6 @@ export function DraftSidebar({ drafts, selectedId }: Props) {
                     </span>
                   </div>
 
-                  {/* タイトル */}
                   <h3 className="font-bold mb-2 line-clamp-1">
                     {draft.title ? (
                       <span className="text-gray-900">{draft.title}</span>
@@ -82,7 +85,6 @@ export function DraftSidebar({ drafts, selectedId }: Props) {
                     )}
                   </h3>
 
-                  {/* 本文プレビュー */}
                   <p className="text-sm line-clamp-2 mb-3">
                     {draft.content ? (
                       <span className="text-gray-600">
@@ -94,7 +96,6 @@ export function DraftSidebar({ drafts, selectedId }: Props) {
                   </p>
                 </Link>
 
-                {/* 編集・削除ボタン */}
                 <div className="flex gap-3">
                   <button
                     onClick={() => handleEdit(draft.id)}
