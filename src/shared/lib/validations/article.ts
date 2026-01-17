@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// 公開用
 export const createArticleSchema = z.object({
   title: z
     .string()
@@ -10,14 +11,16 @@ export const createArticleSchema = z.object({
     .array(z.string())
     .min(1, 'タグは1つ以上指定してください')
     .max(5, 'タグは5つ以内にしてください'),
-  /*
-   *未指定の場合は空配列にする（タグを必須にしない場合）
-   *.default([]),
-   */
+  isDraft: z.boolean().optional().default(false),
 });
 
-/*
- *Zod のスキーマから TypeScript の型を自動生成
- *バリデーションルールと型定義を常に一致させるため
- */
+// 下書き用
+export const draftArticleSchema = z.object({
+  title: z.string().max(100).optional().default(''),
+  content: z.string().optional().default(''),
+  tags: z.array(z.string()).max(5).optional().default([]),
+  isDraft: z.literal(true),
+});
+
 export type CreateArticleInput = z.infer<typeof createArticleSchema>;
+export type DraftArticleInput = z.infer<typeof draftArticleSchema>;

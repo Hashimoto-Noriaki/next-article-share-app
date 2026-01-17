@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
-import { createArticleSchema } from '@/shared/lib/validations/article';
+import {
+  createArticleSchema,
+  draftArticleSchema,
+} from '@/shared/lib/validations/article';
 import { z } from 'zod';
 
 export async function POST(request: NextRequest) {
   try {
-    // 認証チェック
     const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
 
@@ -20,24 +22,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
     }
 
-    // バリデーション
     const body = await request.json();
-    const validatedData = createArticleSchema.parse(body);
 
-    // 記事作成
+    const schema = body.isDraft ? draftArticleSchema : createArticleSchema;
+    const validatedData = schema.parse(body);
+
     const article = await prisma.article.create({
       data: {
-        title: validatedData.title,
-        content: validatedData.content,
-        tags: validatedData.tags,
+        title: validatedData.title || 'タイトル未設定',
+        content: validatedData.content || '本文未入力',
+        tags: validatedData.tags || [],
+        isDraft: validatedData.isDraft ?? false,
         authorId: payload.userId,
       },
     });
 
-    return NextResponse.json(
-      { message: '記事を投稿しました', article },
-      { status: 201 },
-    );
+    const message = validatedData.isDraft
+      ? '下書きを保存しました'
+      : '記事を投稿しました';
+
+    return NextResponse.json({ message, article }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -46,7 +50,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.error('記事投稿エラー:', error);
     return NextResponse.json(
       { message: '記事の投稿に失敗しました' },
       { status: 500 },

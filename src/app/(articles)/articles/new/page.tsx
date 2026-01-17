@@ -19,11 +19,17 @@ export default function NewArticlePage() {
   const [tags, setTags] = useState('');
   const [body, setBody] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDraftSubmitting, setIsDraftSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
 
-  const handlePublish = async () => {
+  const handleSubmit = async (isDraft: boolean) => {
     setErrors({});
-    setIsSubmitting(true);
+
+    if (isDraft) {
+      setIsDraftSubmitting(true);
+    } else {
+      setIsSubmitting(true);
+    }
 
     const tagArray = tags
       .trim()
@@ -37,11 +43,13 @@ export default function NewArticlePage() {
         title,
         content: body,
         tags: tagArray,
+        isDraft,
       }),
     });
 
     const data = await res.json();
     setIsSubmitting(false);
+    setIsDraftSubmitting(false);
 
     if (!res.ok) {
       if (data.errors && Array.isArray(data.errors)) {
@@ -61,9 +69,17 @@ export default function NewArticlePage() {
     router.refresh();
   };
 
+  const handlePublish = () => handleSubmit(false);
+  const handleSaveDraft = () => handleSubmit(true);
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <NewArticleHeader onPublish={handlePublish} isSubmitting={isSubmitting} />
+      <NewArticleHeader
+        onPublish={handlePublish}
+        onSaveDraft={handleSaveDraft}
+        isSubmitting={isSubmitting}
+        isDraftSubmitting={isDraftSubmitting}
+      />
       <main className="grow container mx-auto px-5 py-5 pt-1">
         <MarkdownEditor
           title={title}
