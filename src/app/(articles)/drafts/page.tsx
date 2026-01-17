@@ -56,13 +56,11 @@ export default async function DraftsPage({ searchParams }: Props) {
       </header>
 
       <div className="flex h-[calc(100vh-56px)]">
-        {/* 左サイドバー - 幅を広げた */}
         <DraftSidebar
           drafts={serializedDrafts}
           selectedId={selectedDraft?.id}
         />
 
-        {/* 右メイン - 画面フル活用 */}
         <main className="flex-1 overflow-y-auto">
           {selectedDraft && (
             <article className="h-full p-8">
