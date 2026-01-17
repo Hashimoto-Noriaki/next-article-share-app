@@ -65,7 +65,11 @@ export default function NewArticlePage() {
       return;
     }
 
-    router.push('/articles');
+    if (isDraft) {
+      router.push('/drafts');
+    } else {
+      router.push('/articles');
+    }
     router.refresh();
   };
 
