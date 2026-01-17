@@ -29,8 +29,8 @@ export async function POST(request: NextRequest) {
 
     const article = await prisma.article.create({
       data: {
-        title: validatedData.title || 'タイトル未設定',
-        content: validatedData.content || '本文未入力',
+        title: validatedData.title || '',
+        content: validatedData.content || '',
         tags: validatedData.tags || [],
         isDraft: validatedData.isDraft ?? false,
         authorId: payload.userId,
