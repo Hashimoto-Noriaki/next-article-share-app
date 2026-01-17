@@ -73,7 +73,7 @@ export default async function DraftsPage({ searchParams }: Props) {
                   {selectedDraft.title ? (
                     <span className="text-gray-900">{selectedDraft.title}</span>
                   ) : (
-                    <span  className="text-gray-400">タイトル未設定</span>
+                    <span className="text-gray-400">タイトル未設定</span>
                   )}
                 </h1>
 
