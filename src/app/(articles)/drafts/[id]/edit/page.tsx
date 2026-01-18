@@ -120,7 +120,7 @@ export default function DraftEditPage() {
       return;
     }
 
-    router.push(`/articles/${id}`);
+    router.push('/articles');
     router.refresh();
   };
 
