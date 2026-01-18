@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
 import { createArticleSchema } from '@/shared/lib/validations/article';
+import { draftArticleSchema } from '@/shared/lib/validations/article';
 import { z } from 'zod';
 
 // 記事詳細取得
@@ -81,22 +82,25 @@ export async function PUT(
 
     // バリデーション
     const body = await request.json();
-    const validatedData = createArticleSchema.parse(body);
+    const schema = body.isDraft ? draftArticleSchema : createArticleSchema;
+    const validatedData = schema.parse(body);
 
     // 記事更新
     const article = await prisma.article.update({
       where: { id },
       data: {
-        title: validatedData.title,
-        content: validatedData.content,
-        tags: validatedData.tags,
+        title: validatedData.title || '',
+        content: validatedData.content || '',
+        tags: validatedData.tags || [],
+        isDraft: validatedData.isDraft ?? false,
       },
     });
 
-    return NextResponse.json({
-      message: '記事を更新しました',
-      article,
-    });
+    const message = validatedData.isDraft
+      ? '下書きを保存しました'
+      : '記事を公開しました';
+
+    return NextResponse.json({ message, article });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
