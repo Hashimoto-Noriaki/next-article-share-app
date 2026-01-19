@@ -6,22 +6,20 @@ datasource db {
   provider = "postgresql"
 }
 
-// NextAuth.js用のモデル
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -43,10 +41,10 @@ model User {
   password      String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-
-  accounts Account[]
-  sessions Session[]
-  articles Article[]
+  accounts      Account[]
+  articles      Article[]
+  likes         Like[]
+  sessions      Session[]
 }
 
 model VerificationToken {
@@ -57,18 +55,29 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// アプリ用のモデル
 model Article {
   id        String   @id @default(cuid())
   title     String
-  content   String   @db.Text
+  content   String
   tags      String[]
-  isDraft Boolean @default(false)
+  isDraft   Boolean  @default(false)
   authorId  String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   likeCount Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes     Like[]
 
   @@index([authorId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  createdAt DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, articleId])
 }
