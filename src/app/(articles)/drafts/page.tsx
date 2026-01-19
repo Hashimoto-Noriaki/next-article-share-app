@@ -5,7 +5,7 @@ import { verifyToken } from '@/lib/jwt';
 import Link from 'next/link';
 import { DraftSidebar } from '@/features/drafts/components/DraftSidebar';
 import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
-import { DRAFT_LIMIT } from '@/shared/lib/validations/draft'; 
+import { DRAFT_LIMIT } from '@/shared/lib/validations/draft';
 
 type Props = {
   searchParams: Promise<{ id?: string }>;
@@ -63,7 +63,8 @@ export default async function DraftsPage({ searchParams }: Props) {
         <div className="bg-yellow-100 px-5 py-3 flex items-center justify-center gap-2">
           <span className="text-xl">⚠️</span>
           <span className="text-yellow-800">
-            下書きが上限（{DRAFT_LIMIT}件）になりました。この機会に投稿してみませんか？
+            下書きが上限（{DRAFT_LIMIT}
+            件）になりました。この機会に投稿してみませんか？
           </span>
         </div>
       )}

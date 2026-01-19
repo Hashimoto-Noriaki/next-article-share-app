@@ -3,7 +3,10 @@ import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
 import { createArticleSchema } from '@/shared/lib/validations/article';
-import { draftArticleSchema, DRAFT_LIMIT } from '@/shared/lib/validations/draft';
+import {
+  draftArticleSchema,
+  DRAFT_LIMIT,
+} from '@/shared/lib/validations/draft';
 import { z } from 'zod';
 
 export async function POST(request: NextRequest) {
@@ -33,8 +36,10 @@ export async function POST(request: NextRequest) {
 
       if (draftCount >= DRAFT_LIMIT) {
         return NextResponse.json(
-          { message: `下書きが上限（${DRAFT_LIMIT}件）になりました。この機会に投稿してみませんか？` },
-          { status: 400 }
+          {
+            message: `下書きが上限（${DRAFT_LIMIT}件）になりました。この機会に投稿してみませんか？`,
+          },
+          { status: 400 },
         );
       }
     }
