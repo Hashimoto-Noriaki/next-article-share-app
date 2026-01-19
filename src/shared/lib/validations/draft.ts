@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const DRAFT_LIMIT = 10;
+export const DRAFT_LIMIT = 50;
 
 export const draftArticleSchema = z.object({
   title: z
