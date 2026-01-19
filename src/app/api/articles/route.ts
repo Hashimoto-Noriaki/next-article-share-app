@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
+import { createArticleSchema } from '@/shared/lib/validations/article';
 import {
-  createArticleSchema,
   draftArticleSchema,
-} from '@/shared/lib/validations/article';
+  DRAFT_LIMIT,
+} from '@/shared/lib/validations/draft';
 import { z } from 'zod';
 
 export async function POST(request: NextRequest) {
@@ -23,6 +24,25 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+
+    // 下書きの場合、上限チェック
+    if (body.isDraft) {
+      const draftCount = await prisma.article.count({
+        where: {
+          authorId: payload.userId,
+          isDraft: true,
+        },
+      });
+
+      if (draftCount >= DRAFT_LIMIT) {
+        return NextResponse.json(
+          {
+            message: `下書きが上限（${DRAFT_LIMIT}件）になりました。この機会に投稿してみませんか？`,
+          },
+          { status: 400 },
+        );
+      }
+    }
 
     const schema = body.isDraft ? draftArticleSchema : createArticleSchema;
     const validatedData = schema.parse(body);

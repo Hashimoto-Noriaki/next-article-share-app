@@ -5,6 +5,7 @@ import { verifyToken } from '@/lib/jwt';
 import Link from 'next/link';
 import { DraftSidebar } from '@/features/drafts/components/DraftSidebar';
 import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
+import { DRAFT_LIMIT } from '@/shared/lib/validations/draft';
 
 type Props = {
   searchParams: Promise<{ id?: string }>;
@@ -44,6 +45,8 @@ export default async function DraftsPage({ searchParams }: Props) {
     updatedAt: draft.updatedAt.toISOString(),
   }));
 
+  const isAtLimit = drafts.length >= DRAFT_LIMIT;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-gradient-to-r from-cyan-500 to-cyan-600 px-5 py-4">
@@ -54,6 +57,17 @@ export default async function DraftsPage({ searchParams }: Props) {
           ← 記事一覧に戻る
         </Link>
       </header>
+
+      {/* 上限警告バナー */}
+      {isAtLimit && (
+        <div className="bg-yellow-100 px-5 py-3 flex items-center justify-center gap-2">
+          <span className="text-xl">⚠️</span>
+          <span className="text-yellow-800">
+            下書きが上限（{DRAFT_LIMIT}
+            件）になりました。この機会に投稿してみませんか？
+          </span>
+        </div>
+      )}
 
       <div className="flex h-[calc(100vh-56px)]">
         <DraftSidebar

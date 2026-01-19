@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
 import { createArticleSchema } from '@/shared/lib/validations/article';
-import { draftArticleSchema } from '@/shared/lib/validations/article';
+import { draftArticleSchema } from '@/shared/lib/validations/draft';
 import { z } from 'zod';
 
 // 記事詳細取得
