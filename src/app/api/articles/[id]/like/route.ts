@@ -6,7 +6,7 @@ import { verifyToken } from '@/lib/jwt';
 // いいねする
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -90,7 +90,7 @@ export async function POST(
 // いいね解除
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
