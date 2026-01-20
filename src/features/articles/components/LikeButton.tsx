@@ -56,7 +56,7 @@ export function LikeButton({
     <button
       onClick={handleClick}
       disabled={isLoading || isAuthor}
-      className={`flex items-center gap-2 px-4 py-2 rounded-md transition ${
+      className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${
         isAuthor
           ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
           : isLiked

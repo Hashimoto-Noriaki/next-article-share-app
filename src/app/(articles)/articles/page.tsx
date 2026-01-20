@@ -16,7 +16,6 @@ export default async function ArticleListPage() {
     if (payload) {
       userId = payload.userId;
 
-      // ユーザー名を取得
       const user = await prisma.user.findUnique({
         where: { id: payload.userId },
         select: { name: true },
@@ -32,6 +31,13 @@ export default async function ArticleListPage() {
       author: {
         select: { name: true },
       },
+      // ログイン中なら自分のいいねを取得
+      ...(userId && {
+        likes: {
+          where: { userId },
+          select: { id: true },
+        },
+      }),
     },
   });
 
@@ -59,6 +65,9 @@ export default async function ArticleListPage() {
                 createdAt={article.createdAt}
                 updatedAt={article.updatedAt}
                 likeCount={article.likeCount}
+                isLiked={'likes' in article && article.likes.length > 0}
+                isAuthor={article.authorId === userId}
+                isLoggedIn={!!userId}
               />
             ))
           )}
