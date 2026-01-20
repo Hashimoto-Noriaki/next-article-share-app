@@ -4,3 +4,4 @@ export { MarkdownEditor } from './MarkdownEditor';
 export { ArticleCard } from './ArticleCard';
 export { DeleteButton } from './DeleteButton';
 export { UserDropdown } from './UserDropdown';
+export { LikeButton } from './LikeButton';
