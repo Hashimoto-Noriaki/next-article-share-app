@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { AiOutlineHeart } from 'react-icons/ai';
-import { LikeButton } from './LikeButton';
+import { LikeButton } from '../LikeButton';
 
 type Props = {
   id: string;

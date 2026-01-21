@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { verifyToken } from '@/lib/jwt';
-import { DeleteButton, LikeButton } from '@/features/articles/components';
+import { ArticleDeleteButton } from '@/features/articles/components/ArticleDeleteButton';
+import { LikeButton } from '@/features/articles/components/LikeButton';
 
 type Props = {
   params: Promise<{ id: string }>; // sync-dynamic-apis 対策
@@ -113,7 +114,7 @@ export default async function ArticleDetailPage({ params }: Props) {
                 >
                   編集
                 </Link>
-                <DeleteButton articleId={id} />
+                <ArticleDeleteButton articleId={id} />
               </div>
             )}
           </div>

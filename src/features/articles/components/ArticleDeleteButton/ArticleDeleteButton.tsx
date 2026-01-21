@@ -7,7 +7,7 @@ type Props = {
   articleId: string;
 };
 
-export function DeleteButton({ articleId }: Props) {
+export function ArticleDeleteButton({ articleId }: Props) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
