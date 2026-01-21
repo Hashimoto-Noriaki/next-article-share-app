@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
-import { ArticleCard } from '@/features/articles/components';
+import { ArticleCard } from '@/features/articles/components/ArticleCard';
 import Link from 'next/link';
 
 type Props = {
