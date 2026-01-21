@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { logout } from '@/actions/auth';
-import { UserDropdown } from './UserDropdown';
+import { UserDropdown } from '../UserDropdown';
 
 type Props = {
   userId: string;
