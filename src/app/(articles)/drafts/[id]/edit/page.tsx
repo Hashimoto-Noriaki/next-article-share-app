@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { MarkdownEditor } from '@/features/articles/components';
+import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
 import Link from 'next/link';
 
 type FieldErrors = {
