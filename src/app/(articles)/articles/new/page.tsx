@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
-import { NewArticleHeader } from '@/features/articles/components';
+import { NewArticleHeader } from '@/features/articles/components/NewArticleHeader';
 
 type FieldErrors = {
   title?: string;
