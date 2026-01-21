@@ -10,14 +10,7 @@ export const createArticleSchema = z.object({
     .array(z.string())
     .min(1, 'タグは1つ以上指定してください')
     .max(5, 'タグは5つ以内にしてください'),
-  /*
-   *未指定の場合は空配列にする（タグを必須にしない場合）
-   *.default([]),
-   */
+  isDraft: z.boolean().optional().default(false),
 });
 
-/*
- *Zod のスキーマから TypeScript の型を自動生成
- *バリデーションルールと型定義を常に一致させるため
- */
 export type CreateArticleInput = z.infer<typeof createArticleSchema>;

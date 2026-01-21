@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { verifyToken } from '@/lib/jwt';
-import { DeleteButton } from '@/features/articles/components';
+import { ArticleDeleteButton } from '@/features/articles/components/ArticleDeleteButton';
+import { LikeButton } from '@/features/articles/components/LikeButton';
 
 type Props = {
   params: Promise<{ id: string }>; // sync-dynamic-apis 対策
@@ -13,12 +14,31 @@ type Props = {
 export default async function ArticleDetailPage({ params }: Props) {
   const { id } = await params;
 
+  // ログインユーザー取得（記事取得より先に） ログインユーザーが著者かチェック
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+  let userId = '';
+
+  if (token) {
+    const payload = await verifyToken(token);
+    if (payload) {
+      userId = payload.userId;
+    }
+  }
+
   const article = await prisma.article.findUnique({
     where: { id },
     include: {
       author: {
         select: { id: true, name: true },
       },
+      // ログイン中なら自分のいいねを取得
+      ...(userId && {
+        likes: {
+          where: { userId },
+          select: { id: true },
+        },
+      }),
     },
   });
 
@@ -26,17 +46,9 @@ export default async function ArticleDetailPage({ params }: Props) {
     notFound();
   }
 
-  // ログインユーザーが著者かチェック
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-
-  let isAuthor = false;
-  if (token) {
-    const payload = await verifyToken(token);
-    if (payload && payload.userId === article.author.id) {
-      isAuthor = true;
-    }
-  }
+  const isAuthor = userId === article.author.id;
+  const isLiked = 'likes' in article && article.likes.length > 0;
+  const isLoggedIn = !!userId;
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -77,12 +89,20 @@ export default async function ArticleDetailPage({ params }: Props) {
                   更新日: {article.updatedAt.toLocaleDateString('ja-JP')}
                 </span>
               )}
-              <span className="flex items-center gap-1">
-                <AiOutlineHeart className="w-5 h-5 text-red-500 transition-transform hover:scale-110" />
-                <span className="text-gray-500 text-sm">
-                  {article.likeCount}
+              {/* いいねボタン */}
+              {isLoggedIn ? (
+                <LikeButton
+                  articleId={id}
+                  initialLiked={isLiked}
+                  initialCount={article.likeCount}
+                  isAuthor={isAuthor}
+                />
+              ) : (
+                <span className="flex items-center gap-1">
+                  <AiOutlineHeart className="w-5 h-5 text-red-500" />
+                  <span>{article.likeCount}</span>
                 </span>
-              </span>
+              )}
             </div>
 
             {isAuthor && (
@@ -94,7 +114,7 @@ export default async function ArticleDetailPage({ params }: Props) {
                 >
                   編集
                 </Link>
-                <DeleteButton articleId={id} />
+                <ArticleDeleteButton articleId={id} />
               </div>
             )}
           </div>

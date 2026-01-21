@@ -42,7 +42,13 @@ export function UserDropdown({ userId, userName }: Props) {
               </Link>
             </li>
             <li>
-              <span className="block px-4 py-2 text-gray-400">下書き一覧</span>
+              <Link
+                href="/drafts"
+                className="block px-4 py-2 hover:bg-gray-100"
+                onClick={() => setIsOpen(false)}
+              >
+                下書き一覧
+              </Link>
             </li>
             <li>
               <span className="block px-4 py-2 text-gray-400">

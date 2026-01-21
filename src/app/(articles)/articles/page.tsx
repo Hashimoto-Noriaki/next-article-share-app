@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/jwt';
-import { ArticleListHeader, ArticleCard } from '@/features/articles/components';
+import { ArticleListHeader } from '@/features/articles/components/ArticleListHeader';
+import { ArticleCard } from '@/features/articles/components/ArticleCard';
 import Footer from '@/shared/components/footer';
 
 export default async function ArticleListPage() {
@@ -16,7 +17,6 @@ export default async function ArticleListPage() {
     if (payload) {
       userId = payload.userId;
 
-      // ユーザー名を取得
       const user = await prisma.user.findUnique({
         where: { id: payload.userId },
         select: { name: true },
@@ -26,11 +26,19 @@ export default async function ArticleListPage() {
   }
 
   const articles = await prisma.article.findMany({
+    where: { isDraft: false },
     orderBy: { createdAt: 'desc' },
     include: {
       author: {
         select: { name: true },
       },
+      // ログイン中なら自分のいいねを取得
+      ...(userId && {
+        likes: {
+          where: { userId },
+          select: { id: true },
+        },
+      }),
     },
   });
 
@@ -58,6 +66,9 @@ export default async function ArticleListPage() {
                 createdAt={article.createdAt}
                 updatedAt={article.updatedAt}
                 likeCount={article.likeCount}
+                isLiked={'likes' in article && article.likes.length > 0}
+                isAuthor={article.authorId === userId}
+                isLoggedIn={!!userId}
               />
             ))
           )}

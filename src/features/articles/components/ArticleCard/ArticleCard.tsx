@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { AiOutlineHeart } from 'react-icons/ai';
+import { LikeButton } from '../LikeButton';
 
 type Props = {
   id: string;
@@ -9,6 +12,9 @@ type Props = {
   createdAt: Date;
   updatedAt?: Date;
   likeCount: number;
+  isLiked?: boolean;
+  isAuthor?: boolean;
+  isLoggedIn?: boolean;
 };
 
 export function ArticleCard({
@@ -19,8 +25,12 @@ export function ArticleCard({
   createdAt,
   updatedAt,
   likeCount,
+  isLiked = false,
+  isAuthor = false,
+  isLoggedIn = false,
 }: Props) {
   const isUpdated = updatedAt && updatedAt > createdAt;
+
   return (
     <Link href={`/articles/${id}`}>
       <article className="w-90 bg-white rounded-xl shadow-md hover:shadow-lg transition p-5">
@@ -39,19 +49,34 @@ export function ArticleCard({
         </div>
         <div className="flex justify-between items-center mt-4 text-sm text-gray-500">
           <span>{authorName}</span>
-          <span className="flex items-center gap-1">
-            <AiOutlineHeart className="w-5 h-5 text-red-500 transition hover:scale-120" />
-            <span className="text-gray-500 text-sm">{likeCount}</span>
-          </span>
-          <p className="text-xs text-gray-400 mt-2">
+
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+          >
+            {isLoggedIn ? (
+              <LikeButton
+                articleId={id}
+                initialLiked={isLiked}
+                initialCount={likeCount}
+                isAuthor={isAuthor}
+              />
+            ) : (
+              <span className="flex items-center gap-1 text-gray-500">
+                <AiOutlineHeart className="w-5 h-5 text-red-500" />
+                <span>{likeCount}</span>
+              </span>
+            )}
+          </div>
+
+          <p className="text-xs text-gray-400">
             {isUpdated
               ? `更新: ${updatedAt.toLocaleDateString('ja-JP')}`
               : createdAt.toLocaleDateString('ja-JP')}
           </p>
         </div>
-        <p className="text-xs text-gray-400 mt-2">
-          {createdAt.toLocaleDateString('ja-JP')}
-        </p>
       </article>
     </Link>
   );

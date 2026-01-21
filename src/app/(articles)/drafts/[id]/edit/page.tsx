@@ -11,7 +11,7 @@ type FieldErrors = {
   tags?: string;
 };
 
-export default function ArticleEditPage() {
+export default function DraftEditPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
@@ -20,37 +20,32 @@ export default function ArticleEditPage() {
   const [tags, setTags] = useState('');
   const [body, setBody] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<FieldErrors>({});
 
   useEffect(() => {
-    const fetchArticle = async () => {
+    const fetchDraft = async () => {
       const res = await fetch(`/api/articles/${id}`);
       if (!res.ok) {
-        setErrors({ title: '記事が見つかりません' });
+        setErrors({ title: '下書きが見つかりません' });
         setIsLoading(false);
         return;
       }
-      const article = await res.json();
-      setTitle(article.title);
-      setTags(article.tags.join(' '));
-      setBody(article.content);
+      const draft = await res.json();
+      setTitle(draft.title || '');
+      setTags(draft.tags?.join(' ') || '');
+      setBody(draft.content || '');
       setIsLoading(false);
     };
 
-    fetchArticle();
+    fetchDraft();
   }, [id]);
 
-  const handleUpdate = async () => {
+  const handleSaveDraft = async () => {
     setErrors({});
     setIsSubmitting(true);
 
-    /**
-     * タグ文字列を配列に変換
-     * trim(): 前後の空白を削除
-     * split(/\s+/): 1つ以上の空白で分割
-     * filter(): 空文字を除去
-     */
     const tagArray = tags
       .trim()
       .split(/\s+/)
@@ -63,6 +58,7 @@ export default function ArticleEditPage() {
         title,
         content: body,
         tags: tagArray,
+        isDraft: true,
       }),
     });
 
@@ -83,7 +79,48 @@ export default function ArticleEditPage() {
       return;
     }
 
-    router.push(`/articles/${id}`);
+    router.push('/drafts');
+    router.refresh();
+  };
+
+  const handlePublish = async () => {
+    setErrors({});
+    setIsPublishing(true);
+
+    const tagArray = tags
+      .trim()
+      .split(/\s+/)
+      .filter((tag) => tag.length > 0);
+
+    const res = await fetch(`/api/articles/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title,
+        content: body,
+        tags: tagArray,
+        isDraft: false,
+      }),
+    });
+
+    const data = await res.json();
+    setIsPublishing(false);
+
+    if (!res.ok) {
+      if (data.errors && Array.isArray(data.errors)) {
+        const fieldErrors: FieldErrors = {};
+        data.errors.forEach((err: { path: string[]; message: string }) => {
+          const field = err.path[0] as keyof FieldErrors;
+          if (field && !fieldErrors[field]) {
+            fieldErrors[field] = err.message;
+          }
+        });
+        setErrors(fieldErrors);
+      }
+      return;
+    }
+
+    router.push('/articles');
     router.refresh();
   };
 
@@ -97,21 +134,30 @@ export default function ArticleEditPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
+      <header className="bg-gradient-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
         <Link
-          href={`/articles/${id}`}
+          href="/drafts"
           className="text-white font-bold text-xl hover:underline"
         >
-          ← 戻る
+          ← 下書き一覧に戻る
         </Link>
-        <h1 className="text-2xl font-bold text-white">記事を編集</h1>
-        <button
-          onClick={handleUpdate}
-          disabled={isSubmitting}
-          className="bg-emerald-500 hover:bg-emerald-400 disabled:bg-gray-400 text-white font-semibold px-6 py-2 rounded-md"
-        >
-          {isSubmitting ? '更新中...' : '更新する'}
-        </button>
+        <h1 className="text-2xl font-bold text-white">下書きを編集</h1>
+        <div className="flex gap-3">
+          <button
+            onClick={handleSaveDraft}
+            disabled={isSubmitting || isPublishing}
+            className="bg-gray-500 hover:bg-gray-400 disabled:bg-gray-400 text-white font-semibold px-6 py-2 rounded-md"
+          >
+            {isSubmitting ? '保存中...' : '下書き保存'}
+          </button>
+          <button
+            onClick={handlePublish}
+            disabled={isSubmitting || isPublishing}
+            className="bg-emerald-500 hover:bg-emerald-400 disabled:bg-gray-400 text-white font-semibold px-6 py-2 rounded-md"
+          >
+            {isPublishing ? '公開中...' : '公開する'}
+          </button>
+        </div>
       </header>
       <main className="grow container mx-auto px-5 py-5">
         <MarkdownEditor
