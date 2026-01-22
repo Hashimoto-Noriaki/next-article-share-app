@@ -1,8 +1,8 @@
-export default function Footer() {
+export function Footer() {
   return (
     <footer className="bg-linear-to-r from-cyan-500 to-cyan-600 p-4">
       <p className="text-white text-center font-bold">
-        © 2025 テックブログ共有アプリ
+        © 2026 テックブログ共有アプリ
       </p>
     </footer>
   );
