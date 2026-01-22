@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
+import { Footer } from '../../../../shared/components/organisms/Footer';
 import {
   updateUserSchema,
   UpdateUserInput,
@@ -62,7 +63,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4">
         <Link
           href="/articles"
@@ -71,7 +72,7 @@ export default function SettingsPage() {
           ← 記事一覧に戻る
         </Link>
       </header>
-      <main className="container mx-auto px-5 py-8 max-w-md">
+      <main className="container mx-auto px-5 py-8 max-w-md grow">
         <h1 className="text-2xl font-bold mb-8 text-center">プロフィール</h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -112,6 +113,7 @@ export default function SettingsPage() {
           </Button>
         </form>
       </main>
+      <Footer/>
     </div>
   );
 }

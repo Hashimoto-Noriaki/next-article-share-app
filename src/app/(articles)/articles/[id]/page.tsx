@@ -6,6 +6,7 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import { verifyToken } from '@/lib/jwt';
 import { ArticleDeleteButton } from '@/features/articles/components/ArticleDeleteButton';
 import { LikeButton } from '@/features/articles/components/LikeButton';
+import { Footer } from '../../../../shared/components/organisms/Footer';
 
 type Props = {
   params: Promise<{ id: string }>; // sync-dynamic-apis 対策
@@ -51,7 +52,7 @@ export default async function ArticleDetailPage({ params }: Props) {
   const isLoggedIn = !!userId;
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-start">
         <Link
           href="/articles"
@@ -60,7 +61,7 @@ export default async function ArticleDetailPage({ params }: Props) {
           ← 記事一覧に戻る
         </Link>
       </header>
-      <main className="mx-auto max-w-4xl px-6 py-10">
+      <main className="container mx-auto max-w-4xl px-6 py-10 grow">
         <article className="bg-white rounded-lg shadow-md p-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">
             {article.title}
@@ -122,6 +123,7 @@ export default async function ArticleDetailPage({ params }: Props) {
           <div className="prose max-w-none">{article.content}</div>
         </article>
       </main>
+      <Footer/>
     </div>
   );
 }
