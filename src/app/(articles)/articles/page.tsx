@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/jwt';
 import { ArticleListHeader } from '@/features/articles/components/ArticleListHeader';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
-import Footer from '@/shared/components/footer';
+import { Footer } from '@/shared/components/organisms/Footer';
 
 export default async function ArticleListPage() {
   // ログインユーザーのID・名前取得

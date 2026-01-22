@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
+import { Footer } from '../../../../shared/components/organisms/Footer';
 import Link from 'next/link';
 
 type Props = {
@@ -26,7 +27,7 @@ export default async function UserProfilePage({ params }: Props) {
   const displayName = user.name || '名無し';
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4">
         <Link
           href="/articles"
@@ -36,7 +37,7 @@ export default async function UserProfilePage({ params }: Props) {
         </Link>
       </header>
 
-      <main className="container mx-auto px-5 py-8 max-w-4xl">
+      <main className="container mx-auto px-5 py-8 max-w-4xl grow">
         <section className="bg-white rounded-lg shadow-md p-8 mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             {displayName}
@@ -66,6 +67,7 @@ export default async function UserProfilePage({ params }: Props) {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
