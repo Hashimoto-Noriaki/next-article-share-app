@@ -113,7 +113,7 @@ export default function SettingsPage() {
           </Button>
         </form>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

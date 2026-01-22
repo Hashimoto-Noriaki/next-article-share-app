@@ -123,7 +123,7 @@ export default async function ArticleDetailPage({ params }: Props) {
           <div className="prose max-w-none">{article.content}</div>
         </article>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
