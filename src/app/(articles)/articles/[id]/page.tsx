@@ -109,10 +109,7 @@ export default async function ArticleDetailPage({ params }: Props) {
               )}
               {/* ストックボタン */}
               {isLoggedIn && (
-                <StockButton
-                  articleId={id}
-                  initialStocked={isStocked}
-                />
+                <StockButton articleId={id} initialStocked={isStocked} />
               )}
             </div>
 

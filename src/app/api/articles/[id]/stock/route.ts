@@ -6,7 +6,7 @@ import { verifyToken } from '@/lib/jwt';
 // ストックする
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -16,18 +16,12 @@ export async function POST(
     const token = cookieStore.get('token')?.value;
 
     if (!token) {
-      return NextResponse.json(
-        { message: '認証が必要です' },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
     }
 
     const payload = await verifyToken(token);
     if (!payload) {
-      return NextResponse.json(
-        { message: '認証が無効です' },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
     }
 
     // 記事の存在確認
@@ -38,7 +32,7 @@ export async function POST(
     if (!article) {
       return NextResponse.json(
         { message: '記事が見つかりません' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -55,7 +49,7 @@ export async function POST(
     if (existingStock) {
       return NextResponse.json(
         { message: '既にストック済みです' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -74,7 +68,7 @@ export async function POST(
     console.error('ストックエラー:', error);
     return NextResponse.json(
       { message: 'ストックに失敗しました' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -82,7 +76,7 @@ export async function POST(
 // ストック解除
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -92,18 +86,12 @@ export async function DELETE(
     const token = cookieStore.get('token')?.value;
 
     if (!token) {
-      return NextResponse.json(
-        { message: '認証が必要です' },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
     }
 
     const payload = await verifyToken(token);
     if (!payload) {
-      return NextResponse.json(
-        { message: '認証が無効です' },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
     }
 
     // ストックの存在確認
@@ -119,7 +107,7 @@ export async function DELETE(
     if (!existingStock) {
       return NextResponse.json(
         { message: 'ストックしていません' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -140,7 +128,7 @@ export async function DELETE(
     console.error('ストック解除エラー:', error);
     return NextResponse.json(
       { message: 'ストック解除に失敗しました' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
