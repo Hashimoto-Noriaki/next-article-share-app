@@ -51,9 +51,13 @@ export function UserDropdown({ userId, userName }: Props) {
               </Link>
             </li>
             <li>
-              <span className="block px-4 py-2 text-gray-400">
-                ストックした記事
-              </span>
+              <Link
+                href="/stocks"
+                className="block px-4 py-2 hover:bg-gray-100"
+                onClick={() => setIsOpen(false)}
+              >
+                ストックリスト
+              </Link>
             </li>
             <li className="border-t">
               <Link
