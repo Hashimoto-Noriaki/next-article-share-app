@@ -14,7 +14,11 @@ export function NavigationHeader({ userId, userName }: Props) {
       <Link href="/articles/new" className="hover:text-amber-400">
         新規投稿
       </Link>
-      <UserDropdown userId={userId} userName={userName} className="hover:text-amber-400"/>
+      <UserDropdown
+        userId={userId}
+        userName={userName}
+        className="hover:text-amber-400"
+      />
     </nav>
   );
 }
