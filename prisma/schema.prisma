@@ -46,6 +46,7 @@ model User {
   likes         Like[]
   sessions      Session[]
   stocks    Stock[]
+  comments  Comment[]
 }
 
 model VerificationToken {
@@ -69,6 +70,7 @@ model Article {
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   likes     Like[]
   stocks    Stock[]
+  comments  Comment[]
 
   @@index([authorId])
 }
@@ -93,4 +95,15 @@ model Stock {
   createdAt DateTime @default(now())
 
   @@unique([userId, articleId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  userId    String
+  articleId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
