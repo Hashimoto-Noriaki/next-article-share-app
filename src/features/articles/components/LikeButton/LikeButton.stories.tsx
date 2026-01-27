@@ -36,11 +36,3 @@ export const AsAuthor: Story = {
   },
 };
 
-export const ZeroLikes: Story = {
-  args: {
-    articleId: '1',
-    initialLiked: false,
-    initialCount: 0,
-    isAuthor: false,
-  },
-};
