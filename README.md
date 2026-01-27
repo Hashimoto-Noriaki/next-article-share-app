@@ -32,6 +32,7 @@
 - PlayWright
 - Docker(マルチステージビルド)
 - GitHubActions
+- Swagger
 - Prisma
 - Supabase
 - ESLint Prettier
@@ -106,3 +107,27 @@ npm run dev
 # 3. 終わるとき
 docker compose down
 ```
+
+## Swagger起動
+
+```bash
+
+**ファイル構成：**
+project-root/
+├── .docs/
+│   └── api/
+│       └── openapi.yaml      ← API仕様（YAML）
+├── src/
+│   ├── app/
+│   │   └── api-docs/
+│   │       ├── page.tsx      ← ページ
+│   │       └── SwaggerUI.tsx ← Client Component
+│   └── lib/
+│       └── swagger.ts        ← YAML読み込み
+```
+
+```bash
+http://localhost:3000/api-docs
+```
+
+![スクリーンショット 2026-01-27 19 11 36](https://github.com/user-attachments/assets/82e65954-b81f-4d1a-9ac2-b6b4eaf9b2be)
