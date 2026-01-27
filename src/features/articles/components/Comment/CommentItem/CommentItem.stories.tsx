@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { CommentItem } from './CommentItem';
 
 const meta: Meta<typeof CommentItem> = {
-  title: 'Features/Articles/CommentItem',
+  title: 'Features/Articles/Comment/CommentItem',
   component: CommentItem,
   decorators: [
     (Story) => (
@@ -43,7 +43,8 @@ export const AsOwner: Story = {
 export const LongComment: Story = {
   args: {
     id: '1',
-    content: 'これはとても長いコメントです。\n\n改行も含まれています。\n\nNext.jsのApp Routerについて詳しく解説されていて、とても勉強になりました。特にServer Componentsの部分が分かりやすかったです。',
+    content:
+      'これはとても長いコメントです。\n\n改行も含まれています。\n\nNext.jsのApp Routerについて詳しく解説されていて、とても勉強になりました。特にServer Componentsの部分が分かりやすかったです。',
     articleId: '1',
     userId: '1',
     userName: 'テストユーザー',
