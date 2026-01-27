@@ -11,6 +11,7 @@ import { CommentList } from '@/features/articles/components/Comment/CommentList'
 import { CommentForm } from '@/features/articles/components/Comment/CommentForm';
 import { Footer } from '../../../../shared/components/organisms/Footer';
 import { NavigationHeader } from '../../../../shared/components/molecules/NavigationHeader';
+import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -89,9 +90,9 @@ export default async function ArticleDetailPage({ params }: Props) {
         </Link>
         {userId && <NavigationHeader userId={userId} userName={userName} />}
       </header>
-      <main className="container mx-auto max-w-4xl px-6 py-10 grow">
+      <main className="container mx-auto max-w-7xl px-6 py-10 grow">
         <article className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
             {article.title}
           </h1>
 
@@ -148,7 +149,7 @@ export default async function ArticleDetailPage({ params }: Props) {
             )}
           </div>
 
-          <div className="prose max-w-none">{article.content}</div>
+          <MarkdownPreview content={article.content} />
         </article>
 
         {/* コメントセクション */}
