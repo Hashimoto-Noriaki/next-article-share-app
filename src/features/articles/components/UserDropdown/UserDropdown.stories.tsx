@@ -6,7 +6,7 @@ const meta: Meta<typeof UserDropdown> = {
   component: UserDropdown,
   decorators: [
     (Story) => (
-      <div className="bg-cyan-600 p-4 rounded text-white font-bold">
+      <div className="bg-cyan-600 p-4 rounded text-white font-bold flex justify-end">
         <Story />
       </div>
     ),
