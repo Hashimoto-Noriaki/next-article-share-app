@@ -6,16 +6,20 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import { verifyToken } from '@/lib/jwt';
 import { ArticleDeleteButton } from '@/features/articles/components/ArticleDeleteButton';
 import { LikeButton } from '@/features/articles/components/LikeButton';
+import { StockButton } from '@/features/articles/components/StockButton';
+import {
+  CommentForm,
+  CommentList,
+} from '@/features/articles/components/Comment';
 import { Footer } from '../../../../shared/components/organisms/Footer';
 
 type Props = {
-  params: Promise<{ id: string }>; // sync-dynamic-apis 対策
+  params: Promise<{ id: string }>;
 };
 
 export default async function ArticleDetailPage({ params }: Props) {
   const { id } = await params;
 
-  // ログインユーザー取得（記事取得より先に） ログインユーザーが著者かチェック
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
   let userId = '';
@@ -33,9 +37,20 @@ export default async function ArticleDetailPage({ params }: Props) {
       author: {
         select: { id: true, name: true },
       },
-      // ログイン中なら自分のいいねを取得
+      comments: {
+        orderBy: { createdAt: 'desc' },
+        include: {
+          user: {
+            select: { id: true, name: true },
+          },
+        },
+      },
       ...(userId && {
         likes: {
+          where: { userId },
+          select: { id: true },
+        },
+        stocks: {
           where: { userId },
           select: { id: true },
         },
@@ -49,7 +64,13 @@ export default async function ArticleDetailPage({ params }: Props) {
 
   const isAuthor = userId === article.author.id;
   const isLiked = 'likes' in article && article.likes.length > 0;
+  const isStocked = 'stocks' in article && article.stocks.length > 0;
   const isLoggedIn = !!userId;
+
+  const comments = article.comments.map((comment) => ({
+    ...comment,
+    createdAt: comment.createdAt.toISOString(),
+  }));
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -78,7 +99,6 @@ export default async function ArticleDetailPage({ params }: Props) {
             ))}
           </div>
 
-          {/* メタ情報 + 操作（編集/削除） */}
           <div className="flex flex-wrap items-center justify-between gap-4 text-gray-500 text-sm mb-8">
             <div className="flex flex-wrap items-center gap-4">
               <span>投稿者: {article.author.name || '名無し'}</span>
@@ -90,7 +110,6 @@ export default async function ArticleDetailPage({ params }: Props) {
                   更新日: {article.updatedAt.toLocaleDateString('ja-JP')}
                 </span>
               )}
-              {/* いいねボタン */}
               {isLoggedIn ? (
                 <LikeButton
                   articleId={id}
@@ -104,11 +123,13 @@ export default async function ArticleDetailPage({ params }: Props) {
                   <span>{article.likeCount}</span>
                 </span>
               )}
+              {isLoggedIn && (
+                <StockButton articleId={id} initialStocked={isStocked} />
+              )}
             </div>
 
             {isAuthor && (
               <div className="flex items-center gap-5">
-                {/* 編集 */}
                 <Link
                   href={`/articles/${id}/edit`}
                   className="inline-flex items-center border border-cyan-900 text-cyan-800 text-sm font-semibold px-5 py-3 rounded-lg hover:bg-cyan-100 transition"
@@ -122,6 +143,21 @@ export default async function ArticleDetailPage({ params }: Props) {
 
           <div className="prose max-w-none">{article.content}</div>
         </article>
+
+        {/* コメントセクション */}
+        <section className="bg-white rounded-lg shadow-md p-8 mt-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-6">
+            コメント ({comments.length})
+          </h2>
+
+          {isLoggedIn && <CommentForm articleId={id} />}
+
+          <CommentList
+            comments={comments}
+            articleId={id}
+            currentUserId={userId}
+          />
+        </section>
       </main>
       <Footer />
     </div>

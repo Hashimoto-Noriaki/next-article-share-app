@@ -15,6 +15,7 @@ type Props = {
   isLiked?: boolean;
   isAuthor?: boolean;
   isLoggedIn?: boolean;
+  fullWidth?: boolean;
 };
 
 export function ArticleCard({
@@ -28,12 +29,17 @@ export function ArticleCard({
   isLiked = false,
   isAuthor = false,
   isLoggedIn = false,
+  fullWidth = false,
 }: Props) {
   const isUpdated = updatedAt && updatedAt > createdAt;
 
   return (
     <Link href={`/articles/${id}`}>
-      <article className="w-90 bg-white rounded-xl shadow-md hover:shadow-lg transition p-5">
+      <article
+        className={`bg-white rounded-xl shadow-md hover:shadow-lg transition p-5 ${
+          fullWidth ? 'w-full' : 'w-90'
+        }`}
+      >
         <h2 className="text-lg font-bold text-gray-800 line-clamp-2">
           {title}
         </h2>

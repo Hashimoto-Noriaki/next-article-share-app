@@ -1,0 +1,1 @@
+export { SearchableArticleList } from './SearchableArticleList';
