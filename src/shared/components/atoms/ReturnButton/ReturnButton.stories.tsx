@@ -6,7 +6,7 @@ const meta: Meta<typeof ReturnButton> = {
   component: ReturnButton,
   decorators: [
     (Story) => (
-      <div className="w-[500px]">
+      <div className="w-[500%]">
         <Story />
       </div>
     ),
