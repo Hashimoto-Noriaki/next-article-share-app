@@ -7,10 +7,8 @@ import { verifyToken } from '@/lib/jwt';
 import { ArticleDeleteButton } from '@/features/articles/components/ArticleDeleteButton';
 import { LikeButton } from '@/features/articles/components/LikeButton';
 import { StockButton } from '@/features/articles/components/StockButton';
-import {
-  CommentForm,
-  CommentList,
-} from '@/features/articles/components/Comment';
+import { CommentList } from '@/features/articles/components/Comment/CommentList';
+import { CommentForm } from '@/features/articles/components/Comment/CommentForm';
 import { Footer } from '../../../../shared/components/organisms/Footer';
 import { NavigationHeader } from '../../../../shared/components/molecules/NavigationHeader';
 

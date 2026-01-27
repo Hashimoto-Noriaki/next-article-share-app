@@ -1,4 +1,4 @@
-import { CommentItem } from './CommentItem';
+import { CommentItem } from '../CommentItem';
 
 type Comment = {
   id: string;
