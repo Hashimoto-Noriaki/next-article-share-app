@@ -7,6 +7,10 @@ import { verifyToken } from '@/lib/jwt';
 import { ArticleDeleteButton } from '@/features/articles/components/ArticleDeleteButton';
 import { LikeButton } from '@/features/articles/components/LikeButton';
 import { StockButton } from '@/features/articles/components/StockButton';
+import {
+  CommentForm,
+  CommentList,
+} from '@/features/articles/components/Comment';
 import { Footer } from '../../../../shared/components/organisms/Footer';
 import { NavigationHeader } from '../../../../shared/components/molecules/NavigationHeader';
 
@@ -41,6 +45,14 @@ export default async function ArticleDetailPage({ params }: Props) {
       author: {
         select: { id: true, name: true },
       },
+      comments: {
+        orderBy: { createdAt: 'desc' },
+        include: {
+          user: {
+            select: { id: true, name: true },
+          },
+        },
+      },
       ...(userId && {
         likes: {
           where: { userId },
@@ -62,6 +74,11 @@ export default async function ArticleDetailPage({ params }: Props) {
   const isLiked = 'likes' in article && article.likes.length > 0;
   const isStocked = 'stocks' in article && article.stocks.length > 0;
   const isLoggedIn = !!userId;
+
+  const comments = article.comments.map((comment) => ({
+    ...comment,
+    createdAt: comment.createdAt.toISOString(),
+  }));
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -135,6 +152,21 @@ export default async function ArticleDetailPage({ params }: Props) {
 
           <div className="prose max-w-none">{article.content}</div>
         </article>
+
+        {/* コメントセクション */}
+        <section className="bg-white rounded-lg shadow-md p-8 mt-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-6">
+            コメント ({comments.length})
+          </h2>
+
+          {isLoggedIn && <CommentForm articleId={id} />}
+
+          <CommentList
+            comments={comments}
+            articleId={id}
+            currentUserId={userId}
+          />
+        </section>
       </main>
       <Footer />
     </div>
