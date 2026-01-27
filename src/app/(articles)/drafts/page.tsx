@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { DraftSidebar } from '@/features/drafts/components/DraftSidebar';
 import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
 import { DRAFT_LIMIT } from '@/shared/lib/validations/draft';
+import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 
 type Props = {
   searchParams: Promise<{ id?: string }>;
@@ -24,9 +25,17 @@ export default async function DraftsPage({ searchParams }: Props) {
     redirect('/login');
   }
 
+  // ユーザー情報を取得
+  const userId = payload.userId;
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { name: true },
+  });
+  const userName = user?.name || '';
+
   const drafts = await prisma.article.findMany({
     where: {
-      authorId: payload.userId,
+      authorId: userId,
       isDraft: true,
     },
     orderBy: { updatedAt: 'desc' },
@@ -49,13 +58,14 @@ export default async function DraftsPage({ searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-gradient-to-r from-cyan-500 to-cyan-600 px-5 py-4">
+      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
         <Link
           href="/articles"
           className="text-white font-bold text-xl hover:underline"
         >
           ← 記事一覧に戻る
         </Link>
+        <NavigationHeader userId={userId} userName={userName} />
       </header>
 
       {/* 上限警告バナー */}
