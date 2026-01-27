@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { verifyToken } from '@/lib/jwt';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
 import Link from 'next/link';
+import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { Footer } from '@/shared/components/organisms/Footer';
 
 export default async function StocksPage() {
@@ -19,9 +20,17 @@ export default async function StocksPage() {
     redirect('/login');
   }
 
+  // ユーザー情報を取得
+  const userId = payload.userId;
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { name: true },
+  });
+  const userName = user?.name || '';
+
   const stocks = await prisma.stock.findMany({
     where: {
-      userId: payload.userId,
+      userId: userId,
     },
     orderBy: { createdAt: 'desc' },
     include: {
@@ -37,13 +46,14 @@ export default async function StocksPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4">
+      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
         <Link
           href="/articles"
           className="text-white font-bold text-xl hover:underline"
         >
           ← 記事一覧に戻る
         </Link>
+        <NavigationHeader userId={userId} userName={userName} />
       </header>
 
       <main className="container mx-auto px-5 py-8 max-w-2xl grow">

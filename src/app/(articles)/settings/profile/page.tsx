@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
+import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { Footer } from '../../../../shared/components/organisms/Footer';
 import {
   updateUserSchema,
@@ -17,6 +18,8 @@ export default function SettingsPage() {
   const router = useRouter();
   const [success, setSuccess] = useState('');
   const [serverError, setServerError] = useState('');
+  const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
 
   const {
     register,
@@ -37,6 +40,8 @@ export default function SettingsPage() {
       const user = await res.json();
       setValue('name', user.name || '');
       setValue('email', user.email);
+      setUserId(user.id);
+      setUserName(user.name || '');
     };
 
     fetchUser();
@@ -60,17 +65,19 @@ export default function SettingsPage() {
     }
 
     setSuccess('プロフィールを更新しました');
+    setUserName(data.name || '');
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4">
+      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
         <Link
           href="/articles"
           className="text-white font-bold text-xl hover:underline"
         >
           ← 記事一覧に戻る
         </Link>
+        {userId && <NavigationHeader userId={userId} userName={userName} />}
       </header>
       <main className="container mx-auto px-5 py-8 max-w-md grow">
         <h1 className="text-2xl font-bold mb-8 text-center">プロフィール</h1>

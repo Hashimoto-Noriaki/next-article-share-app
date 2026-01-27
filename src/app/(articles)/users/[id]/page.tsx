@@ -1,7 +1,10 @@
 import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { verifyToken } from '@/lib/jwt';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
 import { Footer } from '../../../../shared/components/organisms/Footer';
+import { NavigationHeader } from '../../../../shared/components/molecules/NavigationHeader';
 import Link from 'next/link';
 
 type Props = {
@@ -10,6 +13,25 @@ type Props = {
 
 export default async function UserProfilePage({ params }: Props) {
   const { id } = await params;
+
+  // ログインユーザー取得
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+  let userId = '';
+  let userName = '';
+
+  if (token) {
+    const payload = await verifyToken(token);
+    if (payload) {
+      userId = payload.userId;
+
+      const loggedInUser = await prisma.user.findUnique({
+        where: { id: payload.userId },
+        select: { name: true },
+      });
+      userName = loggedInUser?.name || '';
+    }
+  }
 
   const user = await prisma.user.findUnique({
     where: { id },
@@ -28,13 +50,14 @@ export default async function UserProfilePage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4">
+      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
         <Link
           href="/articles"
           className="text-white text-xl font-bold hover:underline"
         >
           ← 記事一覧に戻る
         </Link>
+        {userId && <NavigationHeader userId={userId} userName={userName} />}
       </header>
 
       <main className="container mx-auto px-5 py-8 max-w-4xl grow">
