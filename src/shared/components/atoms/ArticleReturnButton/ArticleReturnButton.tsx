@@ -7,7 +7,7 @@ type PropsType = {
   children: ReactNode;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export default function ArticleReturnButton({ children, ...props }: PropsType) {
+export function ArticleReturnButton({ children, ...props }: PropsType) {
   const router = useRouter();
   return (
     <button
