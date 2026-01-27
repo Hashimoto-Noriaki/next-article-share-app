@@ -35,4 +35,3 @@ export const AsAuthor: Story = {
     isAuthor: true,
   },
 };
-
