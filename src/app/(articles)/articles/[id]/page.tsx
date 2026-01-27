@@ -7,11 +7,11 @@ import { verifyToken } from '@/lib/jwt';
 import { ArticleDeleteButton } from '@/features/articles/components/ArticleDeleteButton';
 import { LikeButton } from '@/features/articles/components/LikeButton';
 import { StockButton } from '@/features/articles/components/StockButton';
-import {
-  CommentForm,
-  CommentList,
-} from '@/features/articles/components/Comment';
+import { CommentList } from '@/features/articles/components/Comment/CommentList';
+import { CommentForm } from '@/features/articles/components/Comment/CommentForm';
 import { Footer } from '../../../../shared/components/organisms/Footer';
+import { NavigationHeader } from '../../../../shared/components/molecules/NavigationHeader';
+import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -23,11 +23,18 @@ export default async function ArticleDetailPage({ params }: Props) {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
   let userId = '';
+  let userName = '';
 
   if (token) {
     const payload = await verifyToken(token);
     if (payload) {
       userId = payload.userId;
+
+      const user = await prisma.user.findUnique({
+        where: { id: payload.userId },
+        select: { name: true },
+      });
+      userName = user?.name || '';
     }
   }
 
@@ -74,17 +81,18 @@ export default async function ArticleDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-start">
+      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center h-[10vh]">
         <Link
           href="/articles"
           className="text-white font-bold text-xl hover:underline"
         >
           ← 記事一覧に戻る
         </Link>
+        {userId && <NavigationHeader userId={userId} userName={userName} />}
       </header>
-      <main className="container mx-auto max-w-4xl px-6 py-10 grow">
+      <main className="container mx-auto max-w-7xl px-6 py-10 grow">
         <article className="bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
             {article.title}
           </h1>
 
@@ -141,7 +149,7 @@ export default async function ArticleDetailPage({ params }: Props) {
             )}
           </div>
 
-          <div className="prose max-w-none">{article.content}</div>
+          <MarkdownPreview content={article.content} />
         </article>
 
         {/* コメントセクション */}
