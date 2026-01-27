@@ -1,0 +1,536 @@
+openapi: 3.0.0
+info:
+  title: テックブログ共有アプリ API
+  version: 1.0.0
+  description: Qiitaクローンの記事共有アプリのAPI仕様書
+
+servers:
+  - url: http://localhost:3000
+    description: 開発環境
+
+tags:
+  - name: Articles
+    description: 記事関連
+  - name: Comments
+    description: コメント関連
+  - name: Likes
+    description: いいね関連
+  - name: Stocks
+    description: ストック関連
+  - name: Auth
+    description: 認証関連
+  - name: Drafts
+    description: 下書き関連
+  - name: Users
+    description: ユーザー関連
+
+paths:
+  # ============ Articles ============
+  /api/articles:
+    get:
+      tags: [Articles]
+      summary: 記事一覧を取得
+      description: 公開されている記事の一覧を取得します
+      responses:
+        '200':
+          description: 記事一覧
+        '500':
+          description: サーバーエラー
+    post:
+      tags: [Articles]
+      summary: 記事を作成
+      description: 新しい記事を作成します（認証必須）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, content]
+              properties:
+                title:
+                  type: string
+                  description: 記事タイトル
+                content:
+                  type: string
+                  description: 記事本文
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: タグ
+                isDraft:
+                  type: boolean
+                  description: 下書きフラグ
+      responses:
+        '201':
+          description: 作成成功
+        '401':
+          description: 認証が必要
+        '500':
+          description: サーバーエラー
+
+  /api/articles/{id}:
+    get:
+      tags: [Articles]
+      summary: 記事詳細を取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: 記事ID
+      responses:
+        '200':
+          description: 記事詳細
+        '404':
+          description: 記事が見つからない
+    put:
+      tags: [Articles]
+      summary: 記事を更新
+      description: 自分の記事を更新します（認証必須）
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: 更新成功
+        '401':
+          description: 認証が必要
+        '403':
+          description: 権限がない
+        '404':
+          description: 記事が見つからない
+    delete:
+      tags: [Articles]
+      summary: 記事を削除
+      description: 自分の記事を削除します（認証必須）
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 削除成功
+        '401':
+          description: 認証が必要
+        '403':
+          description: 権限がない
+        '404':
+          description: 記事が見つからない
+
+  /api/articles/search:
+    get:
+      tags: [Articles]
+      summary: 記事を検索
+      description: タイトルまたはタグで記事を検索します
+      parameters:
+        - in: query
+          name: q
+          required: true
+          schema:
+            type: string
+          description: 検索キーワード
+      responses:
+        '200':
+          description: 検索結果
+        '500':
+          description: サーバーエラー
+
+  # ============ Comments ============
+  /api/articles/{id}/comments:
+    get:
+      tags: [Comments]
+      summary: コメント一覧を取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: 記事ID
+      responses:
+        '200':
+          description: コメント一覧
+    post:
+      tags: [Comments]
+      summary: コメントを投稿
+      description: 記事にコメントを投稿します（認証必須）
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+                  description: コメント内容
+      responses:
+        '201':
+          description: 投稿成功
+        '401':
+          description: 認証が必要
+        '404':
+          description: 記事が見つからない
+
+  /api/articles/{id}/comments/{commentId}:
+    put:
+      tags: [Comments]
+      summary: コメントを編集
+      description: 自分のコメントを編集します（認証必須）
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [content]
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: 編集成功
+        '401':
+          description: 認証が必要
+        '403':
+          description: 権限がない
+        '404':
+          description: コメントが見つからない
+    delete:
+      tags: [Comments]
+      summary: コメントを削除
+      description: 自分のコメントを削除します（認証必須）
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 削除成功
+        '401':
+          description: 認証が必要
+        '403':
+          description: 権限がない
+
+  # ============ Likes ============
+  /api/articles/{id}/like:
+    post:
+      tags: [Likes]
+      summary: 記事にいいね
+      description: 記事にいいねを追加します（認証必須）
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: いいね成功
+        '400':
+          description: 既にいいね済み / 自分の記事
+        '401':
+          description: 認証が必要
+        '404':
+          description: 記事が見つからない
+    delete:
+      tags: [Likes]
+      summary: いいねを解除
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: いいね解除成功
+        '400':
+          description: いいねしていない
+        '401':
+          description: 認証が必要
+
+  # ============ Stocks ============
+  /api/articles/{id}/stock:
+    post:
+      tags: [Stocks]
+      summary: 記事をストック
+      description: 記事をストックします（認証必須）
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ストック成功
+        '400':
+          description: 既にストック済み
+        '401':
+          description: 認証が必要
+        '404':
+          description: 記事が見つからない
+    delete:
+      tags: [Stocks]
+      summary: ストックを解除
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ストック解除成功
+        '400':
+          description: ストックしていない
+        '401':
+          description: 認証が必要
+
+  /api/stocks:
+    get:
+      tags: [Stocks]
+      summary: ストック一覧を取得
+      description: 自分のストック一覧を取得します（認証必須）
+      responses:
+        '200':
+          description: ストック一覧
+        '401':
+          description: 認証が必要
+
+  # ============ Auth ============
+  /api/auth/signup:
+    post:
+      tags: [Auth]
+      summary: ユーザー登録
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, name]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '201':
+          description: 登録成功
+        '400':
+          description: 入力エラー / 既に登録済み
+
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: ログイン
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: ログイン成功
+        '401':
+          description: 認証失敗
+
+  /api/auth/logout:
+    post:
+      tags: [Auth]
+      summary: ログアウト
+      responses:
+        '200':
+          description: ログアウト成功
+
+  # ============ Drafts ============
+  /api/drafts:
+    get:
+      tags: [Drafts]
+      summary: 下書き一覧を取得
+      description: 自分の下書き一覧を取得します（認証必須）
+      responses:
+        '200':
+          description: 下書き一覧
+        '401':
+          description: 認証が必要
+    post:
+      tags: [Drafts]
+      summary: 下書きを作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: 作成成功
+        '401':
+          description: 認証が必要
+
+  /api/drafts/{id}:
+    get:
+      tags: [Drafts]
+      summary: 下書き詳細を取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 下書き詳細
+        '401':
+          description: 認証が必要
+        '404':
+          description: 下書きが見つからない
+    put:
+      tags: [Drafts]
+      summary: 下書きを更新
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                content:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                isDraft:
+                  type: boolean
+                  description: falseで公開
+      responses:
+        '200':
+          description: 更新成功
+        '401':
+          description: 認証が必要
+        '403':
+          description: 権限がない
+    delete:
+      tags: [Drafts]
+      summary: 下書きを削除
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 削除成功
+        '401':
+          description: 認証が必要
+        '403':
+          description: 権限がない
+
+  # ============ Users ============
+  /api/users/{id}:
+    get:
+      tags: [Users]
+      summary: ユーザー情報を取得
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ユーザー情報
+        '404':
+          description: ユーザーが見つからない
+
+  /api/users/me:
+    get:
+      tags: [Users]
+      summary: 自分の情報を取得
+      description: ログイン中のユーザー情報を取得します（認証必須）
+      responses:
+        '200':
+          description: ユーザー情報
+        '401':
+          description: 認証が必要
