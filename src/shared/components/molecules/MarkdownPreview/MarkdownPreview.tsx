@@ -23,7 +23,6 @@ export function MarkdownPreview({ content, className }: Props) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
         components={{
-          // ← ここから追加
           code({ className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || '');
             const isInline = !match;
