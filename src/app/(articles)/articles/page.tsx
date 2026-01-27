@@ -2,11 +2,10 @@ import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { verifyToken } from '@/lib/jwt';
 import { ArticleListHeader } from '@/features/articles/components/ArticleListHeader';
-import { ArticleCard } from '@/features/articles/components/ArticleCard';
+import { SearchableArticleList } from '@/features/articles/components/SearchableArticleList';
 import { Footer } from '@/shared/components/organisms/Footer';
 
 export default async function ArticleListPage() {
-  // ログインユーザーのID・名前取得
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
   let userId = '';
@@ -32,7 +31,6 @@ export default async function ArticleListPage() {
       author: {
         select: { name: true },
       },
-      // ログイン中なら自分のいいねを取得
       ...(userId && {
         likes: {
           where: { userId },
@@ -41,6 +39,14 @@ export default async function ArticleListPage() {
       }),
     },
   });
+
+  // Client Componentに渡すためにシリアライズ
+  const serializedArticles = articles.map((article) => ({
+    ...article,
+    createdAt: article.createdAt.toISOString(),
+    updatedAt: article.updatedAt.toISOString(),
+    isLiked: 'likes' in article && article.likes.length > 0,
+  }));
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -52,26 +58,12 @@ export default async function ArticleListPage() {
             エンジニア同士で有益な記事を共有しよう
           </p>
         </div>
-        <div className="flex flex-wrap justify-center gap-5 mt-5 pb-10">
-          {articles.length === 0 ? (
-            <p className="text-gray-500">まだ記事がありません</p>
-          ) : (
-            articles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                id={article.id}
-                title={article.title}
-                tags={article.tags}
-                authorName={article.author.name || '名無し'}
-                createdAt={article.createdAt}
-                updatedAt={article.updatedAt}
-                likeCount={article.likeCount}
-                isLiked={'likes' in article && article.likes.length > 0}
-                isAuthor={article.authorId === userId}
-                isLoggedIn={!!userId}
-              />
-            ))
-          )}
+
+        <div className="w-full max-w-10xl mt-8 px-10">
+          <SearchableArticleList
+            initialArticles={serializedArticles}
+            userId={userId}
+          />
         </div>
       </main>
       <Footer />
