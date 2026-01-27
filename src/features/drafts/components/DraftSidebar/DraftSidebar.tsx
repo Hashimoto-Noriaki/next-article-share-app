@@ -49,7 +49,7 @@ export function DraftSidebar({ drafts, selectedId }: Props) {
   };
 
   return (
-    <aside className="w-[480px] bg-white border-r border-gray-200 flex-shrink-0 flex flex-col h-full">
+    <aside className="w-[480px] bg-white border-r border-gray-200 shrink-0 flex flex-col h-full">
       <div className="p-5 flex-1 overflow-hidden flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold">下書き一覧</h1>
