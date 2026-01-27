@@ -1,4 +1,4 @@
-import ArticleReturnButton from '../../shared/components/atoms/ArticleReturnButton';
+import { ArticleReturnButton } from '../../shared/components/atoms/ArticleReturnButton';
 
 export default function TutorialPage() {
   return (
