@@ -40,11 +40,12 @@ export function SearchableArticleList({ initialArticles, userId }: Props) {
     setIsSearching(true);
 
     try {
-      const res = await fetch(`/api/articles/search?q=${encodeURIComponent(query)}`);
+      const res = await fetch(
+        `/api/articles/search?q=${encodeURIComponent(query)}`,
+      );
       const data = await res.json();
 
-      // 日付をstringに変換
-      const formattedData = data.map((article) => ({
+      const formattedData = data.map((article: Article) => ({
         ...article,
         createdAt: article.createdAt,
         updatedAt: article.updatedAt,

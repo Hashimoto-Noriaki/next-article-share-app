@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     console.error('検索エラー:', error);
     return NextResponse.json(
       { message: '検索に失敗しました' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
