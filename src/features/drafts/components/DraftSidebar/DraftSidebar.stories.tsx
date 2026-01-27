@@ -23,7 +23,8 @@ const sampleDrafts = [
   {
     id: '1',
     title: 'Next.js App Routerの使い方',
-    content: 'この記事ではNext.js App Routerについて解説します。Server Componentsやレイアウト機能など、新しい機能を詳しく説明します。',
+    content:
+      'この記事ではNext.js App Routerについて解説します。Server Componentsやレイアウト機能など、新しい機能を詳しく説明します。',
     tags: ['Next.js', 'React'],
     updatedAt: new Date().toISOString(),
   },
