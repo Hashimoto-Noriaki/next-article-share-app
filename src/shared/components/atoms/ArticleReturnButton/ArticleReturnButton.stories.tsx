@@ -1,4 +1,4 @@
-import type { meta, StoryObj } from '/@storybook/nextjs';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { ArticleReturnButton } from './ArticleReturnButton';
 
 const meta: Meta<typeof ArticleReturnButton> = {

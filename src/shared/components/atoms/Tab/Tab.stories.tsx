@@ -4,7 +4,7 @@ import { Tab } from './Tab';
 const meta: Meta<typeof Tab> = {
   title: 'Shared/Atoms/Tab',
   component: Tab,
-  argsTypes: {
+  argTypes: {
     onClick: { action: 'clicked' },
   },
 };
