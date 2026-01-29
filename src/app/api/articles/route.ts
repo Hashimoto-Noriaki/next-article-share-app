@@ -9,6 +9,45 @@ import {
 } from '@/shared/lib/validations/draft';
 import { z } from 'zod';
 
+const PER_PAGE = 12;
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const skip = (page - 1) * PER_PAGE;
+
+    const [articles, total] = await Promise.all([
+      prisma.article.findMany({
+        where: { isDraft: false },
+        orderBy: { createdAt: 'desc' },
+        include: {
+          author: {
+            select: { name: true },
+          },
+        },
+        skip,
+        take: PER_PAGE,
+      }),
+      prisma.article.count({
+        where: { isDraft: false },
+      }),
+    ]);
+
+    return NextResponse.json({
+      articles,
+      totalPages: Math.ceil(total / PER_PAGE),
+      currentPage: page,
+    });
+  } catch (error) {
+    console.error('記事取得エラー:', error);
+    return NextResponse.json(
+      { message: '記事の取得に失敗しました' },
+      { status: 500 },
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
