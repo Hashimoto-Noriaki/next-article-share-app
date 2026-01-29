@@ -47,6 +47,8 @@ model User {
   sessions      Session[]
   stocks    Stock[]
   comments  Comment[]
+  receivedNotifications Notification[] @relation("ReceivedNotifications")
+  sentNotifications     Notification[] @relation("SentNotifications")
 }
 
 model VerificationToken {
@@ -71,6 +73,7 @@ model Article {
   likes     Like[]
   stocks    Stock[]
   comments  Comment[]
+  notifications Notification[]
 
   @@index([authorId])
 }
@@ -106,4 +109,20 @@ model Comment {
   article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  message   String
+  isRead    Boolean  @default(false)
+  userId    String
+  senderId  String?
+  articleId String?
+  user      User     @relation("ReceivedNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  sender    User?    @relation("SentNotifications", fields: [senderId], references: [id], onDelete: SetNull)
+  article   Article? @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
