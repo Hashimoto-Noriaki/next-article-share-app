@@ -7,7 +7,9 @@ import { NotificationWithRelations } from '@/types';
 
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<NotificationWithRelations[]>([]);
+  const [notifications, setNotifications] = useState<
+    NotificationWithRelations[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -30,9 +32,7 @@ export function NotificationBell() {
     try {
       const res = await fetch('/api/notifications', { method: 'PUT' });
       if (res.ok) {
-        setNotifications((prev) =>
-          prev.map((n) => ({ ...n, isRead: true }))
-        );
+        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       }
     } catch (error) {
       console.error('既読更新エラー:', error);
@@ -49,7 +49,10 @@ export function NotificationBell() {
   // 外側クリックで閉じる
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -92,7 +95,9 @@ export function NotificationBell() {
             {isLoading ? (
               <p className="px-4 py-3 text-sm text-gray-500">読み込み中...</p>
             ) : notifications.length === 0 ? (
-              <p className="px-4 py-3 text-sm text-gray-500">通知はありません</p>
+              <p className="px-4 py-3 text-sm text-gray-500">
+                通知はありません
+              </p>
             ) : (
               notifications.map((notification) => (
                 <NotificationItem
