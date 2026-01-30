@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { logout } from '@/actions/auth';
+import { NotificationBell } from '@/features/notifications/components';
 import { UserDropdown } from '../UserDropdown';
 
 type Props = {
@@ -36,6 +37,9 @@ export function ArticleListHeader({ userId, userName }: Props) {
               <Link href="/articles/new" className="hover:text-amber-400">
                 新規投稿
               </Link>
+            </li>
+            <li>
+              <NotificationBell />
             </li>
             <li>
               <UserDropdown userId={userId} userName={userName} />
