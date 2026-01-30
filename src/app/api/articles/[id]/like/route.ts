@@ -76,6 +76,14 @@ export async function POST(
       }),
     ]);
 
+    // 通知作成
+    await createNotification({
+      type: 'like',
+      userId: article.authorId,
+      senderId: payload.userId,
+      articleId: id,
+    });
+
     return NextResponse.json({
       message: 'いいねしました',
     });
@@ -141,17 +149,6 @@ export async function DELETE(
         data: { likeCount: { decrement: 1 } },
       }),
     ]);
-
-    await createNotification({
-      type: 'like',
-      userId: article.authorId,
-      senderId: payload.userId,
-      articleId: id,
-    });
-
-    return NextResponse.json({
-      message: 'いいねしました',
-    });
 
     return NextResponse.json({
       message: 'いいねを解除しました',
