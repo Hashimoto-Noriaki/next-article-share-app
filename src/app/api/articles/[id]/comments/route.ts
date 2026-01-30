@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
+import { createNotification } from '@/lib/notification';
 
 // コメント一覧取得
 export async function GET(
@@ -82,6 +83,13 @@ export async function POST(
           select: { id: true, name: true, image: true },
         },
       },
+    });
+
+    await createNotification({
+      type: 'comment',
+      userId: article.authorId,
+      senderId: payload.userId,
+      articleId: id,
     });
 
     return NextResponse.json(comment, { status: 201 });

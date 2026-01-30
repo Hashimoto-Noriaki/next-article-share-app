@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
+import { createNotification } from '@/lib/notification';
 
 // いいねする
 export async function POST(
@@ -140,6 +141,17 @@ export async function DELETE(
         data: { likeCount: { decrement: 1 } },
       }),
     ]);
+
+    await createNotification({
+      type: 'like',
+      userId: article.authorId,
+      senderId: payload.userId,
+      articleId: id,
+    });
+
+    return NextResponse.json({
+      message: 'いいねしました',
+    });
 
     return NextResponse.json({
       message: 'いいねを解除しました',
