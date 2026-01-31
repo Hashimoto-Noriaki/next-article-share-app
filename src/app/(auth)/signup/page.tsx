@@ -126,9 +126,11 @@ export default function SignUpPage() {
           <hr className="flex-1 border-white/50" />
         </div>
 
-        {/* GitHub 登録ボタン */}
-        <OAuthButton provider="github" mode="signup" />
-
+        {/* GitHub と Google のボタン */}
+        <div className="flex flex-col gap-3">
+          <OAuthButton provider="github" mode="signup" />
+          <OAuthButton provider="google" mode="signup" />
+        </div>
         <Link
           href="/login"
           className="block text-center underline mt-5 hover:text-cyan-800"
