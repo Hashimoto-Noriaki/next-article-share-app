@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { logout } from '@/actions/auth';
-import { NotificationBell } from '@/features/notifications/components';
 import { UserDropdown } from '../UserDropdown';
 
 type Props = {
@@ -27,7 +26,7 @@ export function ArticleListHeader({ userId, userName }: Props) {
           </p>
         </div>
         <nav>
-          <ul className="flex items-center gap-5 text-white text-lg font-bold p-10">
+          <ul className="flex gap-5 text-white text-lg font-bold p-10">
             <li>
               <Link href="/tutorial" className="hover:text-amber-400">
                 利用説明
@@ -37,9 +36,6 @@ export function ArticleListHeader({ userId, userName }: Props) {
               <Link href="/articles/new" className="hover:text-amber-400">
                 新規投稿
               </Link>
-            </li>
-            <li className="">
-              <NotificationBell />
             </li>
             <li>
               <UserDropdown userId={userId} userName={userName} />
