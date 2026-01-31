@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { verifyToken } from '@/lib/jwt';
+import { auth } from '@/external/auth';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
 import { Footer } from '../../../../shared/components/organisms/Footer';
 import { NavigationHeader } from '../../../../shared/components/molecules/NavigationHeader';
@@ -14,24 +13,9 @@ type Props = {
 export default async function UserProfilePage({ params }: Props) {
   const { id } = await params;
 
-  // ログインユーザー取得
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  let userId = '';
-  let userName = '';
-
-  if (token) {
-    const payload = await verifyToken(token);
-    if (payload) {
-      userId = payload.userId;
-
-      const loggedInUser = await prisma.user.findUnique({
-        where: { id: payload.userId },
-        select: { name: true },
-      });
-      userName = loggedInUser?.name || '';
-    }
-  }
+  const session = await auth();
+  const userId = session?.user?.id || '';
+  const userName = session?.user?.name || '';
 
   const user = await prisma.user.findUnique({
     where: { id },

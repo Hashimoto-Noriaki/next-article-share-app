@@ -1,32 +1,20 @@
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { verifyToken } from '@/lib/jwt';
+import { auth } from '@/external/auth';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
 import Link from 'next/link';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { Footer } from '@/shared/components/organisms/Footer';
 
 export default async function StocksPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+  const session = await auth();
 
-  if (!token) {
+  if (!session?.user?.id) {
     redirect('/login');
   }
 
-  const payload = await verifyToken(token);
-  if (!payload) {
-    redirect('/login');
-  }
-
-  // ユーザー情報を取得
-  const userId = payload.userId;
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { name: true },
-  });
-  const userName = user?.name || '';
+  const userId = session.user.id;
+  const userName = session.user.name || '';
 
   const stocks = await prisma.stock.findMany({
     where: {
@@ -55,10 +43,8 @@ export default async function StocksPage() {
         </Link>
         <NavigationHeader userId={userId} userName={userName} />
       </header>
-
       <main className="container mx-auto px-5 py-8 max-w-2xl grow">
         <h1 className="text-2xl font-bold mb-8">ストックした記事</h1>
-
         <div className="flex flex-col gap-5">
           {stocks.length === 0 ? (
             <p className="text-gray-500">ストックした記事はありません</p>
