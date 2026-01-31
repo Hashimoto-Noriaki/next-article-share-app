@@ -1,9 +1,8 @@
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { AiOutlineHeart } from 'react-icons/ai';
-import { verifyToken } from '@/lib/jwt';
+import { auth } from '@/external/auth';
 import { ArticleDeleteButton } from '@/features/articles/components/ArticleDeleteButton';
 import { LikeButton } from '@/features/articles/components/LikeButton';
 import { StockButton } from '@/features/articles/components/StockButton';
@@ -20,23 +19,9 @@ type Props = {
 export default async function ArticleDetailPage({ params }: Props) {
   const { id } = await params;
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  let userId = '';
-  let userName = '';
-
-  if (token) {
-    const payload = await verifyToken(token);
-    if (payload) {
-      userId = payload.userId;
-
-      const user = await prisma.user.findUnique({
-        where: { id: payload.userId },
-        select: { name: true },
-      });
-      userName = user?.name || '';
-    }
-  }
+  const session = await auth();
+  const userId = session?.user?.id || '';
+  const userName = session?.user?.name || '';
 
   const article = await prisma.article.findUnique({
     where: { id },
@@ -152,7 +137,6 @@ export default async function ArticleDetailPage({ params }: Props) {
           <MarkdownPreview content={article.content} />
         </article>
 
-        {/* コメントセクション */}
         <section className="bg-white rounded-lg shadow-md p-8 mt-8">
           <h2 className="text-xl font-bold text-gray-800 mb-6">
             コメント ({comments.length})
