@@ -134,7 +134,7 @@ export default function SignUpPage() {
         <button
           type="button"
           onClick={handleGitHubSignIn}
-          className="flex items-center justify-center gap-2 w-full bg-gray-900 text-white py-3 rounded-md hover:bg-gray-800 transition font-bold"
+          className="flex items-center justify-center gap-2 w-full bg-gray-900 text-white py-3 rounded-full hover:bg-gray-800 transition font-bold"
         >
           <FaGithub className="text-xl" />
           GitHubで登録
