@@ -3,7 +3,7 @@
 import { signIn } from 'next-auth/react';
 import { FaGithub } from 'react-icons/fa';
 
-type Provider = 'github' | 'google';
+type Provider = 'github';
 
 type Props = {
   provider: Provider;
