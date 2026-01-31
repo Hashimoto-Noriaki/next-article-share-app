@@ -1,12 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { Button } from '@/shared/components/atoms/Button';
 
 export default function WithdrawPage() {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -29,7 +28,8 @@ export default function WithdrawPage() {
         return;
       }
 
-      router.push('/');
+      // 退会成功後、セッションをクリアしてログアウト
+      await signOut({ callbackUrl: '/' });
     } catch (err) {
       console.error('退会エラー:', err);
       setError('退会に失敗しました');
