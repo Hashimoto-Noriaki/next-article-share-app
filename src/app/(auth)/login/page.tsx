@@ -24,22 +24,22 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginInput) => {
-  setServerError('');
+    setServerError('');
 
-  const result = await signIn('credentials', {
-    email: data.email,
-    password: data.password,
-    redirect: false,
-  });
+    const result = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
 
-  if (result?.error) {
-    setServerError('メールアドレスまたはパスワードが間違っています');
-    return;
-  }
+    if (result?.error) {
+      setServerError('メールアドレスまたはパスワードが間違っています');
+      return;
+    }
 
-  router.push('/articles');
-  router.refresh();
-};
+    router.push('/articles');
+    router.refresh();
+  };
 
   return (
     <div className="flex items-center justify-center p-20 max-h-screen">

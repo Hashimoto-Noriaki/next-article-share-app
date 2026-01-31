@@ -18,7 +18,7 @@ export const authConfig: NextAuthConfig = {
       const authPaths = ['/login', '/signup'];
 
       const isProtected = protectedPaths.some((path) =>
-        pathname.startsWith(path)
+        pathname.startsWith(path),
       );
       const isAuthPath = authPaths.some((path) => pathname.startsWith(path));
 

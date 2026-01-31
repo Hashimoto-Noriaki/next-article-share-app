@@ -9,12 +9,12 @@ const PER_PAGE = 12;
 export default async function ArticleListPage() {
   /**
    * NextAuth.js でセッションを取得
-   * 
+   *
    * auth() は Server Component で使用可能
    * session.user には id, name, email, image が含まれる
    */
   const session = await auth();
-  
+
   const userId = session?.user?.id || '';
   const userName = session?.user?.name || '';
 
