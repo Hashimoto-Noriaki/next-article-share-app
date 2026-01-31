@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { signupSchema } from '@/shared/lib/validations/auth';
-import { createToken } from '@/lib/jwt';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 
@@ -34,11 +33,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // JWT発行
-    const token = await createToken({ userId: user.id });
-
-    // レスポンス作成
-    const response = NextResponse.json(
+    // ユーザー作成のみ。ログインはクライアント側で signIn() を呼ぶ
+    return NextResponse.json(
       {
         message: '登録が完了しました',
         user: {
@@ -49,17 +45,6 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     );
-
-    // Cookie設定
-    response.cookies.set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7日間
-      path: '/',
-    });
-
-    return response;
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
