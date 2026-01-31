@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import Credentials from 'next-auth/providers/credentials';
+import GitHub from 'next-auth/providers/github';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { authConfig } from './auth.config';
@@ -13,6 +14,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     maxAge: 60 * 60 * 24 * 7,
   },
   providers: [
+    // GitHub OAuth
+    GitHub({
+      clientId: process.env.GITHUB_ID!,
+      clientSecret: process.env.GITHUB_SECRET!,
+    }),
+
+    // 既存のメール/パスワード認証
     Credentials({
       credentials: {
         email: { label: 'Email', type: 'email' },
