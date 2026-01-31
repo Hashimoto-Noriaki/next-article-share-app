@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { FaLaptopCode, FaGithub } from 'react-icons/fa';
+import { FaLaptopCode } from 'react-icons/fa';
 import { signIn } from 'next-auth/react';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { Button } from '@/shared/components/atoms/Button';
+import { OAuthButton } from '@/shared/components/atoms/OAuthButton';
 import { signupSchema, SignUpInput } from '@/shared/lib/validations/auth';
 
 export default function SignUpPage() {
@@ -54,11 +55,6 @@ export default function SignUpPage() {
 
     router.push('/articles');
     router.refresh();
-  };
-
-  // GitHub で登録
-  const handleGitHubSignIn = () => {
-    signIn('github', { callbackUrl: '/articles' });
   };
 
   return (
@@ -131,14 +127,7 @@ export default function SignUpPage() {
         </div>
 
         {/* GitHub 登録ボタン */}
-        <button
-          type="button"
-          onClick={handleGitHubSignIn}
-          className="flex items-center justify-center gap-2 w-full bg-gray-900 text-white py-3 rounded-full hover:bg-gray-800 transition font-bold"
-        >
-          <FaGithub className="text-xl" />
-          GitHubで登録
-        </button>
+        <OAuthButton provider="github" mode="signup" />
 
         <Link
           href="/login"
