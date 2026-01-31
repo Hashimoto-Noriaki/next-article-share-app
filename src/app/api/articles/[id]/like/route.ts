@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { verifyToken } from '@/lib/jwt';
+import { createNotification } from '@/lib/notification';
 
 // いいねする
 export async function POST(
@@ -74,6 +75,14 @@ export async function POST(
         data: { likeCount: { increment: 1 } },
       }),
     ]);
+
+    // 通知作成
+    await createNotification({
+      type: 'like',
+      userId: article.authorId,
+      senderId: payload.userId,
+      articleId: id,
+    });
 
     return NextResponse.json({
       message: 'いいねしました',

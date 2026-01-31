@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ArticleCard } from '../ArticleCard';
+import { Pagination } from '../../../../shared/components/molecules/Pagination';
 
 type Article = {
   id: string;
@@ -20,13 +21,50 @@ type Article = {
 type Props = {
   initialArticles: Article[];
   userId: string;
+  initialTotalPages: number;
 };
 
-export function SearchableArticleList({ initialArticles, userId }: Props) {
+export function SearchableArticleList({
+  initialArticles,
+  userId,
+  initialTotalPages,
+}: Props) {
   const [query, setQuery] = useState('');
   const [articles, setArticles] = useState<Article[]>(initialArticles);
   const [isSearching, setIsSearching] = useState(false);
   const [isSearched, setIsSearched] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(initialTotalPages);
+
+  const fetchArticles = async (page: number, searchQuery: string = '') => {
+    setIsSearching(true);
+
+    try {
+      const endpoint = searchQuery
+        ? `/api/articles/search?q=${encodeURIComponent(searchQuery)}&page=${page}`
+        : `/api/articles?page=${page}`;
+
+      const res = await fetch(endpoint);
+      const data = await res.json();
+
+      const formattedArticles = (data.articles || data).map(
+        (article: Article) => ({
+          ...article,
+          createdAt: article.createdAt,
+          updatedAt: article.updatedAt,
+        }),
+      );
+
+      setArticles(formattedArticles);
+      setTotalPages(data.totalPages || initialTotalPages);
+      setCurrentPage(page);
+    } catch (error) {
+      console.error('取得エラー:', error);
+      alert('記事の取得に失敗しました');
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,37 +72,29 @@ export function SearchableArticleList({ initialArticles, userId }: Props) {
     if (!query.trim()) {
       setArticles(initialArticles);
       setIsSearched(false);
+      setCurrentPage(1);
+      setTotalPages(initialTotalPages);
       return;
     }
 
-    setIsSearching(true);
-
-    try {
-      const res = await fetch(
-        `/api/articles/search?q=${encodeURIComponent(query)}`,
-      );
-      const data = await res.json();
-
-      const formattedData = data.map((article: Article) => ({
-        ...article,
-        createdAt: article.createdAt,
-        updatedAt: article.updatedAt,
-      }));
-
-      setArticles(formattedData);
-      setIsSearched(true);
-    } catch (error) {
-      console.error('検索エラー:', error);
-      alert('検索に失敗しました');
-    } finally {
-      setIsSearching(false);
-    }
+    setIsSearched(true);
+    await fetchArticles(1, query);
   };
 
   const handleClear = () => {
     setQuery('');
     setArticles(initialArticles);
     setIsSearched(false);
+    setCurrentPage(1);
+    setTotalPages(initialTotalPages);
+  };
+
+  const handlePageChange = (page: number) => {
+    if (isSearched) {
+      fetchArticles(page, query);
+    } else {
+      fetchArticles(page);
+    }
   };
 
   return (
@@ -104,9 +134,9 @@ export function SearchableArticleList({ initialArticles, userId }: Props) {
       )}
 
       {/* 記事一覧 */}
-      <div className="flex flex-wrap justify-center gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {articles.length === 0 ? (
-          <p className="text-gray-500">
+          <p className="text-gray-500 col-span-full text-center">
             {isSearched ? '検索結果がありません' : 'まだ記事がありません'}
           </p>
         ) : (
@@ -127,6 +157,13 @@ export function SearchableArticleList({ initialArticles, userId }: Props) {
           ))
         )}
       </div>
+
+      {/* ページネーション */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }
