@@ -1,24 +1,15 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const notifications = await prisma.notification.findMany({
-      where: { userId: payload.userId },
+      where: { userId },
       orderBy: { createdAt: 'desc' },
       take: 50,
       include: {
@@ -41,24 +32,15 @@ export async function GET() {
   }
 }
 
-// 全て既読にする
 export async function PUT() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     await prisma.notification.updateMany({
       where: {
-        userId: payload.userId,
+        userId,
         isRead: false,
       },
       data: { isRead: true },

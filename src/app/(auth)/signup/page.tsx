@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
+import { signIn } from 'next-auth/react';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { Button } from '@/shared/components/atoms/Button';
 import { signupSchema, SignUpInput } from '@/shared/lib/validations/auth';
@@ -25,6 +26,7 @@ export default function SignUpPage() {
   const onSubmit = async (data: SignUpInput) => {
     setServerError('');
 
+    // 1. ユーザー登録
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,6 +37,19 @@ export default function SignUpPage() {
 
     if (!res.ok) {
       setServerError(result.message || '登録に失敗しました');
+      return;
+    }
+
+    // 2. 登録成功後、自動ログイン
+    const signInResult = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (signInResult?.error) {
+      setServerError('登録は完了しましたが、ログインに失敗しました');
+      router.push('/login');
       return;
     }
 

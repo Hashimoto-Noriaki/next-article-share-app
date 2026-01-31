@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 
-// コメント編集
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string; commentId: string }> },
@@ -11,17 +9,9 @@ export async function PUT(
   try {
     const { commentId } = await params;
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const { content } = await request.json();
 
@@ -43,8 +33,7 @@ export async function PUT(
       );
     }
 
-    // 自分のコメントのみ編集可能
-    if (comment.userId !== payload.userId) {
+    if (comment.userId !== userId) {
       return NextResponse.json(
         { message: '自分のコメントのみ編集できます' },
         { status: 403 },
@@ -71,7 +60,6 @@ export async function PUT(
   }
 }
 
-// コメント削除
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string; commentId: string }> },
@@ -79,17 +67,9 @@ export async function DELETE(
   try {
     const { commentId } = await params;
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const comment = await prisma.comment.findUnique({
       where: { id: commentId },
@@ -102,8 +82,7 @@ export async function DELETE(
       );
     }
 
-    // 自分のコメントのみ削除可能
-    if (comment.userId !== payload.userId) {
+    if (comment.userId !== userId) {
       return NextResponse.json(
         { message: '自分のコメントのみ削除できます' },
         { status: 403 },

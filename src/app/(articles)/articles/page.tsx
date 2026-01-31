@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
-import { verifyToken } from '@/lib/jwt';
+import { auth } from '@/external/auth';
 import { ArticleListHeader } from '@/features/articles/components/ArticleListHeader';
 import { SearchableArticleList } from '@/features/articles/components/SearchableArticleList';
 import { Footer } from '@/shared/components/organisms/Footer';
@@ -8,23 +7,16 @@ import { Footer } from '@/shared/components/organisms/Footer';
 const PER_PAGE = 12;
 
 export default async function ArticleListPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  let userId = '';
-  let userName = '';
+  /**
+   * NextAuth.js でセッションを取得
+   *
+   * auth() は Server Component で使用可能
+   * session.user には id, name, email, image が含まれる
+   */
+  const session = await auth();
 
-  if (token) {
-    const payload = await verifyToken(token);
-    if (payload) {
-      userId = payload.userId;
-
-      const user = await prisma.user.findUnique({
-        where: { id: payload.userId },
-        select: { name: true },
-      });
-      userName = user?.name || '';
-    }
-  }
+  const userId = session?.user?.id || '';
+  const userName = session?.user?.name || '';
 
   const [articles, total] = await Promise.all([
     prisma.article.findMany({
@@ -67,7 +59,6 @@ export default async function ArticleListPage() {
             エンジニア同士で有益な記事を共有しよう
           </p>
         </div>
-
         <div className="w-full max-w-8xl mt-8 px-8">
           <SearchableArticleList
             initialArticles={serializedArticles}

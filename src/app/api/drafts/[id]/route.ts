@@ -1,24 +1,15 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const { id } = await params;
 
@@ -33,7 +24,7 @@ export async function DELETE(
       );
     }
 
-    if (draft.authorId !== payload.userId) {
+    if (draft.authorId !== userId) {
       return NextResponse.json(
         { message: '権限がありません' },
         { status: 403 },

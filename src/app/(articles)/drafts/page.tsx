@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { verifyToken } from '@/lib/jwt';
+import { auth } from '@/external/auth';
 import Link from 'next/link';
 import { DraftSidebar } from '@/features/drafts/components/DraftSidebar';
 import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
@@ -13,25 +12,14 @@ type Props = {
 };
 
 export default async function DraftsPage({ searchParams }: Props) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+  const session = await auth();
 
-  if (!token) {
+  if (!session?.user?.id) {
     redirect('/login');
   }
 
-  const payload = await verifyToken(token);
-  if (!payload) {
-    redirect('/login');
-  }
-
-  // ユーザー情報を取得
-  const userId = payload.userId;
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { name: true },
-  });
-  const userName = user?.name || '';
+  const userId = session.user.id;
+  const userName = session.user.name || '';
 
   const drafts = await prisma.article.findMany({
     where: {
@@ -68,7 +56,6 @@ export default async function DraftsPage({ searchParams }: Props) {
         <NavigationHeader userId={userId} userName={userName} />
       </header>
 
-      {/* 上限警告バナー */}
       {isAtLimit && (
         <div className="bg-yellow-100 px-5 py-3 flex items-center justify-center gap-2">
           <span className="text-xl">⚠️</span>

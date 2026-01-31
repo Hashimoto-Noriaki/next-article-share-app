@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
+import { signIn } from 'next-auth/react';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { loginSchema, LoginInput } from '@/shared/lib/validations/auth';
@@ -25,13 +26,13 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginInput) => {
     setServerError('');
 
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+    const result = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
     });
 
-    if (!res.ok) {
+    if (result?.error) {
       setServerError('メールアドレスまたはパスワードが間違っています');
       return;
     }
