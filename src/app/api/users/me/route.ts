@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 import { z } from 'zod';
 
 const updateUserSchema = z.object({
@@ -12,23 +11,14 @@ const updateUserSchema = z.object({
   email: z.string().email('有効なメールアドレスを入力してください'),
 });
 
-// ユーザー情報取得
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const user = await prisma.user.findUnique({
-      where: { id: payload.userId },
+      where: { id: userId },
       select: { id: true, name: true, email: true },
     });
 
@@ -49,30 +39,20 @@ export async function GET() {
   }
 }
 
-// ユーザー情報更新
 export async function PUT(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const body = await request.json();
     const validatedData = updateUserSchema.parse(body);
 
-    // メールアドレスの重複チェック
     const existingUser = await prisma.user.findUnique({
       where: { email: validatedData.email },
     });
 
-    if (existingUser && existingUser.id !== payload.userId) {
+    if (existingUser && existingUser.id !== userId) {
       return NextResponse.json(
         { message: 'このメールアドレスは既に使用されています' },
         { status: 400 },
@@ -80,7 +60,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const user = await prisma.user.update({
-      where: { id: payload.userId },
+      where: { id: userId },
       data: {
         name: validatedData.name,
         email: validatedData.email,
@@ -108,34 +88,19 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// 退会
 export async function DELETE() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
-
-    // ユーザーと関連記事を削除
     await prisma.user.delete({
-      where: { id: payload.userId },
+      where: { id: userId },
     });
 
-    // Cookie削除
-    const response = NextResponse.json({
+    return NextResponse.json({
       message: '退会が完了しました',
     });
-
-    response.cookies.delete('token');
-
-    return response;
   } catch (error) {
     console.error('退会エラー:', error);
     return NextResponse.json(

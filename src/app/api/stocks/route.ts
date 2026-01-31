@@ -1,25 +1,16 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const stocks = await prisma.stock.findMany({
       where: {
-        userId: payload.userId,
+        userId,
       },
       orderBy: { createdAt: 'desc' },
       include: {
@@ -33,7 +24,6 @@ export async function GET() {
       },
     });
 
-    // 記事データのみ返す
     const articles = stocks.map((stock) => stock.article);
 
     return NextResponse.json(articles);
