@@ -2,8 +2,9 @@
 
 import { signIn } from 'next-auth/react';
 import { FaGithub } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 
-type Provider = 'github';
+type Provider = 'github' | 'google';
 
 type Props = {
   provider: Provider;
@@ -16,6 +17,12 @@ const providerConfig = {
     icon: FaGithub,
     label: 'GitHub',
     className: 'bg-gray-900 text-white hover:bg-gray-800',
+  },
+  google: {
+    icon: FcGoogle,
+    label: 'Google',
+    className:
+      'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300',
   },
 };
 

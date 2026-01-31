@@ -101,8 +101,11 @@ export default function LoginPage() {
           <hr className="flex-1 border-white/50" />
         </div>
 
-        {/* GitHub ログインボタン */}
-        <OAuthButton provider="github" mode="login" />
+        {/* GitHub と Google のボタン */}
+        <div className="flex flex-col gap-3">
+          <OAuthButton provider="github" mode="login" />
+          <OAuthButton provider="google" mode="login" />
+        </div>
 
         <Link
           href="/signup"
