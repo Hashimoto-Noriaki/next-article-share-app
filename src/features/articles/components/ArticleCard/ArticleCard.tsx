@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { AiOutlineHeart } from 'react-icons/ai';
 import { LikeButton } from '../LikeButton';
 
@@ -9,6 +10,7 @@ type Props = {
   title: string;
   tags: string[];
   authorName: string;
+  authorImage?: string | null;
   createdAt: Date;
   updatedAt?: Date;
   likeCount: number;
@@ -23,6 +25,7 @@ export function ArticleCard({
   title,
   tags,
   authorName,
+  authorImage,
   createdAt,
   updatedAt,
   likeCount,
@@ -54,8 +57,22 @@ export function ArticleCard({
           ))}
         </div>
         <div className="flex justify-between items-center mt-4 text-sm text-gray-500">
-          <span>{authorName}</span>
-
+          {/* 著者名と画像 */}
+          <div className="flex items-center gap-2">
+            {authorImage ? (
+              <div className="relative w-6 h-6 rounded-full overflow-hidden">
+                <Image
+                  src={authorImage}
+                  alt={authorName}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-6 h-6 rounded-full bg-gray-300" />
+            )}
+            <span>{authorName}</span>
+          </div>
           <div
             onClick={(e) => {
               e.stopPropagation();

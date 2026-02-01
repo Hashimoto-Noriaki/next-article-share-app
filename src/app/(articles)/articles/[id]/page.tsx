@@ -22,6 +22,7 @@ export default async function ArticleDetailPage({ params }: Props) {
   const session = await auth();
   const userId = session?.user?.id || '';
   const userName = session?.user?.name || '';
+  const userImage = session?.user?.image || null;
 
   const article = await prisma.article.findUnique({
     where: { id },
@@ -73,7 +74,13 @@ export default async function ArticleDetailPage({ params }: Props) {
         >
           ← 記事一覧に戻る
         </Link>
-        {userId && <NavigationHeader userId={userId} userName={userName} />}
+        {userId && (
+          <NavigationHeader
+            userId={userId}
+            userName={userName}
+            userImage={userImage}
+          />
+        )}
       </header>
       <main className="container mx-auto max-w-7xl px-6 py-10 grow">
         <article className="bg-white rounded-lg shadow-md p-8">

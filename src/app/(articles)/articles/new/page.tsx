@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
 import { NewArticleHeader } from '@/features/articles/components/NewArticleHeader';
@@ -19,6 +19,27 @@ export default function NewArticlePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDraftSubmitting, setIsDraftSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
+
+  // ユーザー情報
+  const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch('/api/users/me');
+      if (!res.ok) {
+        router.push('/login');
+        return;
+      }
+      const user = await res.json();
+      setUserId(user.id);
+      setUserName(user.name || '');
+      setUserImage(user.image || null);
+    };
+
+    fetchUser();
+  }, [router]);
 
   const handleSubmit = async (isDraft: boolean) => {
     setErrors({});
@@ -81,6 +102,9 @@ export default function NewArticlePage() {
         onSaveDraft={handleSaveDraft}
         isSubmitting={isSubmitting}
         isDraftSubmitting={isDraftSubmitting}
+        userId={userId}
+        userName={userName}
+        userImage={userImage}
       />
       <main className="grow container mx-auto px-5 py-5 pt-1">
         <MarkdownEditor

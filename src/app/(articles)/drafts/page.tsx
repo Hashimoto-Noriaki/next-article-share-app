@@ -20,6 +20,7 @@ export default async function DraftsPage({ searchParams }: Props) {
 
   const userId = session.user.id;
   const userName = session.user.name || '';
+  const userImage = session?.user?.image || null;
 
   const drafts = await prisma.article.findMany({
     where: {
@@ -53,7 +54,11 @@ export default async function DraftsPage({ searchParams }: Props) {
         >
           ← 記事一覧に戻る
         </Link>
-        <NavigationHeader userId={userId} userName={userName} />
+        <NavigationHeader
+          userId={userId}
+          userName={userName}
+          userImage={userImage}
+        />
       </header>
 
       {isAtLimit && (

@@ -17,6 +17,7 @@ export default async function ArticleListPage() {
 
   const userId = session?.user?.id || '';
   const userName = session?.user?.name || '';
+  const userImage = session?.user?.image || null;
 
   const [articles, total] = await Promise.all([
     prisma.article.findMany({
@@ -24,7 +25,7 @@ export default async function ArticleListPage() {
       orderBy: { createdAt: 'desc' },
       include: {
         author: {
-          select: { name: true },
+          select: { name: true, image: true },
         },
         ...(userId && {
           likes: {
@@ -45,13 +46,18 @@ export default async function ArticleListPage() {
     createdAt: article.createdAt.toISOString(),
     updatedAt: article.updatedAt.toISOString(),
     isLiked: 'likes' in article && article.likes.length > 0,
+    authorImage: article.author.image,
   }));
 
   const totalPages = Math.ceil(total / PER_PAGE);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <ArticleListHeader userId={userId} userName={userName} />
+      <ArticleListHeader
+        userId={userId}
+        userName={userName}
+        userImage={userImage}
+      />
       <main className="grow flex flex-col items-center justify-start mt-5">
         <div className="bg-linear-to-r from-rose-300 to-cyan-600 px-8 py-12 font-bold text-white w-full max-w-5xl text-center rounded-lg shadow-lg">
           <h1 className="text-5xl">テックブログ共有アプリ</h1>
