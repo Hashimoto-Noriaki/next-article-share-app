@@ -15,6 +15,7 @@ export default async function StocksPage() {
 
   const userId = session.user.id;
   const userName = session.user.name || '';
+  const userImage = session?.user?.image || null;
 
   const stocks = await prisma.stock.findMany({
     where: {
@@ -41,7 +42,11 @@ export default async function StocksPage() {
         >
           ← 記事一覧に戻る
         </Link>
-        <NavigationHeader userId={userId} userName={userName} />
+        <NavigationHeader
+          userId={userId}
+          userName={userName}
+          userImage={userImage}
+        />
       </header>
       <main className="container mx-auto px-5 py-8 max-w-2xl grow">
         <h1 className="text-2xl font-bold mb-8">ストックした記事</h1>

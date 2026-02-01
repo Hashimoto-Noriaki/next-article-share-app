@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
@@ -20,6 +21,9 @@ export default function SettingsPage() {
   const [serverError, setServerError] = useState('');
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -42,10 +46,62 @@ export default function SettingsPage() {
       setValue('email', user.email);
       setUserId(user.id);
       setUserName(user.name || '');
+      setUserImage(user.image || null);
     };
 
     fetchUser();
   }, [router, setValue]);
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setServerError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'profiles');
+
+      const uploadRes = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadRes.ok) {
+        const data = await uploadRes.json();
+        setServerError(data.message || '画像のアップロードに失敗しました');
+        return;
+      }
+
+      const { url } = await uploadRes.json();
+
+      // ユーザー情報を更新
+      const updateRes = await fetch('/api/users/me/image', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: url }),
+      });
+
+      if (!updateRes.ok) {
+        setServerError('プロフィール画像の更新に失敗しました');
+        return;
+      }
+
+      setUserImage(url);
+      setSuccess('プロフィール画像を更新しました');
+    } catch (error) {
+      console.error('アップロードエラー:', error);
+      setServerError('画像のアップロードに失敗しました');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const onSubmit = async (data: UpdateUserInput) => {
     setSuccess('');
@@ -77,10 +133,55 @@ export default function SettingsPage() {
         >
           ← 記事一覧に戻る
         </Link>
-        {userId && <NavigationHeader userId={userId} userName={userName} />}
+        {userId && (
+          <NavigationHeader
+            userId={userId}
+            userName={userName}
+            userImage={userImage}
+          />
+        )}
       </header>
       <main className="container mx-auto px-5 py-8 max-w-md grow">
         <h1 className="text-2xl font-bold mb-8 text-center">プロフィール</h1>
+        {/* プロフィール画像 */}
+        <div className="bg-white rounded-lg shadow-md p-8 mb-6">
+          <h2 className="font-bold mb-4">プロフィール画像</h2>
+          <div className="flex flex-col items-center">
+            <button
+              type="button"
+              onClick={handleImageClick}
+              disabled={isUploading}
+              className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300 hover:border-cyan-500 transition cursor-pointer"
+            >
+              {userImage ? (
+                <Image
+                  src={userImage}
+                  alt="プロフィール画像"
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+                  未設定
+                </div>
+              )}
+              {isUploading && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-sm">
+                  更新中...
+                </div>
+              )}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              onChange={handleImageChange}
+              className="hidden"
+              placeholder="プロフィール"
+            />
+            <p className="text-sm text-gray-500 mt-2">クリックして画像を変更</p>
+          </div>
+        </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white rounded-lg shadow-md p-8"
