@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { useLike } from '../../hooks';
 
 type Props = {
   articleId: string;
@@ -17,39 +16,18 @@ export function LikeButton({
   initialCount,
   isAuthor,
 }: Props) {
-  const router = useRouter();
-  const [isLiked, setIsLiked] = useState(initialLiked);
-  const [likeCount, setLikeCount] = useState(initialCount);
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLiked, likeCount, isLoading, toggleLike } = useLike({
+    articleId,
+    initialLiked,
+    initialCount,
+  });
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (isAuthor) {
       alert('自分の記事にはいいねできません');
       return;
     }
-
-    setIsLoading(true);
-
-    try {
-      const res = await fetch(`/api/articles/${articleId}/like`, {
-        method: isLiked ? 'DELETE' : 'POST',
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || 'エラーが発生しました');
-        return;
-      }
-
-      setIsLiked(!isLiked);
-      setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
-      router.refresh();
-    } catch (error) {
-      console.error('いいねエラー:', error);
-      alert('エラーが発生しました');
-    } finally {
-      setIsLoading(false);
-    }
+    toggleLike();
   };
 
   return (
