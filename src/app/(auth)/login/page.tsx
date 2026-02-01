@@ -108,6 +108,13 @@ export default function LoginPage() {
         </div>
 
         <Link
+          href="/forgot-password"
+          className="block text-center underline mt-5 hover:text-cyan-800"
+        >
+          パスワードをお忘れの方
+        </Link>
+
+        <Link
           href="/signup"
           className="block text-center underline mt-5 hover:text-cyan-800"
         >
