@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 import { createArticleSchema } from '@/shared/lib/validations/article';
 import {
   draftArticleSchema,
@@ -50,25 +49,16 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const body = await request.json();
 
-    // 下書きの場合、上限チェック
     if (body.isDraft) {
       const draftCount = await prisma.article.count({
         where: {
-          authorId: payload.userId,
+          authorId: userId,
           isDraft: true,
         },
       });
@@ -92,7 +82,7 @@ export async function POST(request: NextRequest) {
         content: validatedData.content || '',
         tags: validatedData.tags || [],
         isDraft: validatedData.isDraft ?? false,
-        authorId: payload.userId,
+        authorId: userId,
       },
     });
 
@@ -108,7 +98,6 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-
     return NextResponse.json(
       { message: '記事の投稿に失敗しました' },
       { status: 500 },

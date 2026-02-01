@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 import { createNotification } from '@/lib/notification';
 
-// コメント一覧取得
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -32,7 +30,6 @@ export async function GET(
   }
 }
 
-// コメント投稿
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -40,17 +37,9 @@ export async function POST(
   try {
     const { id } = await params;
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
     const { content } = await request.json();
 
@@ -75,7 +64,7 @@ export async function POST(
     const comment = await prisma.comment.create({
       data: {
         content: content.trim(),
-        userId: payload.userId,
+        userId,
         articleId: id,
       },
       include: {
@@ -88,7 +77,7 @@ export async function POST(
     await createNotification({
       type: 'comment',
       userId: article.authorId,
-      senderId: payload.userId,
+      senderId: userId,
       articleId: id,
     });
 

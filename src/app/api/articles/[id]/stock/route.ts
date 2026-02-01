@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 
-// ストックする
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -11,20 +9,10 @@ export async function POST(
   try {
     const { id } = await params;
 
-    // 認証チェック
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
-
-    // 記事の存在確認
     const article = await prisma.article.findUnique({
       where: { id },
     });
@@ -36,11 +24,10 @@ export async function POST(
       );
     }
 
-    // 既にストック済みかチェック
     const existingStock = await prisma.stock.findUnique({
       where: {
         userId_articleId: {
-          userId: payload.userId,
+          userId,
           articleId: id,
         },
       },
@@ -53,10 +40,9 @@ export async function POST(
       );
     }
 
-    // ストック作成
     await prisma.stock.create({
       data: {
-        userId: payload.userId,
+        userId,
         articleId: id,
       },
     });
@@ -73,7 +59,6 @@ export async function POST(
   }
 }
 
-// ストック解除
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -81,24 +66,14 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // 認証チェック
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
-
-    // ストックの存在確認
     const existingStock = await prisma.stock.findUnique({
       where: {
         userId_articleId: {
-          userId: payload.userId,
+          userId,
           articleId: id,
         },
       },
@@ -111,11 +86,10 @@ export async function DELETE(
       );
     }
 
-    // ストック削除
     await prisma.stock.delete({
       where: {
         userId_articleId: {
-          userId: payload.userId,
+          userId,
           articleId: id,
         },
       },

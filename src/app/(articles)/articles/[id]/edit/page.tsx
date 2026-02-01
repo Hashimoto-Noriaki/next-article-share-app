@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
+import { UserDropdown } from '@/features/articles/components/UserDropdown';
 import Link from 'next/link';
 
 type FieldErrors = {
@@ -23,6 +24,29 @@ export default function ArticleEditPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  // ユーザー情報
+  const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState<string | null>(null);
+
+  // ユーザー情報を取得
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch('/api/users/me');
+      if (!res.ok) {
+        router.push('/login');
+        return;
+      }
+      const user = await res.json();
+      setUserId(user.id);
+      setUserName(user.name || '');
+      setUserImage(user.image || null);
+    };
+
+    fetchUser();
+  }, [router]);
+
+  // 記事を取得
   useEffect(() => {
     const fetchArticle = async () => {
       const res = await fetch(`/api/articles/${id}`);
@@ -45,12 +69,6 @@ export default function ArticleEditPage() {
     setErrors({});
     setIsSubmitting(true);
 
-    /**
-     * タグ文字列を配列に変換
-     * trim(): 前後の空白を削除
-     * split(/\s+/): 1つ以上の空白で分割
-     * filter(): 空文字を除去
-     */
     const tagArray = tags
       .trim()
       .split(/\s+/)
@@ -105,13 +123,20 @@ export default function ArticleEditPage() {
           ← 戻る
         </Link>
         <h1 className="text-2xl font-bold text-white">記事を編集</h1>
-        <button
-          onClick={handleUpdate}
-          disabled={isSubmitting}
-          className="bg-emerald-500 hover:bg-emerald-400 disabled:bg-gray-400 text-white font-semibold px-6 py-2 rounded-md"
-        >
-          {isSubmitting ? '更新中...' : '更新する'}
-        </button>
+        <div className="flex items-center gap-3 text-white">
+          <button
+            onClick={handleUpdate}
+            disabled={isSubmitting}
+            className="bg-emerald-500 hover:bg-emerald-400 disabled:bg-gray-400 text-white font-semibold px-6 py-2 rounded-md"
+          >
+            {isSubmitting ? '更新中...' : '更新する'}
+          </button>
+          <UserDropdown
+            userId={userId}
+            userName={userName}
+            userImage={userImage}
+          />
+        </div>
       </header>
       <main className="grow container mx-auto px-5 py-5">
         <MarkdownEditor

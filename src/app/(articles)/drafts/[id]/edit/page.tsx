@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
+import { UserDropdown } from '@/features/articles/components/UserDropdown';
 import Link from 'next/link';
 
 type FieldErrors = {
@@ -24,6 +25,29 @@ export default function DraftEditPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  // ユーザー情報
+  const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState<string | null>(null);
+
+  // ユーザー情報を取得
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch('/api/users/me');
+      if (!res.ok) {
+        router.push('/login');
+        return;
+      }
+      const user = await res.json();
+      setUserId(user.id);
+      setUserName(user.name || '');
+      setUserImage(user.image || null);
+    };
+
+    fetchUser();
+  }, [router]);
+
+  // 下書きを取得
   useEffect(() => {
     const fetchDraft = async () => {
       const res = await fetch(`/api/articles/${id}`);
@@ -142,7 +166,7 @@ export default function DraftEditPage() {
           ← 下書き一覧に戻る
         </Link>
         <h1 className="text-2xl font-bold text-white">下書きを編集</h1>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3 text-white">
           <button
             onClick={handleSaveDraft}
             disabled={isSubmitting || isPublishing}
@@ -157,6 +181,11 @@ export default function DraftEditPage() {
           >
             {isPublishing ? '公開中...' : '公開する'}
           </button>
+          <UserDropdown
+            userId={userId}
+            userName={userName}
+            userImage={userImage}
+          />
         </div>
       </header>
       <main className="grow container mx-auto px-5 py-5">

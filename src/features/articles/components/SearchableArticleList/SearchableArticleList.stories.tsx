@@ -28,7 +28,7 @@ const sampleArticles = [
     likeCount: 10,
     createdAt: '2026-01-01T00:00:00Z',
     updatedAt: '2026-01-01T00:00:00Z',
-    author: { name: 'ユーザーA' },
+    author: { name: 'ユーザーA', image: null },
     isLiked: false,
   },
   {
@@ -39,7 +39,7 @@ const sampleArticles = [
     likeCount: 25,
     createdAt: '2026-01-05T00:00:00Z',
     updatedAt: '2026-01-10T00:00:00Z',
-    author: { name: 'ユーザーB' },
+    author: { name: 'ユーザーB', image: null },
     isLiked: true,
   },
   {
@@ -50,7 +50,7 @@ const sampleArticles = [
     likeCount: 15,
     createdAt: '2026-01-08T00:00:00Z',
     updatedAt: '2026-01-08T00:00:00Z',
-    author: { name: '自分' },
+    author: { name: '自分', image: null },
     isLiked: false,
   },
 ];
@@ -59,6 +59,7 @@ export const Default: Story = {
   args: {
     initialArticles: sampleArticles,
     userId: '1',
+    initialTotalPages: 1,
   },
 };
 
@@ -66,6 +67,7 @@ export const Empty: Story = {
   args: {
     initialArticles: [],
     userId: '1',
+    initialTotalPages: 0,
   },
 };
 
@@ -73,5 +75,6 @@ export const NotLoggedIn: Story = {
   args: {
     initialArticles: sampleArticles,
     userId: '',
+    initialTotalPages: 1,
   },
 };

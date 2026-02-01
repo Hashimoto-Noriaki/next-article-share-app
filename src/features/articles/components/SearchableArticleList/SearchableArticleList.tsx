@@ -14,6 +14,7 @@ type Article = {
   updatedAt: string;
   author: {
     name: string | null;
+    image: string | null;
   };
   isLiked?: boolean;
 };
@@ -147,6 +148,7 @@ export function SearchableArticleList({
               title={article.title}
               tags={article.tags}
               authorName={article.author.name || '名無し'}
+              authorImage={article.author.image}
               createdAt={new Date(article.createdAt)}
               updatedAt={new Date(article.updatedAt)}
               likeCount={article.likeCount}

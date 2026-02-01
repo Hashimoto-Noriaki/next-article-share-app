@@ -1,11 +1,11 @@
 import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { verifyToken } from '@/lib/jwt';
+import { auth } from '@/external/auth';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
 import { Footer } from '../../../../shared/components/organisms/Footer';
 import { NavigationHeader } from '../../../../shared/components/molecules/NavigationHeader';
 import Link from 'next/link';
+import Image from 'next/image';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -14,24 +14,10 @@ type Props = {
 export default async function UserProfilePage({ params }: Props) {
   const { id } = await params;
 
-  // ログインユーザー取得
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  let userId = '';
-  let userName = '';
-
-  if (token) {
-    const payload = await verifyToken(token);
-    if (payload) {
-      userId = payload.userId;
-
-      const loggedInUser = await prisma.user.findUnique({
-        where: { id: payload.userId },
-        select: { name: true },
-      });
-      userName = loggedInUser?.name || '';
-    }
-  }
+  const session = await auth();
+  const userId = session?.user?.id || '';
+  const userName = session?.user?.name || '';
+  const userImage = session?.user?.image || null;
 
   const user = await prisma.user.findUnique({
     where: { id },
@@ -57,16 +43,41 @@ export default async function UserProfilePage({ params }: Props) {
         >
           ← 記事一覧に戻る
         </Link>
-        {userId && <NavigationHeader userId={userId} userName={userName} />}
+        {userId && (
+          <NavigationHeader
+            userId={userId}
+            userName={userName}
+            userImage={userImage}
+          />
+        )}
       </header>
 
       <main className="container mx-auto px-5 py-8 max-w-4xl grow">
         <section className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            {displayName}
-          </h1>
-          <p className="text-gray-500 font-bold text-xl">{user.email}</p>
-          <p className="text-gray-500 font-bold text-xl mt-2">
+          {/* プロフィール画像と名前 */}
+          <div className="flex items-center gap-4 mb-4">
+            {user.image ? (
+              <div className="relative w-20 h-20 rounded-full overflow-hidden">
+                <Image
+                  src={user.image}
+                  alt={displayName}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-gray-500">
+                未設定
+              </div>
+            )}
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800">
+                {displayName}
+              </h1>
+              <p className="text-gray-500 font-bold">{user.email}</p>
+            </div>
+          </div>
+          <p className="text-gray-500 font-bold text-xl">
             投稿記事数: {user.articles.length}
           </p>
         </section>
@@ -83,6 +94,7 @@ export default async function UserProfilePage({ params }: Props) {
                 title={article.title}
                 tags={article.tags}
                 authorName={displayName}
+                authorImage={user.image}
                 createdAt={article.createdAt}
                 likeCount={article.likeCount}
               />

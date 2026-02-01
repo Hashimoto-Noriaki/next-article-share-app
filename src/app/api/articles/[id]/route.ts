@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { verifyToken } from '@/lib/jwt';
+import { requireAuth } from '@/lib/auth';
 import { createArticleSchema } from '@/shared/lib/validations/article';
 import { draftArticleSchema } from '@/shared/lib/validations/draft';
 import { z } from 'zod';
 
-// 記事詳細取得
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -40,7 +38,6 @@ export async function GET(
   }
 }
 
-// 記事編集
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -48,20 +45,10 @@ export async function PUT(
   try {
     const { id } = await params;
 
-    // 認証チェック
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
-
-    // 記事の存在確認と権限チェック
     const existingArticle = await prisma.article.findUnique({
       where: { id },
     });
@@ -73,19 +60,17 @@ export async function PUT(
       );
     }
 
-    if (existingArticle.authorId !== payload.userId) {
+    if (existingArticle.authorId !== userId) {
       return NextResponse.json(
         { message: '編集権限がありません' },
         { status: 403 },
       );
     }
 
-    // バリデーション
     const body = await request.json();
     const schema = body.isDraft ? draftArticleSchema : createArticleSchema;
     const validatedData = schema.parse(body);
 
-    // 記事更新
     const article = await prisma.article.update({
       where: { id },
       data: {
@@ -117,7 +102,6 @@ export async function PUT(
   }
 }
 
-// 記事削除
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -125,19 +109,10 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // 認証チェック
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const authResult = await requireAuth();
+    if (authResult instanceof Response) return authResult;
+    const { userId } = authResult;
 
-    if (!token) {
-      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
-    }
-
-    const payload = await verifyToken(token);
-    if (!payload) {
-      return NextResponse.json({ message: '認証が無効です' }, { status: 401 });
-    }
-    // 記事の存在確認と権限チェック
     const existingArticle = await prisma.article.findUnique({
       where: { id },
     });
@@ -149,14 +124,13 @@ export async function DELETE(
       );
     }
 
-    if (existingArticle.authorId !== payload.userId) {
+    if (existingArticle.authorId !== userId) {
       return NextResponse.json(
         { message: '削除権限がありません' },
         { status: 403 },
       );
     }
 
-    // 記事削除
     await prisma.article.delete({
       where: { id },
     });

@@ -6,8 +6,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
+import { signIn } from 'next-auth/react';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { Button } from '@/shared/components/atoms/Button';
+import { OAuthButton } from '@/shared/components/atoms/OAuthButton';
 import { signupSchema, SignUpInput } from '@/shared/lib/validations/auth';
 
 export default function SignUpPage() {
@@ -22,6 +24,7 @@ export default function SignUpPage() {
     resolver: zodResolver(signupSchema),
   });
 
+  // メール/パスワードで登録
   const onSubmit = async (data: SignUpInput) => {
     setServerError('');
 
@@ -38,6 +41,18 @@ export default function SignUpPage() {
       return;
     }
 
+    const signInResult = await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (signInResult?.error) {
+      setServerError('登録は完了しましたが、ログインに失敗しました');
+      router.push('/login');
+      return;
+    }
+
     router.push('/articles');
     router.refresh();
   };
@@ -50,11 +65,14 @@ export default function SignUpPage() {
           テックブログ共有アプリ
         </h1>
         <h2 className="text-xl text-white font-bold mt-3">新規登録</h2>
+
         {serverError && (
           <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm mt-3">
             {serverError}
           </div>
         )}
+
+        {/* メール/パスワードフォーム */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 text-left mt-5"
@@ -99,13 +117,26 @@ export default function SignUpPage() {
           <Button type="submit" variant="secondary" disabled={isSubmitting}>
             {isSubmitting ? '登録中...' : '新規登録'}
           </Button>
-          <Link
-            href="/login"
-            className="text-center underline mt-5 hover:text-cyan-800"
-          >
-            ログインはこちら
-          </Link>
         </form>
+
+        {/* 区切り線 */}
+        <div className="flex items-center gap-4 my-6">
+          <hr className="flex-1 border-white/50" />
+          <span className="text-white text-sm">または</span>
+          <hr className="flex-1 border-white/50" />
+        </div>
+
+        {/* GitHub と Google のボタン */}
+        <div className="flex flex-col gap-3">
+          <OAuthButton provider="github" mode="signup" />
+          <OAuthButton provider="google" mode="signup" />
+        </div>
+        <Link
+          href="/login"
+          className="block text-center underline mt-5 hover:text-cyan-800"
+        >
+          ログインはこちら
+        </Link>
       </div>
     </div>
   );

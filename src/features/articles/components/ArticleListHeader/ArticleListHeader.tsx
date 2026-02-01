@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import { logout } from '@/actions/auth';
-import { NotificationBell } from '@/features/notifications/components';
 import { UserDropdown } from '../UserDropdown';
 
 type Props = {
   userId: string;
   userName: string;
+  userImage?: string | null;
 };
 
-export function ArticleListHeader({ userId, userName }: Props) {
+export function ArticleListHeader({ userId, userName, userImage }: Props) {
   const handleLogout = async () => {
     await logout();
   };
@@ -38,11 +38,12 @@ export function ArticleListHeader({ userId, userName }: Props) {
                 新規投稿
               </Link>
             </li>
-            <li className="">
-              <NotificationBell />
-            </li>
             <li>
-              <UserDropdown userId={userId} userName={userName} />
+              <UserDropdown
+                userId={userId}
+                userName={userName}
+                userImage={userImage}
+              />
             </li>
             <li>
               <button onClick={handleLogout} className="hover:text-amber-400">
