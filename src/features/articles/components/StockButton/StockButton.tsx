@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
+import { useStock } from '../../hooks';
 
 type Props = {
   articleId: string;
@@ -10,37 +9,14 @@ type Props = {
 };
 
 export function StockButton({ articleId, initialStocked }: Props) {
-  const router = useRouter();
-  const [isStocked, setIsStocked] = useState(initialStocked);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClick = async () => {
-    setIsLoading(true);
-
-    try {
-      const res = await fetch(`/api/articles/${articleId}/stock`, {
-        method: isStocked ? 'DELETE' : 'POST',
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || 'エラーが発生しました');
-        return;
-      }
-
-      setIsStocked(!isStocked);
-      router.refresh();
-    } catch (error) {
-      console.error('ストックエラー:', error);
-      alert('エラーが発生しました');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { isStocked, isLoading, toggleStock } = useStock({
+    articleId,
+    initialStocked,
+  });
 
   return (
     <button
-      onClick={handleClick}
+      onClick={toggleStock}
       disabled={isLoading}
       className={`flex items-center gap-2 px-4 py-2 rounded-md transition ${
         isStocked
