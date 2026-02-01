@@ -33,7 +33,8 @@ export function useCommentForm({ articleId }: UseCommentFormParams) {
       setContent('');
       router.refresh();
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'エラーが発生しました';
+      const message =
+        error instanceof Error ? error.message : 'エラーが発生しました';
       alert(message);
     } finally {
       setIsLoading(false);

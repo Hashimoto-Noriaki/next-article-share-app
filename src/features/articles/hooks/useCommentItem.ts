@@ -26,11 +26,14 @@ export function useCommentItem({
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/articles/${articleId}/comments/${commentId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: editContent }),
-      });
+      const res = await fetch(
+        `/api/articles/${articleId}/comments/${commentId}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: editContent }),
+        },
+      );
 
       if (!res.ok) {
         const data = await res.json();
@@ -40,7 +43,8 @@ export function useCommentItem({
       setIsEditing(false);
       router.refresh();
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'エラーが発生しました';
+      const message =
+        error instanceof Error ? error.message : 'エラーが発生しました';
       alert(message);
     } finally {
       setIsLoading(false);
@@ -53,9 +57,12 @@ export function useCommentItem({
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/articles/${articleId}/comments/${commentId}`, {
-        method: 'DELETE',
-      });
+      const res = await fetch(
+        `/api/articles/${articleId}/comments/${commentId}`,
+        {
+          method: 'DELETE',
+        },
+      );
 
       if (!res.ok) {
         const data = await res.json();
@@ -64,7 +71,8 @@ export function useCommentItem({
 
       router.refresh();
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'エラーが発生しました';
+      const message =
+        error instanceof Error ? error.message : 'エラーが発生しました';
       alert(message);
     } finally {
       setIsLoading(false);

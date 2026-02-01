@@ -1,6 +1,6 @@
 'use client';
 
-import { useCommentItem } from '../../hooks';
+import { useCommentItem } from '../../../hooks';
 
 type Props = {
   id: string;
