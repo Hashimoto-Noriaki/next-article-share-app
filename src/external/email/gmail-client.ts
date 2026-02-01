@@ -19,7 +19,10 @@ type SendPasswordResetEmailParams = {
 export async function sendPasswordResetEmail({
   email,
   token,
-}: SendPasswordResetEmailParams): Promise<{ success: boolean; error?: string }> {
+}: SendPasswordResetEmailParams): Promise<{
+  success: boolean;
+  error?: string;
+}> {
   const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
 
   const htmlContent = `
