@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useCommentItem } from '../../../hooks';
 
 type Props = {
   id: string;
@@ -21,66 +20,20 @@ export function CommentItem({
   createdAt,
   isOwner,
 }: Props) {
-  const router = useRouter();
-  const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(content);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleUpdate = async () => {
-    if (!editContent.trim()) {
-      alert('コメントを入力してください');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const res = await fetch(`/api/articles/${articleId}/comments/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: editContent }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || 'エラーが発生しました');
-        return;
-      }
-
-      setIsEditing(false);
-      router.refresh();
-    } catch (error) {
-      console.error('コメント編集エラー:', error);
-      alert('エラーが発生しました');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!confirm('コメントを削除しますか？')) return;
-
-    setIsLoading(true);
-
-    try {
-      const res = await fetch(`/api/articles/${articleId}/comments/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || 'エラーが発生しました');
-        return;
-      }
-
-      router.refresh();
-    } catch (error) {
-      console.error('コメント削除エラー:', error);
-      alert('エラーが発生しました');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const {
+    isEditing,
+    editContent,
+    setEditContent,
+    isLoading,
+    updateComment,
+    deleteComment,
+    startEditing,
+    cancelEditing,
+  } = useCommentItem({
+    articleId,
+    commentId: id,
+    initialContent: content,
+  });
 
   return (
     <div className="border-b border-gray-200 py-4">
@@ -94,13 +47,13 @@ export function CommentItem({
         {isOwner && !isEditing && (
           <div className="flex gap-2">
             <button
-              onClick={() => setIsEditing(true)}
+              onClick={startEditing}
               className="px-3 py-1 text-sm border border-cyan-500 text-cyan-600 rounded-md hover:bg-cyan-50 transition"
             >
               編集
             </button>
             <button
-              onClick={handleDelete}
+              onClick={deleteComment}
               disabled={isLoading}
               className="px-3 py-1 text-sm border border-red-500 text-red-600 rounded-md hover:bg-red-50 transition"
             >
@@ -121,17 +74,14 @@ export function CommentItem({
           />
           <div className="flex gap-2 mt-2">
             <button
-              onClick={handleUpdate}
+              onClick={updateComment}
               disabled={isLoading}
               className="px-3 py-1 bg-cyan-500 text-white rounded hover:bg-cyan-600 disabled:bg-gray-300 text-sm"
             >
               {isLoading ? '更新中...' : '更新'}
             </button>
             <button
-              onClick={() => {
-                setIsEditing(false);
-                setEditContent(content);
-              }}
+              onClick={cancelEditing}
               className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm"
             >
               キャンセル

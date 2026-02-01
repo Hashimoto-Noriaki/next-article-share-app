@@ -1,48 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useCommentForm } from '../../../hooks';
 
 type Props = {
   articleId: string;
 };
 
 export function CommentForm({ articleId }: Props) {
-  const router = useRouter();
-  const [content, setContent] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const { content, setContent, isLoading, submitComment } = useCommentForm({
+    articleId,
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!content.trim()) {
-      alert('コメントを入力してください');
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const res = await fetch(`/api/articles/${articleId}/comments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || 'エラーが発生しました');
-        return;
-      }
-
-      setContent('');
-      router.refresh();
-    } catch (error) {
-      console.error('コメント投稿エラー:', error);
-      alert('エラーが発生しました');
-    } finally {
-      setIsLoading(false);
-    }
+    submitComment();
   };
 
   return (
