@@ -404,6 +404,110 @@ paths:
         '200':
           description: ログアウト成功
 
+  /api/auth/forgot-password:
+    post:
+      tags: [Auth]
+      summary: パスワードリセットリクエスト
+      description: パスワードリセット用のメールを送信します
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: 登録済みメールアドレス
+      responses:
+        '200':
+          description: リクエスト受付（セキュリティのため、メールの存在有無に関わらず同じレスポンス）
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 登録されているメールアドレスの場合、パスワードリセットのメールを送信しました。
+        '400':
+          description: 入力エラー
+        '500':
+          description: サーバーエラー
+
+  /api/auth/reset-password:
+    get:
+      tags: [Auth]
+      summary: トークン検証
+      description: パスワードリセットトークンの有効性を確認します
+      parameters:
+        - in: query
+          name: token
+          required: true
+          schema:
+            type: string
+          description: パスワードリセットトークン
+      responses:
+        '200':
+          description: トークン有効
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                    example: true
+        '400':
+          description: トークンが無効または期限切れ
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+    post:
+      tags: [Auth]
+      summary: パスワードリセット
+      description: 新しいパスワードを設定します
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token:
+                  type: string
+                  description: パスワードリセットトークン
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 50
+                  description: 新しいパスワード（8〜50文字）
+      responses:
+        '200':
+          description: パスワード変更成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: パスワードを変更しました。新しいパスワードでログインしてください。
+        '400':
+          description: トークンが無効または入力エラー
+        '500':
+          description: サーバーエラー
+
   # ============ Drafts ============
   /api/drafts:
     get:
