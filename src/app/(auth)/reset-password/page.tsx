@@ -86,7 +86,9 @@ function ResetPasswordForm() {
       }, 3000);
     } catch (err) {
       console.error('パスワードリセットエラー:', err);
-      setServerError('エラーが発生しました。しばらく経ってからお試しください。');
+      setServerError(
+        'エラーが発生しました。しばらく経ってからお試しください。',
+      );
     }
   };
 
@@ -138,7 +140,9 @@ function ResetPasswordForm() {
             <FaLaptopCode />
             テックブログ共有アプリ
           </h1>
-          <h2 className="text-xl text-white font-bold mt-3">パスワード変更完了</h2>
+          <h2 className="text-xl text-white font-bold mt-3">
+            パスワード変更完了
+          </h2>
 
           <div className="w-full rounded-md bg-green-200 border-green-300 text-green-800 px-4 py-3 text-sm text-center shadow-sm mt-5">
             パスワードを変更しました。新しいパスワードでログインできます。

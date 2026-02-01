@@ -19,7 +19,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     GitHub({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
-      allowDangerousEmailAccountLinking: true, 
+      allowDangerousEmailAccountLinking: true,
     }),
 
     // Google OAuth
