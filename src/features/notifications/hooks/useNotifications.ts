@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDropdown } from '@/shared/hooks';
 import { NotificationWithRelations } from '@/types';
 
@@ -24,11 +24,33 @@ export function useNotifications() {
     }
   };
 
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
   const markAllAsRead = async () => {
     try {
       const res = await fetch('/api/notifications', { method: 'PUT' });
       if (res.ok) {
         setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+      }
+    } catch (error) {
+      console.error('既読更新エラー:', error);
+    }
+  };
+
+  // 個別の通知を既読にする（追加）
+  const markAsRead = async (notificationId: string) => {
+    try {
+      const res = await fetch(`/api/notifications/${notificationId}`, {
+        method: 'PUT',
+      });
+      if (res.ok) {
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n.id === notificationId ? { ...n, isRead: true } : n,
+          ),
+        );
       }
     } catch (error) {
       console.error('既読更新エラー:', error);
@@ -52,6 +74,7 @@ export function useNotifications() {
     unreadCount,
     handleToggle,
     markAllAsRead,
+    markAsRead,
     close,
   };
 }

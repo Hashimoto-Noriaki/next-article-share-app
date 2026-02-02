@@ -13,6 +13,7 @@ export function NotificationBell() {
     unreadCount,
     handleToggle,
     markAllAsRead,
+    markAsRead,
     close,
   } = useNotifications();
 
@@ -57,6 +58,7 @@ export function NotificationBell() {
                   key={notification.id}
                   notification={notification}
                   onClose={close}
+                  onRead={() => markAsRead(notification.id)}
                 />
               ))
             )}
