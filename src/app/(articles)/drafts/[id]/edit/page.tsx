@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
 import { UserDropdown } from '@/features/articles/components/UserDropdown';
+import { useCurrentUser } from '@/shared/hooks';
 import Link from 'next/link';
 
 type FieldErrors = {
@@ -25,27 +26,15 @@ export default function DraftEditPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState<FieldErrors>({});
 
-  // ユーザー情報
-  const [userId, setUserId] = useState('');
-  const [userName, setUserName] = useState('');
-  const [userImage, setUserImage] = useState<string | null>(null);
+  // ユーザー情報（TanStack Query）
+  const { data: user, isLoading: isUserLoading, isError } = useCurrentUser();
 
-  // ユーザー情報を取得
+  // 認証エラー時はログインページへ
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch('/api/users/me');
-      if (!res.ok) {
-        router.push('/login');
-        return;
-      }
-      const user = await res.json();
-      setUserId(user.id);
-      setUserName(user.name || '');
-      setUserImage(user.image || null);
-    };
-
-    fetchUser();
-  }, [router]);
+    if (isError) {
+      router.push('/login');
+    }
+  }, [isError, router]);
 
   // 下書きを取得
   useEffect(() => {
@@ -148,7 +137,7 @@ export default function DraftEditPage() {
     router.refresh();
   };
 
-  if (isLoading) {
+  if (isLoading || isUserLoading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <p>読み込み中...</p>
@@ -182,9 +171,9 @@ export default function DraftEditPage() {
             {isPublishing ? '公開中...' : '公開する'}
           </button>
           <UserDropdown
-            userId={userId}
-            userName={userName}
-            userImage={userImage}
+            userId={user?.id || ''}
+            userName={user?.name || ''}
+            userImage={user?.image || null}
           />
         </div>
       </header>

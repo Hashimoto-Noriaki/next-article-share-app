@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
 import { NewArticleHeader } from '@/features/articles/components/NewArticleHeader';
+import { useCurrentUser } from '@/shared/hooks';
 
 type FieldErrors = {
   title?: string;
@@ -20,26 +21,15 @@ export default function NewArticlePage() {
   const [isDraftSubmitting, setIsDraftSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
 
-  // ユーザー情報
-  const [userId, setUserId] = useState('');
-  const [userName, setUserName] = useState('');
-  const [userImage, setUserImage] = useState<string | null>(null);
+  // ユーザー情報（TanStack Query）
+  const { data: user, isLoading: isUserLoading, isError } = useCurrentUser();
 
+  // 認証エラー時はログインページへ
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch('/api/users/me');
-      if (!res.ok) {
-        router.push('/login');
-        return;
-      }
-      const user = await res.json();
-      setUserId(user.id);
-      setUserName(user.name || '');
-      setUserImage(user.image || null);
-    };
-
-    fetchUser();
-  }, [router]);
+    if (isError) {
+      router.push('/login');
+    }
+  }, [isError, router]);
 
   const handleSubmit = async (isDraft: boolean) => {
     setErrors({});
@@ -95,6 +85,14 @@ export default function NewArticlePage() {
   const handlePublish = () => handleSubmit(false);
   const handleSaveDraft = () => handleSubmit(true);
 
+  if (isUserLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <p>読み込み中...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <NewArticleHeader
@@ -102,9 +100,9 @@ export default function NewArticlePage() {
         onSaveDraft={handleSaveDraft}
         isSubmitting={isSubmitting}
         isDraftSubmitting={isDraftSubmitting}
-        userId={userId}
-        userName={userName}
-        userImage={userImage}
+        userId={user?.id || ''}
+        userName={user?.name || ''}
+        userImage={user?.image || null}
       />
       <main className="grow container mx-auto px-5 py-5 pt-1">
         <MarkdownEditor
