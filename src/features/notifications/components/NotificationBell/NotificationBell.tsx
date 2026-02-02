@@ -1,70 +1,23 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
 import { AiOutlineBell } from 'react-icons/ai';
 import { NotificationItem } from '../NotificationItem';
-import { NotificationWithRelations } from '@/types';
+import { useNotifications } from '../../hooks';
 
 export function NotificationBell() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<
-    NotificationWithRelations[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const fetchNotifications = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch('/api/notifications');
-      if (res.ok) {
-        const data = await res.json();
-        setNotifications(data);
-      }
-    } catch (error) {
-      console.error('通知取得エラー:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleMarkAllAsRead = async () => {
-    try {
-      const res = await fetch('/api/notifications', { method: 'PUT' });
-      if (res.ok) {
-        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-      }
-    } catch (error) {
-      console.error('既読更新エラー:', error);
-    }
-  };
-
-  const handleToggle = () => {
-    if (!isOpen) {
-      fetchNotifications();
-    }
-    setIsOpen(!isOpen);
-  };
-
-  // 外側クリックで閉じる
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
+  const {
+    isOpen,
+    ref,
+    notifications,
+    isLoading,
+    unreadCount,
+    handleToggle,
+    markAllAsRead,
+    close,
+  } = useNotifications();
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative" ref={ref}>
       <button
         onClick={handleToggle}
         className="relative p-2 hover:text-amber-400"
@@ -83,7 +36,7 @@ export function NotificationBell() {
             <h3 className="font-bold text-gray-800">通知</h3>
             {unreadCount > 0 && (
               <button
-                onClick={handleMarkAllAsRead}
+                onClick={markAllAsRead}
                 className="text-xs text-cyan-600 hover:text-cyan-800"
               >
                 全て既読にする
@@ -103,7 +56,7 @@ export function NotificationBell() {
                 <NotificationItem
                   key={notification.id}
                   notification={notification}
-                  onClose={() => setIsOpen(false)}
+                  onClose={close}
                 />
               ))
             )}
