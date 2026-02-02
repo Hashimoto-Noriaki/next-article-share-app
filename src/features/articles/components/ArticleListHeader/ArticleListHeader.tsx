@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { logout } from '@/actions/auth';
 import { UserDropdown } from '../UserDropdown';
+import { NotificationBell } from '@/features/notifications/components';
 
 type Props = {
   userId: string;
@@ -32,6 +33,9 @@ export function ArticleListHeader({ userId, userName, userImage }: Props) {
               <Link href="/tutorial" className="hover:text-amber-400">
                 利用説明
               </Link>
+            </li>
+            <li>
+              <NotificationBell />
             </li>
             <li>
               <Link href="/articles/new" className="hover:text-amber-400">
