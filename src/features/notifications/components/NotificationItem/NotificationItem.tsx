@@ -10,16 +10,24 @@ import { FaComment } from 'react-icons/fa';
 type Props = {
   notification: NotificationWithRelations;
   onClose: () => void;
+  onRead: () => void;
 };
 
-export function NotificationItem({ notification, onClose }: Props) {
+export function NotificationItem({ notification, onClose, onRead }: Props) {
+  const handleClick = () => {
+    if (!notification.isRead) {
+      onRead();
+    }
+    onClose();
+  };
+
   return (
     <Link
       href={
         notification.articleId ? `/articles/${notification.articleId}` : '#'
       }
-      onClick={onClose}
-      className={`block px-4 py-3 hover:bg-gray-50 border-b border-gray-100 ${
+      onClick={handleClick} // 変更
+      className={`flex items-start gap-3 px-4 py-3 hover:bg-gray-50 border-b border-gray-100 ${
         !notification.isRead ? 'bg-cyan-50' : ''
       }`}
     >
