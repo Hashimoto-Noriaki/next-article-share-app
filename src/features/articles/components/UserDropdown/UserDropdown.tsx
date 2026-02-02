@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useDropdown } from '@/shared/hooks';
 
 type Props = {
   userId: string;
@@ -11,33 +11,12 @@ type Props = {
 };
 
 export function UserDropdown({ userId, userName, userImage }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  // 外側クリックで閉じる
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+  const { isOpen, ref, toggle, close } = useDropdown();
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative" ref={ref}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggle}
         className="flex items-center gap-2 hover:opacity-80 transition font-bold"
       >
         {userImage ? (
@@ -65,7 +44,7 @@ export function UserDropdown({ userId, userName, userImage }: Props) {
               <Link
                 href={`/users/${userId}`}
                 className="block px-4 py-2 hover:bg-gray-100"
-                onClick={() => setIsOpen(false)}
+                onClick={close}
               >
                 プロフィール
               </Link>
@@ -74,7 +53,7 @@ export function UserDropdown({ userId, userName, userImage }: Props) {
               <Link
                 href="/settings/profile"
                 className="block px-4 py-2 hover:bg-gray-100"
-                onClick={() => setIsOpen(false)}
+                onClick={close}
               >
                 設定
               </Link>
@@ -83,7 +62,7 @@ export function UserDropdown({ userId, userName, userImage }: Props) {
               <Link
                 href="/drafts"
                 className="block px-4 py-2 hover:bg-gray-100"
-                onClick={() => setIsOpen(false)}
+                onClick={close}
               >
                 下書き一覧
               </Link>
@@ -92,7 +71,7 @@ export function UserDropdown({ userId, userName, userImage }: Props) {
               <Link
                 href="/stocks"
                 className="block px-4 py-2 hover:bg-gray-100"
-                onClick={() => setIsOpen(false)}
+                onClick={close}
               >
                 ストックリスト
               </Link>
@@ -101,7 +80,7 @@ export function UserDropdown({ userId, userName, userImage }: Props) {
               <Link
                 href="/settings/withdraw"
                 className="block px-4 py-2 hover:bg-gray-100 text-red-500"
-                onClick={() => setIsOpen(false)}
+                onClick={close}
               >
                 退会
               </Link>
