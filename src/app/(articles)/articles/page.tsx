@@ -65,7 +65,7 @@ export default async function ArticleListPage() {
             エンジニア同士で有益な記事を共有しよう
           </p>
         </div>
-        <div className="w-full max-w-8xl mt-8 px-8">
+        <div className="w-full max-w-8xl mt-8 px-8 mb-5">
           <SearchableArticleList
             initialArticles={serializedArticles}
             userId={userId}
