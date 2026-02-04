@@ -16,6 +16,7 @@ Zodスキーマの単体テスト。
 
 - `src/shared/lib/validations/article.ts`
 - `src/shared/lib/validations/auth.ts`
+- `src/shared/lib/validations/draft.ts`
 - `src/shared/lib/validations/user.ts`
 
 ### 2. 認証（Jest）
