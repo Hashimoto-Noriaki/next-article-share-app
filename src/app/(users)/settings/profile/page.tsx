@@ -14,16 +14,19 @@ import {
   updateUserSchema,
   UpdateUserInput,
 } from '@/shared/lib/validations/user';
+import { useCurrentUser } from '@/shared/hooks';
 
 export default function SettingsPage() {
   const router = useRouter();
   const [success, setSuccess] = useState('');
   const [serverError, setServerError] = useState('');
-  const [userId, setUserId] = useState('');
-  const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState<string | null>(null);
+  const [userName, setUserName] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ユーザー情報（TanStack Query）
+  const { data: user, isLoading: isUserLoading, isError } = useCurrentUser();
 
   const {
     register,
@@ -34,23 +37,22 @@ export default function SettingsPage() {
     resolver: zodResolver(updateUserSchema),
   });
 
+  // 認証エラー時はログインページへ
   useEffect(() => {
-    const fetchUser = async () => {
-      const res = await fetch('/api/users/me');
-      if (!res.ok) {
-        router.push('/login');
-        return;
-      }
-      const user = await res.json();
+    if (isError) {
+      router.push('/login');
+    }
+  }, [isError, router]);
+
+  // ユーザー情報をフォームにセット
+  useEffect(() => {
+    if (user) {
       setValue('name', user.name || '');
-      setValue('email', user.email);
-      setUserId(user.id);
+      setValue('email', user.email || '');
       setUserName(user.name || '');
       setUserImage(user.image || null);
-    };
-
-    fetchUser();
-  }, [router, setValue]);
+    }
+  }, [user, setValue]);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -124,6 +126,14 @@ export default function SettingsPage() {
     setUserName(data.name || '');
   };
 
+  if (isUserLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <p>読み込み中...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
@@ -133,9 +143,9 @@ export default function SettingsPage() {
         >
           ← 記事一覧に戻る
         </Link>
-        {userId && (
+        {user && (
           <NavigationHeader
-            userId={userId}
+            userId={user.id}
             userName={userName}
             userImage={userImage}
           />
