@@ -14,13 +14,20 @@ export const authConfig: NextAuthConfig = {
       const isLoggedIn = !!auth?.user;
       const pathname = nextUrl.pathname;
 
-      const protectedPaths = ['/articles', '/tutorial'];
-      const authPaths = ['/login', '/signup'];
+      const protectedPaths = [
+        '/articles',
+        '/drafts',
+        '/stocks',
+        '/settings',
+        '/tutorial',
+      ];
+
+      const guestOnlyPaths = ['/login', '/signup']
 
       const isProtected = protectedPaths.some((path) =>
         pathname.startsWith(path),
       );
-      const isAuthPath = authPaths.some((path) => pathname.startsWith(path));
+      const isAuthPath = guestOnlyPaths.some((path) => pathname.startsWith(path));
 
       if (isProtected && !isLoggedIn) {
         return false;
