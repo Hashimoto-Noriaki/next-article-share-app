@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
-import { Footer } from '../../shared/components/organisms/Footer';
-import { Button } from '../../shared/components/atoms/Button';
-import { WelcomeHeader } from '../../features/home/WelcomeHeader';
+import { Footer } from '../../../shared/components/organisms/Footer';
+import { Button } from '../../../shared/components/atoms/Button';
+import { WelcomeHeader } from '../../../features/home/WelcomeHeader';
 
 export default function WelcomePage() {
   return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReturnButton } from '../../shared/components/atoms/ReturnButton';
+import { ReturnButton } from '@/shared/components/atoms/ReturnButton';
 
 export default function GuidePage() {
   return (
