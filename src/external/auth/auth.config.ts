@@ -22,12 +22,14 @@ export const authConfig: NextAuthConfig = {
         '/tutorial',
       ];
 
-      const guestOnlyPaths = ['/login', '/signup']
+      const guestOnlyPaths = ['/login', '/signup'];
 
       const isProtected = protectedPaths.some((path) =>
         pathname.startsWith(path),
       );
-      const isAuthPath = guestOnlyPaths.some((path) => pathname.startsWith(path));
+      const isAuthPath = guestOnlyPaths.some((path) =>
+        pathname.startsWith(path),
+      );
 
       if (isProtected && !isLoggedIn) {
         return false;
