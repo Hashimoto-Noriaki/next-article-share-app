@@ -27,4 +27,26 @@ export const articleRepository = {
     ]);
     return { articles, total, perPage: PER_PAGE };
   },
+  findById: async ({
+    articleId,
+    userId,
+  }: {
+    articleId: string;
+    userId: string;
+  }) => {
+    return prisma.article.findUnique({
+      where: { id: articleId },
+      include: {
+        author: { select: { id: true, name: true } },
+        comments: {
+          orderBy: { createdAt: 'desc' },
+          include: { user: { select: { id: true, name: true } } },
+        },
+        ...(userId && {
+          likes: { where: { userId }, select: { id: true } },
+          stocks: { where: { userId }, select: { id: true } },
+        }),
+      },
+    });
+  },
 };
