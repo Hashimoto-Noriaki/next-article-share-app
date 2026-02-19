@@ -1,49 +1,17 @@
-import { prisma } from '@/lib/prisma'
-import { auth } from '@/external/auth'
-import { ArticleListHeader } from '@/features/articles/components/ArticleListHeader'
-import { SearchableArticleList } from '@/features/articles/components/SearchableArticleList'
-import { Footer } from '@/shared/components/organisms/Footer'
-
-const PER_PAGE = 12
+import { auth } from '@/external/auth';
+import { listArticleHandler } from '@/external/handler/article/query.server';
+import { ArticleListHeader } from '@/features/articles/components/ArticleListHeader';
+import { SearchableArticleList } from '@/features/articles/components/SearchableArticleList';
+import { Footer } from '@/shared/components/organisms/Footer';
 
 export async function ArticlesPageTemplate() {
-  const session = await auth()
+  const session = await auth();
 
-  const userId = session?.user?.id || ''
-  const userName = session?.user?.name || ''
-  const userImage = session?.user?.image || null
+  const userId = session?.user?.id || '';
+  const userName = session?.user?.name || '';
+  const userImage = session?.user?.image || null;
 
-  const [articles, total] = await Promise.all([
-    prisma.article.findMany({
-      where: { isDraft: false },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        author: {
-          select: { name: true, image: true },
-        },
-        ...(userId && {
-          likes: {
-            where: { userId },
-            select: { id: true },
-          },
-        }),
-      },
-      take: PER_PAGE,
-    }),
-    prisma.article.count({
-      where: { isDraft: false },
-    }),
-  ])
-
-  const serializedArticles = articles.map((article) => ({
-    ...article,
-    createdAt: article.createdAt.toISOString(),
-    updatedAt: article.updatedAt.toISOString(),
-    isLiked: 'likes' in article && article.likes.length > 0,
-    authorImage: article.author.image,
-  }))
-
-  const totalPages = Math.ceil(total / PER_PAGE)
+  const { articles, totalPages } = await listArticleHandler(userId);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -61,7 +29,7 @@ export async function ArticlesPageTemplate() {
         </div>
         <div className="w-full max-w-8xl mt-8 px-8 mb-5">
           <SearchableArticleList
-            initialArticles={serializedArticles}
+            initialArticles={articles}
             userId={userId}
             initialTotalPages={totalPages}
           />
@@ -69,5 +37,5 @@ export async function ArticlesPageTemplate() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
