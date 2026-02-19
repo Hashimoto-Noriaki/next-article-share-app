@@ -1,7 +1,5 @@
-import { ArticlesPageTemplate } from '@/features/articles/components/server/ArticlesPageTemplate'
+import { ArticlesPageTemplate } from '@/features/articles/components/server/ArticlesPageTemplate';
 
-export default function  ArticlesPage(){
-  return(
-    <ArticlesPageTemplate/>
-  )
+export default function ArticlesPage() {
+  return <ArticlesPageTemplate />;
 }
