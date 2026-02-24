@@ -1,41 +1,34 @@
-import { auth } from '@/external/auth';
 import Link from 'next/link';
+import { auth } from '@/external/auth';
+import { listDraftsHandler } from '@/external/handler/draft/query.server';
 import { DraftSidebar } from '@/features/drafts/components/DraftSidebar';
 import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
-import { DRAFT_LIMIT } from '@/shared/lib/validations/draft';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
+import { DRAFT_LIMIT } from '@/shared/lib/validations/draft';
+
+type Draft = {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  updatedAt: string;
+};
 
 type Props = {
-    selectedId?: string
-}
+  selectedId?: string;
+};
 
 export async function DraftsPageTemplate({ selectedId }: Props) {
   const session = await auth();
-  const userId = session.user.id;
-  const userName = session.user.name || '';
+  const userId = session?.user?.id || '';
+  const userName = session?.user?.name || '';
   const userImage = session?.user?.image || null;
 
-  const { drafts, isAtLimit } = await listDraftsHandler({ userId })
+  const { drafts, isAtLimit } = await listDraftsHandler({ userId });
 
-   const selectedDraft = selectedId
-    ? drafts.find((d) => d.id === selectedId)
-    : drafts[0]
-
-
-//   const drafts = await prisma.article.findMany({
-//     where: {
-//       authorId: userId,
-//       isDraft: true,
-//     },
-//     orderBy: { updatedAt: 'desc' },
-//   });
-
-//   const { id: selectedId } = await searchParams;
-//   const selectedDraft = selectedId
-//     ? drafts.find((d) => d.id === selectedId)
-//     : drafts[0];
-
-//   const isAtLimit = drafts.length >= DRAFT_LIMIT;
+  const selectedDraft = selectedId
+    ? drafts.find((d: Draft) => d.id === selectedId)
+    : drafts[0];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -64,11 +57,7 @@ export async function DraftsPageTemplate({ selectedId }: Props) {
       )}
 
       <div className="flex h-[calc(100vh-56px)]">
-        <DraftSidebar
-          drafts={serializedDrafts}
-          selectedId={selectedDraft?.id}
-        />
-
+        <DraftSidebar drafts={drafts} selectedId={selectedDraft?.id} />
         <main className="flex-1 overflow-y-auto">
           {selectedDraft && (
             <article className="h-full p-8">
@@ -76,7 +65,6 @@ export async function DraftsPageTemplate({ selectedId }: Props) {
                 <span className="inline-block text-xs bg-gray-700 text-white px-2 py-0.5 rounded mb-4">
                   記事
                 </span>
-
                 <h1 className="text-4xl font-bold mb-4">
                   {selectedDraft.title ? (
                     <span className="text-gray-900">{selectedDraft.title}</span>
@@ -84,10 +72,9 @@ export async function DraftsPageTemplate({ selectedId }: Props) {
                     <span className="text-gray-400">タイトル未設定</span>
                   )}
                 </h1>
-
                 {selectedDraft.tags && selectedDraft.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {selectedDraft.tags.map((tag) => (
+                    {selectedDraft.tags.map((tag: string) => (
                       <span
                         key={tag}
                         className="px-3 py-1 text-sm border border-gray-300 rounded-full text-gray-600"
@@ -97,7 +84,6 @@ export async function DraftsPageTemplate({ selectedId }: Props) {
                     ))}
                   </div>
                 )}
-
                 {selectedDraft.content && (
                   <>
                     <hr className="my-6" />
