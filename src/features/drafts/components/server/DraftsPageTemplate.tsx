@@ -1,0 +1,100 @@
+import Link from 'next/link';
+import { auth } from '@/external/auth';
+import { listDraftsHandler } from '@/external/handler/draft/query.server';
+import { DraftSidebar } from '@/features/drafts/components/DraftSidebar';
+import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
+import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
+import { DRAFT_LIMIT } from '@/shared/lib/validations/draft';
+
+type Draft = {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+  updatedAt: string;
+};
+
+type Props = {
+  selectedId?: string;
+};
+
+export async function DraftsPageTemplate({ selectedId }: Props) {
+  const session = await auth();
+  const userId = session?.user?.id || '';
+  const userName = session?.user?.name || '';
+  const userImage = session?.user?.image || null;
+
+  const { drafts, isAtLimit } = await listDraftsHandler({ userId });
+
+  const selectedDraft = selectedId
+    ? drafts.find((d: Draft) => d.id === selectedId)
+    : drafts[0];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-linear-to-r from-cyan-500 to-cyan-600 px-5 py-4 flex justify-between items-center">
+        <Link
+          href="/articles"
+          className="text-white font-bold text-xl hover:underline"
+        >
+          ← 記事一覧に戻る
+        </Link>
+        <NavigationHeader
+          userId={userId}
+          userName={userName}
+          userImage={userImage}
+        />
+      </header>
+
+      {isAtLimit && (
+        <div className="bg-yellow-100 px-5 py-3 flex items-center justify-center gap-2">
+          <span className="text-xl">⚠️</span>
+          <span className="text-yellow-800">
+            下書きが上限（{DRAFT_LIMIT}
+            件）になりました。この機会に投稿してみませんか？
+          </span>
+        </div>
+      )}
+
+      <div className="flex h-[calc(100vh-56px)]">
+        <DraftSidebar drafts={drafts} selectedId={selectedDraft?.id} />
+        <main className="flex-1 overflow-y-auto">
+          {selectedDraft && (
+            <article className="h-full p-8">
+              <div className="bg-white rounded-lg shadow p-8 h-full overflow-y-auto">
+                <span className="inline-block text-xs bg-gray-700 text-white px-2 py-0.5 rounded mb-4">
+                  記事
+                </span>
+                <h1 className="text-4xl font-bold mb-4">
+                  {selectedDraft.title ? (
+                    <span className="text-gray-900">{selectedDraft.title}</span>
+                  ) : (
+                    <span className="text-gray-400">タイトル未設定</span>
+                  )}
+                </h1>
+                {selectedDraft.tags && selectedDraft.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {selectedDraft.tags.map((tag: string) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 text-sm border border-gray-300 rounded-full text-gray-600"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {selectedDraft.content && (
+                  <>
+                    <hr className="my-6" />
+                    <MarkdownPreview content={selectedDraft.content} />
+                  </>
+                )}
+              </div>
+            </article>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}
