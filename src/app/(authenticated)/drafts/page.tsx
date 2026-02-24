@@ -1,10 +1,10 @@
-import { DraftsPageTemplate } from '@/features/drafts/components/server/DraftsPageTemplate'
+import { DraftsPageTemplate } from '@/features/drafts/components/server/DraftsPageTemplate';
 
 type Props = {
-  searchParams: Promise<{ id?: string }>
-}
+  searchParams: Promise<{ id?: string }>;
+};
 
-export default async function DraftsPage({ searchParams }: Props){
-  const { id } = await searchParams
-  return <DraftsPageTemplate selectedId={id}/>
+export default async function DraftsPage({ searchParams }: Props) {
+  const { id } = await searchParams;
+  return <DraftsPageTemplate selectedId={id} />;
 }
