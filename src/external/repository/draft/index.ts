@@ -1,1 +1,1 @@
-export { draftRepository } from './draft.repository'
+export { draftRepository } from './draft.repository';
