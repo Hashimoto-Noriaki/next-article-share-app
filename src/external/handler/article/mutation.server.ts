@@ -1,22 +1,23 @@
-import { prisma } from '@/lib/prisma'
-import { createNotification } from '@/lib/notification'
+import { prisma } from '@/lib/prisma';
+import { createNotification } from '@/lib/notification';
 
 export async function likeHandler({
   articleId,
   userId,
 }: {
-  articleId: string
-  userId: string
+  articleId: string;
+  userId: string;
 }) {
-  const article = await prisma.article.findUnique({ where: { id: articleId } })
+  const article = await prisma.article.findUnique({ where: { id: articleId } });
 
-  if (!article) return { success: false, error: '記事が見つかりません' }
-  if (article.authorId === userId) return { success: false, error: '自分の記事にはいいねできません' }
+  if (!article) return { success: false, error: '記事が見つかりません' };
+  if (article.authorId === userId)
+    return { success: false, error: '自分の記事にはいいねできません' };
 
   const existingLike = await prisma.like.findUnique({
     where: { userId_articleId: { userId, articleId } },
-  })
-  if (existingLike) return { success: false, error: '既にいいね済みです' }
+  });
+  if (existingLike) return { success: false, error: '既にいいね済みです' };
 
   await prisma.$transaction([
     prisma.like.create({ data: { userId, articleId } }),
@@ -24,29 +25,29 @@ export async function likeHandler({
       where: { id: articleId },
       data: { likeCount: { increment: 1 } },
     }),
-  ])
+  ]);
 
   await createNotification({
     type: 'like',
     userId: article.authorId,
     senderId: userId,
     articleId,
-  })
+  });
 
-  return { success: true }
+  return { success: true };
 }
 
 export async function unlikeHandler({
   articleId,
   userId,
 }: {
-  articleId: string
-  userId: string
+  articleId: string;
+  userId: string;
 }) {
   const existingLike = await prisma.like.findUnique({
     where: { userId_articleId: { userId, articleId } },
-  })
-  if (!existingLike) return { success: false, error: 'いいねしていません' }
+  });
+  if (!existingLike) return { success: false, error: 'いいねしていません' };
 
   await prisma.$transaction([
     prisma.like.delete({
@@ -56,7 +57,7 @@ export async function unlikeHandler({
       where: { id: articleId },
       data: { likeCount: { decrement: 1 } },
     }),
-  ])
+  ]);
 
-  return { success: true }
+  return { success: true };
 }
