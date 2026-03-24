@@ -61,3 +61,42 @@ export async function unlikeHandler({
 
   return { success: true };
 }
+
+export async function stockHandler({
+  articleId,
+  userId,
+}: {
+  articleId: string;
+  userId: string;
+}) {
+  const article = await prisma.article.findUnique({ where: { id: articleId } });
+  if (!article) return { success: false, error: '記事が見つかりません' };
+
+  const existingStock = await prisma.stock.findUnique({
+    where: { userId_articleId: { userId, articleId } },
+  });
+  if (existingStock) return { success: false, error: '既にストック済みです' };
+
+  await prisma.stock.create({ data: { userId, articleId } });
+
+  return { success: true };
+}
+
+export async function unstockHandler({
+  articleId,
+  userId,
+}: {
+  articleId: string;
+  userId: string;
+}) {
+  const existingStock = await prisma.stock.findUnique({
+    where: { userId_articleId: { userId, articleId } },
+  });
+  if (!existingStock) return { success: false, error: 'ストックしていません' };
+
+  await prisma.stock.delete({
+    where: { userId_articleId: { userId, articleId } },
+  });
+
+  return { success: true };
+}
