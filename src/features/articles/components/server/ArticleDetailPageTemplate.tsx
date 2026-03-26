@@ -104,11 +104,7 @@ export async function ArticleDetailPageTemplate({ articleId }: Props) {
             コメント ({article.comments.length})
           </h2>
           {article.isLoggedIn && <CommentForm articleId={articleId} />}
-          <CommentList
-            comments={article.comments}
-            articleId={articleId}
-            currentUserId={userId}
-          />
+          <CommentList comments={article.comments} currentUserId={userId} />
         </section>
       </main>
       <Footer />

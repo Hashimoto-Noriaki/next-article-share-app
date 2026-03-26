@@ -3,7 +3,6 @@ import { CommentItem } from '../CommentItem';
 type Comment = {
   id: string;
   content: string;
-  articleId: string;
   userId: string;
   createdAt: string;
   user: {
@@ -14,7 +13,6 @@ type Comment = {
 
 type Props = {
   comments: Comment[];
-  articleId: string;
   currentUserId: string;
 };
 
