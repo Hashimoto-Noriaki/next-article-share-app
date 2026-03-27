@@ -3,7 +3,6 @@ import { CommentItem } from '../CommentItem';
 type Comment = {
   id: string;
   content: string;
-  articleId: string;
   userId: string;
   createdAt: string;
   user: {
@@ -14,11 +13,10 @@ type Comment = {
 
 type Props = {
   comments: Comment[];
-  articleId: string;
   currentUserId: string;
 };
 
-export function CommentList({ comments, articleId, currentUserId }: Props) {
+export function CommentList({ comments, currentUserId }: Props) {
   if (comments.length === 0) {
     return <p className="text-gray-500">コメントはまだありません</p>;
   }
@@ -30,7 +28,6 @@ export function CommentList({ comments, articleId, currentUserId }: Props) {
           key={comment.id}
           id={comment.id}
           content={comment.content}
-          articleId={articleId}
           userId={comment.userId}
           userName={comment.user.name || '名無し'}
           createdAt={comment.createdAt}

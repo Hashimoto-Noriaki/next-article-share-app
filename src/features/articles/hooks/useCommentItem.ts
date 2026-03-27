@@ -1,14 +1,18 @@
+'use client';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  updateCommentAction,
+  deleteCommentAction,
+} from '@/features/articles/actions/comment.action';
 
 type UseCommentItemParams = {
-  articleId: string;
   commentId: string;
   initialContent: string;
 };
 
 export function useCommentItem({
-  articleId,
   commentId,
   initialContent,
 }: UseCommentItemParams) {
@@ -22,24 +26,13 @@ export function useCommentItem({
       alert('コメントを入力してください');
       return;
     }
-
     setIsLoading(true);
-
     try {
-      const res = await fetch(
-        `/api/articles/${articleId}/comments/${commentId}`,
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ content: editContent }),
-        },
-      );
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'エラーが発生しました');
-      }
-
+      const result = await updateCommentAction({
+        commentId,
+        content: editContent,
+      });
+      if (!result.success) throw new Error(result.error);
       setIsEditing(false);
       router.refresh();
     } catch (error) {
@@ -53,22 +46,10 @@ export function useCommentItem({
 
   const deleteComment = async () => {
     if (!confirm('コメントを削除しますか？')) return;
-
     setIsLoading(true);
-
     try {
-      const res = await fetch(
-        `/api/articles/${articleId}/comments/${commentId}`,
-        {
-          method: 'DELETE',
-        },
-      );
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'エラーが発生しました');
-      }
-
+      const result = await deleteCommentAction({ commentId });
+      if (!result.success) throw new Error(result.error);
       router.refresh();
     } catch (error) {
       const message =
@@ -79,13 +60,6 @@ export function useCommentItem({
     }
   };
 
-  const startEditing = () => setIsEditing(true);
-
-  const cancelEditing = () => {
-    setIsEditing(false);
-    setEditContent(initialContent);
-  };
-
   return {
     isEditing,
     editContent,
@@ -93,7 +67,10 @@ export function useCommentItem({
     isLoading,
     updateComment,
     deleteComment,
-    startEditing,
-    cancelEditing,
+    startEditing: () => setIsEditing(true),
+    cancelEditing: () => {
+      setIsEditing(false);
+      setEditContent(initialContent);
+    },
   };
 }

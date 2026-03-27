@@ -1,5 +1,8 @@
+'use client';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createCommentAction } from '@/features/articles/actions/comment.action';
 
 type UseCommentFormParams = {
   articleId: string;
@@ -19,16 +22,8 @@ export function useCommentForm({ articleId }: UseCommentFormParams) {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/articles/${articleId}/comments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'エラーが発生しました');
-      }
+      const result = await createCommentAction({ articleId, content });
+      if (!result.success) throw new Error(result.error);
 
       setContent('');
       router.refresh();
@@ -41,10 +36,5 @@ export function useCommentForm({ articleId }: UseCommentFormParams) {
     }
   };
 
-  return {
-    content,
-    setContent,
-    isLoading,
-    submitComment,
-  };
+  return { content, setContent, isLoading, submitComment };
 }

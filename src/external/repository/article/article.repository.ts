@@ -49,4 +49,10 @@ export const articleRepository = {
       },
     });
   },
+  findAuthorById: async (articleId: string) => {
+    return prisma.article.findUnique({
+      where: { id: articleId },
+      select: { id: true, authorId: true },
+    });
+  },
 };

@@ -18,13 +18,11 @@ type Story = StoryObj<typeof CommentList>;
 
 export const Default: Story = {
   args: {
-    articleId: '1',
     currentUserId: '1',
     comments: [
       {
         id: '1',
         content: 'とても参考になりました！',
-        articleId: '1',
         userId: '2',
         createdAt: '2026-01-01T00:00:00Z',
         user: { id: '2', name: 'ユーザーA' },
@@ -32,7 +30,6 @@ export const Default: Story = {
       {
         id: '2',
         content: '自分のコメントです。',
-        articleId: '1',
         userId: '1',
         createdAt: '2026-01-02T00:00:00Z',
         user: { id: '1', name: '自分' },
@@ -40,7 +37,6 @@ export const Default: Story = {
       {
         id: '3',
         content: '素晴らしい記事ですね！',
-        articleId: '1',
         userId: '3',
         createdAt: '2026-01-03T00:00:00Z',
         user: { id: '3', name: 'ユーザーB' },
@@ -51,7 +47,6 @@ export const Default: Story = {
 
 export const Empty: Story = {
   args: {
-    articleId: '1',
     currentUserId: '1',
     comments: [],
   },
@@ -59,13 +54,11 @@ export const Empty: Story = {
 
 export const SingleComment: Story = {
   args: {
-    articleId: '1',
     currentUserId: '1',
     comments: [
       {
         id: '1',
         content: '最初のコメントです。',
-        articleId: '1',
         userId: '2',
         createdAt: '2026-01-01T00:00:00Z',
         user: { id: '2', name: 'ユーザーA' },

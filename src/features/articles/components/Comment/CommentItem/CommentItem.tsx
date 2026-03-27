@@ -5,7 +5,6 @@ import { useCommentItem } from '../../../hooks';
 type Props = {
   id: string;
   content: string;
-  articleId: string;
   userId: string;
   userName: string;
   createdAt: string;
@@ -15,7 +14,6 @@ type Props = {
 export function CommentItem({
   id,
   content,
-  articleId,
   userName,
   createdAt,
   isOwner,
@@ -30,7 +28,6 @@ export function CommentItem({
     startEditing,
     cancelEditing,
   } = useCommentItem({
-    articleId,
     commentId: id,
     initialContent: content,
   });
