@@ -1,1 +1,1 @@
-export { NewArticleForm } from './NewArticleForm'
+export { NewArticleForm } from './NewArticleForm';
