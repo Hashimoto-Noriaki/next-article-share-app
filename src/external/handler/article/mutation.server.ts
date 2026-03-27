@@ -1,5 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { createNotification } from '@/lib/notification';
+import { articleRepository } from '@/external/repository/article';
+import { createArticleSchema } from '@/shared/lib/validations/article';
+import {
+  draftArticleSchema,
+  DRAFT_LIMIT,
+} from '@/shared/lib/validations/draft';
 
 export async function likeHandler({
   articleId,
@@ -99,4 +105,104 @@ export async function unstockHandler({
   });
 
   return { success: true };
+}
+
+export async function createArticleHandler({
+  title,
+  content,
+  tags,
+  isDraft,
+  userId,
+}: {
+  title: string;
+  content: string;
+  tags: string[];
+  isDraft: boolean;
+  userId: string;
+}) {
+  // 下書き上限チェック
+  if (isDraft) {
+    const draftCount = await articleRepository.countDraftsByUser(userId);
+    if (draftCount >= DRAFT_LIMIT) {
+      return {
+        success: false as const,
+        error: `下書きが上限（${DRAFT_LIMIT}件）になりました。この機会に投稿してみませんか？`,
+      };
+    }
+  }
+
+  // バリデーション
+  const schema = isDraft ? draftArticleSchema : createArticleSchema;
+  const parsed = schema.safeParse({ title, content, tags, isDraft });
+  if (!parsed.success) {
+    return { success: false as const, errors: parsed.error.issues };
+  }
+
+  const article = await articleRepository.create({
+    title: parsed.data.title || '',
+    content: parsed.data.content || '',
+    tags: parsed.data.tags || [],
+    isDraft: parsed.data.isDraft ?? false,
+    authorId: userId,
+  });
+
+  return { success: true as const, article };
+}
+
+export async function updateArticleHandler({
+  articleId,
+  title,
+  content,
+  tags,
+  isDraft = false,
+  userId,
+}: {
+  articleId: string;
+  title: string;
+  content: string;
+  tags: string[];
+  isDraft?: boolean;
+  userId: string;
+}) {
+  const existing = await articleRepository.findAuthorById(articleId);
+  if (!existing) {
+    return { success: false as const, error: '記事が見つかりません' };
+  }
+  if (existing.authorId !== userId) {
+    return { success: false as const, error: '編集権限がありません' };
+  }
+
+  const schema = isDraft ? draftArticleSchema : createArticleSchema;
+  const parsed = schema.safeParse({ title, content, tags, isDraft });
+  if (!parsed.success) {
+    return { success: false as const, errors: parsed.error.issues };
+  }
+
+  const article = await articleRepository.update(articleId, {
+    title: parsed.data.title || '',
+    content: parsed.data.content || '',
+    tags: parsed.data.tags || [],
+    isDraft: parsed.data.isDraft ?? false,
+  });
+
+  return { success: true as const, article };
+}
+
+export async function deleteArticleHandler({
+  articleId,
+  userId,
+}: {
+  articleId: string;
+  userId: string;
+}) {
+  const existing = await articleRepository.findAuthorById(articleId);
+  if (!existing) {
+    return { success: false as const, error: '記事が見つかりません' };
+  }
+  if (existing.authorId !== userId) {
+    return { success: false as const, error: '削除権限がありません' };
+  }
+
+  await articleRepository.delete(articleId);
+  return { success: true as const };
 }

@@ -42,3 +42,33 @@ export async function getArticleDetailHandler({
     })),
   };
 }
+
+export async function getArticleForEditHandler(articleId: string) {
+  const article = await articleRepository.findByIdForEdit(articleId);
+  if (!article) return null;
+  return article;
+}
+
+export async function searchArticlesHandler({
+  query,
+  page,
+  perPage = 12,
+}: {
+  query: string;
+  page: number;
+  perPage?: number;
+}) {
+  if (!query.trim()) {
+    return { articles: [], totalPages: 0, currentPage: page };
+  }
+  const { articles, total } = await articleRepository.searchPublished({
+    query,
+    page,
+    perPage,
+  });
+  return {
+    articles,
+    totalPages: Math.ceil(total / perPage),
+    currentPage: page,
+  };
+}

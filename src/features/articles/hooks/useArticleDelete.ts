@@ -1,5 +1,8 @@
+'use client';
+
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { deleteArticleAction } from '@/features/articles/actions/article.action';
 
 type UseArticleDeleteParams = {
   articleId: string;
@@ -10,21 +13,12 @@ export function useArticleDelete({ articleId }: UseArticleDeleteParams) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const deleteArticle = async () => {
-    if (!confirm('本当に削除しますか？')) {
-      return;
-    }
+    if (!confirm('本当に削除しますか？')) return;
 
     setIsDeleting(true);
-
     try {
-      const res = await fetch(`/api/articles/${articleId}`, {
-        method: 'DELETE',
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || '削除に失敗しました');
-      }
+      const result = await deleteArticleAction({ articleId });
+      if (!result.success) throw new Error(result.error);
 
       router.push('/articles');
       router.refresh();
@@ -37,8 +31,5 @@ export function useArticleDelete({ articleId }: UseArticleDeleteParams) {
     }
   };
 
-  return {
-    isDeleting,
-    deleteArticle,
-  };
+  return { isDeleting, deleteArticle };
 }
