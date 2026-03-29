@@ -2,18 +2,15 @@ import { draftRepository } from '@/external/repository/draft';
 import { DRAFT_LIMIT } from '@/shared/lib/validations/draft';
 
 export async function listDraftsHandler({ userId }: { userId: string }) {
-  const drafts = await draftRepository.findByUser(userId);
-
-  const serializedDrafts = drafts.map((draft) => ({
-    id: draft.id,
-    title: draft.title,
-    content: draft.content,
-    tags: draft.tags,
-    updatedAt: draft.updatedAt.toISOString(),
-  }));
-
+  const drafts = await draftRepository.findManyByUserId(userId);
   return {
-    drafts: serializedDrafts,
+    drafts,
     isAtLimit: drafts.length >= DRAFT_LIMIT,
   };
+}
+
+export async function getDraftForEditHandler(draftId: string) {
+  const draft = await draftRepository.findById(draftId);
+  if (!draft) return null;
+  return draft;
 }
