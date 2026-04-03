@@ -11,6 +11,7 @@ import {
   forgotPasswordSchema,
   ForgotPasswordInput,
 } from '@/shared/lib/validations/auth';
+import { forgotPasswordAction } from '@/features/auth/actions/auth.action';
 
 export default function ForgotPasswordPage() {
   const [serverError, setServerError] = useState('');
@@ -28,19 +29,11 @@ export default function ForgotPasswordPage() {
     setServerError('');
 
     try {
-      const response = await fetch('/api/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        setServerError(result.message);
+      const result = await forgotPasswordAction({ email: data.email });
+      if (!result.success) {
+        setServerError(result.error || 'エラーが発生しました');
         return;
       }
-
       setIsSubmitted(true);
     } catch (err) {
       console.error('パスワードリセットリクエストエラー:', err);
