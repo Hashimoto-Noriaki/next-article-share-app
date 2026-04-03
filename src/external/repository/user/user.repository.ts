@@ -11,4 +11,20 @@ export const userRepository = {
       },
     });
   },
+  findByEmail: async (email: string) => {
+    return prisma.user.findUnique({
+      where: { email },
+    });
+  },
+
+  create: async (data: { name: string; email: string; password: string }) => {
+    return prisma.user.create({ data });
+  },
+
+  updatePassword: async (userId: string, hashedPassword: string) => {
+    return prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+  },
 };
