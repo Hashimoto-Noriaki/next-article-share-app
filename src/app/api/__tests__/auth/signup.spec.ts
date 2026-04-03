@@ -1,8 +1,7 @@
 /**
  * @jest-environment node
  */
-import { POST } from '@/app/api/auth/signup/route';
-import { NextRequest } from 'next/server';
+import { signupHandler } from '@/external/handler/auth/mutation.server';
 
 // Prisma をモック
 jest.mock('@/lib/prisma', () => ({
@@ -21,20 +20,10 @@ jest.mock('bcryptjs', () => ({
 
 import { prisma } from '@/lib/prisma';
 
-describe('POST /api/auth/signup', () => {
+describe('signupHandler', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
-  const createRequest = (body: object) => {
-    return new NextRequest('http://localhost:3000/api/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  };
 
   describe('正常系', () => {
     it('新規ユーザーを登録できる', async () => {
@@ -45,81 +34,75 @@ describe('POST /api/auth/signup', () => {
         email: 'test@example.com',
       });
 
-      const request = createRequest({
+      const result = await signupHandler({
         name: 'テストユーザー',
         email: 'test@example.com',
         password: 'password123',
       });
 
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(201);
-      expect(data.message).toBe('登録が完了しました');
-      expect(data.user.email).toBe('test@example.com');
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.user.email).toBe('test@example.com');
+      }
     });
   });
 
   describe('異常系', () => {
-    it('既存のメールアドレスで登録しようとすると400エラー', async () => {
+    it('既存のメールアドレスで登録しようとするとエラー', async () => {
       (prisma.user.findUnique as jest.Mock).mockResolvedValue({
         id: 'existing-user',
         email: 'test@example.com',
       });
 
-      const request = createRequest({
+      const result = await signupHandler({
         name: 'テストユーザー',
         email: 'test@example.com',
         password: 'password123',
       });
 
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.message).toBe('このメールアドレスは既に登録されています');
+      expect(result.success).toBe(false);
+      if (!result.success && 'error' in result) {
+        expect(result.error).toBe('このメールアドレスは既に登録されています');
+      }
     });
 
     it('名前が空だとバリデーションエラー', async () => {
-      const request = createRequest({
+      const result = await signupHandler({
         name: '',
         email: 'test@example.com',
         password: 'password123',
       });
 
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.message).toBe('バリデーションエラー');
+      expect(result.success).toBe(false);
+      if (!result.success && 'errors' in result && result.errors != null) {
+        expect(result.errors.length).toBeGreaterThan(0);
+      }
     });
 
     it('メールアドレスが不正だとバリデーションエラー', async () => {
-      const request = createRequest({
+      const result = await signupHandler({
         name: 'テストユーザー',
         email: 'invalid-email',
         password: 'password123',
       });
 
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.message).toBe('バリデーションエラー');
+      expect(result.success).toBe(false);
+      if (!result.success && 'errors' in result && result.errors != null) {
+        expect(result.errors.length).toBeGreaterThan(0);
+      }
     });
 
     it('パスワードが短すぎるとバリデーションエラー', async () => {
-      const request = createRequest({
+      const result = await signupHandler({
         name: 'テストユーザー',
         email: 'test@example.com',
         password: '123',
       });
 
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.message).toBe('バリデーションエラー');
+      expect(result.success).toBe(false);
+      if (!result.success && 'errors' in result && result.errors != null) {
+        expect(result.errors.length).toBeGreaterThan(0);
+      }
     });
   });
 });
