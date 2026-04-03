@@ -1,6 +1,13 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useDropdown } from '@/shared/hooks';
 import { NotificationWithRelations } from '@/types';
+import {
+  listNotificationsAction,
+  markAllNotificationsAsReadAction,
+  markNotificationAsReadAction,
+} from '@/features/notifications/actions/notification.action';
 
 export function useNotifications() {
   const { isOpen, ref, toggle, close } = useDropdown();
@@ -12,10 +19,9 @@ export function useNotifications() {
   const fetchNotifications = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/notifications');
-      if (res.ok) {
-        const data = await res.json();
-        setNotifications(data);
+      const result = await listNotificationsAction();
+      if (result.success) {
+        setNotifications(result.notifications as NotificationWithRelations[]);
       }
     } catch (error) {
       console.error('通知取得エラー:', error);
@@ -29,38 +35,23 @@ export function useNotifications() {
   }, []);
 
   const markAllAsRead = async () => {
-    try {
-      const res = await fetch('/api/notifications', { method: 'PUT' });
-      if (res.ok) {
-        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-      }
-    } catch (error) {
-      console.error('既読更新エラー:', error);
+    const result = await markAllNotificationsAsReadAction();
+    if (result.success) {
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
     }
   };
 
-  // 個別の通知を既読にする（追加）
   const markAsRead = async (notificationId: string) => {
-    try {
-      const res = await fetch(`/api/notifications/${notificationId}`, {
-        method: 'PUT',
-      });
-      if (res.ok) {
-        setNotifications((prev) =>
-          prev.map((n) =>
-            n.id === notificationId ? { ...n, isRead: true } : n,
-          ),
-        );
-      }
-    } catch (error) {
-      console.error('既読更新エラー:', error);
+    const result = await markNotificationAsReadAction({ notificationId });
+    if (result.success) {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n)),
+      );
     }
   };
 
   const handleToggle = () => {
-    if (!isOpen) {
-      fetchNotifications();
-    }
+    if (!isOpen) fetchNotifications();
     toggle();
   };
 
