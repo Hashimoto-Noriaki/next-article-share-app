@@ -4,7 +4,7 @@
 import { signupHandler } from '@/external/handler/auth/mutation.server';
 
 // Prisma をモック
-jest.mock('@/lib/prisma', () => ({
+jest.mock('@/external/repository/client', () => ({
   prisma: {
     user: {
       findUnique: jest.fn(),
