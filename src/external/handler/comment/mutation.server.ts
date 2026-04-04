@@ -1,6 +1,6 @@
 import { commentRepository } from '@/external/repository/comment';
 import { articleRepository } from '@/external/repository/article';
-import { createNotification } from '@/lib/notification';
+import { createNotification } from '@/external/service/notification';
 
 export async function createCommentHandler({
   content,
