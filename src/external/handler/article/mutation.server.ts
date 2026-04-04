@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
-import { createNotification } from '@/lib/notification';
+import { prisma } from '@/external/repository/client';
+import { createNotification } from '@/external/service/notification';
 import { articleRepository } from '@/external/repository/article';
 import { createArticleSchema } from '@/shared/lib/validations/article';
 import {

@@ -4,7 +4,7 @@
 import { signupHandler } from '@/external/handler/auth/mutation.server';
 
 // Prisma をモック
-jest.mock('@/lib/prisma', () => ({
+jest.mock('@/external/repository/client', () => ({
   prisma: {
     user: {
       findUnique: jest.fn(),
@@ -18,7 +18,7 @@ jest.mock('bcryptjs', () => ({
   hash: jest.fn().mockResolvedValue('hashed_password'),
 }));
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/external/repository/client';
 
 describe('signupHandler', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/external/repository/client';
 
 export const userRepository = {
   findById: async (userId: string) => {

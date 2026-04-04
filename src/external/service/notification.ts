@@ -1,4 +1,4 @@
-import { prisma } from './prisma';
+import { prisma } from '@/external/repository/client';
 
 type CreateNotificationParams = {
   type: 'like' | 'comment';

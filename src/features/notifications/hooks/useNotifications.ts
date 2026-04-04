@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDropdown } from '@/shared/hooks';
-import { NotificationWithRelations } from '@/types';
+import { NotificationWithRelations } from '@/features/notifications/types';
 import {
   listNotificationsAction,
   markAllNotificationsAsReadAction,

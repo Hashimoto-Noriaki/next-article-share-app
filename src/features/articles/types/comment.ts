@@ -7,7 +7,7 @@ export type Comment = {
   updatedAt: string;
 };
 
-export type CommentWithUser = {
+export type CommentWithUser = Comment & {
   user: {
     id: string;
     name: string | null;

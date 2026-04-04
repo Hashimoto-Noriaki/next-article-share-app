@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/external/repository/client';
 
 const PER_PAGE = 12;
 
