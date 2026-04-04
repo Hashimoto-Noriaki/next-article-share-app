@@ -1,5 +1,10 @@
+'use client';
+
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import {
+  likeArticleAction,
+  unlikeArticleAction,
+} from '@/features/articles/actions/like.action';
 
 type UseLikeParams = {
   articleId: string;
@@ -12,40 +17,30 @@ export function useLike({
   initialLiked,
   initialCount,
 }: UseLikeParams) {
-  const router = useRouter();
   const [isLiked, setIsLiked] = useState(initialLiked);
   const [likeCount, setLikeCount] = useState(initialCount);
   const [isLoading, setIsLoading] = useState(false);
 
   const toggleLike = async () => {
     setIsLoading(true);
-
     try {
-      const res = await fetch(`/api/articles/${articleId}/like`, {
-        method: isLiked ? 'DELETE' : 'POST',
-      });
+      const result = isLiked
+        ? await unlikeArticleAction({ articleId })
+        : await likeArticleAction({ articleId });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.message || 'エラーが発生しました');
+      if (!result.success) {
+        alert(result.error);
+        return;
       }
 
       setIsLiked(!isLiked);
       setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
-      router.refresh();
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'エラーが発生しました';
-      alert(message);
+    } catch {
+      alert('エラーが発生しました');
     } finally {
       setIsLoading(false);
     }
   };
 
-  return {
-    isLiked,
-    likeCount,
-    isLoading,
-    toggleLike,
-  };
+  return { isLiked, likeCount, isLoading, toggleLike };
 }

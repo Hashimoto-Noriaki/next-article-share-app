@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { deleteDraftAction } from '@/features/drafts/actions/draft.action';
 
 type Draft = {
   id: string;
@@ -37,14 +38,13 @@ export function DraftSidebar({ drafts, selectedId }: Props) {
   const handleDelete = async (id: string) => {
     if (!confirm('この下書きを削除しますか？')) return;
 
-    const res = await fetch(`/api/drafts/${id}`, { method: 'DELETE' });
+    const result = await deleteDraftAction({ draftId: id });
 
-    if (res.ok) {
+    if (result.success) {
       router.push('/drafts');
       router.refresh();
     } else {
-      const data = await res.json();
-      alert(data.message || '削除に失敗しました');
+      alert(result.error || '削除に失敗しました');
     }
   };
 

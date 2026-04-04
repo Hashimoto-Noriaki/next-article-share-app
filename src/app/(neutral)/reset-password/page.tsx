@@ -12,6 +12,10 @@ import {
   resetPasswordSchema,
   ResetPasswordInput,
 } from '@/shared/lib/validations/auth';
+import {
+  validateResetTokenAction,
+  resetPasswordAction,
+} from '@/features/auth/actions/auth.action';
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -44,9 +48,8 @@ function ResetPasswordForm() {
       }
 
       try {
-        const response = await fetch(`/api/auth/reset-password?token=${token}`);
-        const data = await response.json();
-        setIsTokenValid(data.valid);
+        const result = await validateResetTokenAction({ token });
+        setIsTokenValid(result.valid);
       } catch (err) {
         console.error('トークン検証エラー:', err);
         setIsTokenValid(false);
@@ -62,19 +65,13 @@ function ResetPasswordForm() {
     setServerError('');
 
     try {
-      const response = await fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: data.token,
-          password: data.password,
-        }),
+      const result = await resetPasswordAction({
+        token: data.token,
+        password: data.password,
       });
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        setServerError(result.message);
+      if (!result.success) {
+        setServerError(result.error ?? 'エラーが発生しました');
         return;
       }
 

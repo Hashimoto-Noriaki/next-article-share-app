@@ -11,6 +11,7 @@ import { InputForm } from '@/shared/components/atoms/InputForm';
 import { Button } from '@/shared/components/atoms/Button';
 import { OAuthButton } from '@/shared/components/atoms/OAuthButton';
 import { signupSchema, SignUpInput } from '@/shared/lib/validations/auth';
+import { signupAction } from '@/features/auth/actions/auth.action';
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -24,20 +25,13 @@ export default function SignUpPage() {
     resolver: zodResolver(signupSchema),
   });
 
-  // メール/パスワードで登録
   const onSubmit = async (data: SignUpInput) => {
     setServerError('');
 
-    const res = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+    const result = await signupAction(data);
 
-    const result = await res.json();
-
-    if (!res.ok) {
-      setServerError(result.message || '登録に失敗しました');
+    if (!result.success) {
+      setServerError(result.error || '登録に失敗しました');
       return;
     }
 

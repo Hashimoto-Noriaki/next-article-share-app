@@ -4,31 +4,26 @@ import { useState } from 'react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { Button } from '@/shared/components/atoms/Button';
+import { deleteUserAction } from '@/features/users/actions/user.action';
 
 export default function WithdrawPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const handleWithdraw = async () => {
-    if (!confirm('本当に退会しますか？投稿した記事も全て削除されます。')) {
+    if (!confirm('本当に退会しますか？投稿した記事も全て削除されます。'))
       return;
-    }
 
     setIsSubmitting(true);
     setError('');
 
     try {
-      const res = await fetch('/api/users/me', {
-        method: 'DELETE',
-      });
-
-      if (!res.ok) {
-        const data = await res.json();
-        setError(data.message || '退会に失敗しました');
+      const result = await deleteUserAction();
+      if (!result.success) {
+        setError(result.error || '退会に失敗しました');
         return;
       }
 
-      // 退会成功後、セッションをクリアしてログアウト
       await signOut({ callbackUrl: '/' });
     } catch (err) {
       console.error('退会エラー:', err);
