@@ -1,7 +1,6 @@
 import { userRepository } from '@/external/repository/user'
 
 export async function getUserProfileHandler({ userId }: { userId: string }) {
-  // findById → findProfileById に変更
   const user = await userRepository.findProfileById(userId)
   if (!user) return null
 
