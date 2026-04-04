@@ -49,6 +49,7 @@
 
 - Claude Code
 - ChatGPT
+- PlayWright MCP
 
 ## 機能一覧
 
