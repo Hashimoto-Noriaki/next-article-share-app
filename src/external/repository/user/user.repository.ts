@@ -27,4 +27,57 @@ export const userRepository = {
       data: { password: hashedPassword },
     });
   },
+  // プロフィール画面用
+  findProfileById: async (userId: string) => {
+    return prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        image: true,
+        createdAt: true,
+        articles: {
+          where: { isDraft: false },
+          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true,
+            title: true,
+            tags: true,
+            likeCount: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
+  },
+
+  findMe: async (userId: string) => {
+    return prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, name: true, email: true, image: true },
+    });
+  },
+
+  updateProfile: async (
+    userId: string,
+    data: { name: string; email: string },
+  ) => {
+    return prisma.user.update({
+      where: { id: userId },
+      data,
+      select: { id: true, name: true, email: true },
+    });
+  },
+
+  updateImage: async (userId: string, image: string) => {
+    return prisma.user.update({
+      where: { id: userId },
+      data: { image },
+    });
+  },
+
+  delete: async (userId: string) => {
+    return prisma.user.delete({ where: { id: userId } });
+  },
 };
