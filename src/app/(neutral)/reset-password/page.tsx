@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -24,8 +25,6 @@ function ResetPasswordForm() {
 
   const [serverError, setServerError] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isValidating, setIsValidating] = useState(true);
-  const [isTokenValid, setIsTokenValid] = useState(false);
 
   const {
     register,
@@ -33,63 +32,44 @@ function ResetPasswordForm() {
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordInput>({
     resolver: zodResolver(resetPasswordSchema),
-    defaultValues: {
-      token: token || '',
-    },
+    defaultValues: { token: token || '' },
   });
 
-  // トークンの有効性を確認
-  useEffect(() => {
-    const validateToken = async () => {
-      if (!token) {
-        setIsValidating(false);
-        setIsTokenValid(false);
-        return;
-      }
+  const { isLoading: isValidating, data: tokenData } = useQuery({
+    queryKey: ['resetToken', token],
+    queryFn: async () => {
+      if (!token) return { valid: false };
+      return validateResetTokenAction({ token });
+    },
+    staleTime: Infinity,
+    retry: false,
+  });
 
-      try {
-        const result = await validateResetTokenAction({ token });
-        setIsTokenValid(result.valid);
-      } catch (err) {
-        console.error('トークン検証エラー:', err);
-        setIsTokenValid(false);
-      } finally {
-        setIsValidating(false);
-      }
-    };
+  const isTokenValid = tokenData?.valid ?? false;
 
-    validateToken();
-  }, [token]);
-
-  const onSubmit = async (data: ResetPasswordInput) => {
-    setServerError('');
-
-    try {
-      const result = await resetPasswordAction({
-        token: data.token,
-        password: data.password,
-      });
-
+  const { mutate: submitReset, isPending } = useMutation({
+    mutationFn: (data: ResetPasswordInput) =>
+      resetPasswordAction({ token: data.token, password: data.password }),
+    onSuccess: (result) => {
       if (!result.success) {
         setServerError(result.error ?? 'エラーが発生しました');
         return;
       }
-
       setIsSuccess(true);
-
-      // 3秒後にログインページへリダイレクト
-      setTimeout(() => {
-        router.push('/login');
-      }, 3000);
-    } catch (err) {
-      console.error('パスワードリセットエラー:', err);
+      setTimeout(() => router.push('/login'), 3000);
+    },
+    onError: () => {
       setServerError(
         'エラーが発生しました。しばらく経ってからお試しください。',
       );
-    }
+    },
+  });
+
+  const onSubmit = (data: ResetPasswordInput) => {
+    setServerError('');
+    submitReset(data);
   };
 
-  // ローディング中
   if (isValidating) {
     return (
       <div className="flex items-center justify-center p-20 max-h-screen">
@@ -104,7 +84,6 @@ function ResetPasswordForm() {
     );
   }
 
-  // トークンが無効な場合
   if (!isTokenValid) {
     return (
       <div className="flex items-center justify-center p-20 max-h-screen">
@@ -114,12 +93,10 @@ function ResetPasswordForm() {
             テックブログ共有アプリ
           </h1>
           <h2 className="text-xl text-white font-bold mt-3">無効なリンク</h2>
-
           <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-3 text-sm text-center shadow-sm mt-5">
             このパスワードリセットリンクは無効または期限切れです。
             再度パスワードリセットをリクエストしてください。
           </div>
-
           <Link href="/forgot-password" className="block mt-5">
             <Button variant="primary">パスワードリセットをリクエスト</Button>
           </Link>
@@ -128,7 +105,6 @@ function ResetPasswordForm() {
     );
   }
 
-  // 成功画面
   if (isSuccess) {
     return (
       <div className="flex items-center justify-center p-20 max-h-screen">
@@ -140,15 +116,12 @@ function ResetPasswordForm() {
           <h2 className="text-xl text-white font-bold mt-3">
             パスワード変更完了
           </h2>
-
           <div className="w-full rounded-md bg-green-200 border-green-300 text-green-800 px-4 py-3 text-sm text-center shadow-sm mt-5">
             パスワードを変更しました。新しいパスワードでログインできます。
           </div>
-
           <p className="text-white text-sm mt-5">
             自動的にログインページへ移動します...
           </p>
-
           <Link
             href="/login"
             className="block text-center underline mt-5 hover:text-cyan-800"
@@ -160,7 +133,6 @@ function ResetPasswordForm() {
     );
   }
 
-  // パスワード入力フォーム
   return (
     <div className="flex items-center justify-center p-20 max-h-screen">
       <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
@@ -171,23 +143,19 @@ function ResetPasswordForm() {
         <h2 className="text-xl text-white font-bold mt-3">
           新しいパスワードを設定
         </h2>
-
         <p className="text-white text-sm mt-3">
           安全な新しいパスワードを入力してください。
         </p>
-
         {serverError && (
           <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm mt-3">
             {serverError}
           </div>
         )}
-
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 text-left mt-5"
         >
           <input type="hidden" {...register('token')} />
-
           <div>
             <p className="font-bold mb-3">新しいパスワード</p>
             <InputForm
@@ -201,7 +169,6 @@ function ResetPasswordForm() {
               </p>
             )}
           </div>
-
           <div>
             <p className="font-bold mb-3">パスワード（確認）</p>
             <InputForm
@@ -215,12 +182,14 @@ function ResetPasswordForm() {
               </p>
             )}
           </div>
-
-          <Button type="submit" variant="primary" disabled={isSubmitting}>
-            {isSubmitting ? '変更中...' : 'パスワードを変更'}
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isSubmitting || isPending}
+          >
+            {isPending ? '変更中...' : 'パスワードを変更'}
           </Button>
         </form>
-
         <Link
           href="/login"
           className="block text-center underline mt-5 hover:text-cyan-800"
@@ -232,7 +201,6 @@ function ResetPasswordForm() {
   );
 }
 
-// Suspenseでラップ（useSearchParamsのため）
 export default function ResetPasswordPage() {
   return (
     <Suspense
