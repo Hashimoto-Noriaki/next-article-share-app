@@ -10,3 +10,7 @@ export async function getUserProfileHandler({ userId }: { userId: string }) {
     articleCount: user.articles.length,
   };
 }
+
+export async function getCurrentUserHandler({ userId }: { userId: string }) {
+  return userRepository.findMe(userId);
+}
