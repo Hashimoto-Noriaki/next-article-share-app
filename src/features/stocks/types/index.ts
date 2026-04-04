@@ -5,7 +5,7 @@ export type Stock = {
   createdAt: string;
 };
 
-export type StockWithArticle = {
+export type StockWithArticle = Stock & {
   article: {
     id: string;
     title: string;

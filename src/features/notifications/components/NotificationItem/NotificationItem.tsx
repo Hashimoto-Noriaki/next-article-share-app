@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { NotificationWithRelations } from '@/types';
+import { NotificationWithRelations } from '@/features/notifications/types';
 import { timeAgo } from '@/utils';
 import { AiFillHeart } from 'react-icons/ai';
 import { FaComment } from 'react-icons/fa';
