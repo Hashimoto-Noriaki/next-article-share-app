@@ -18,7 +18,7 @@ jest.mock('bcryptjs', () => ({
   hash: jest.fn().mockResolvedValue('hashed_password'),
 }));
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/external/repository/client';
 
 describe('signupHandler', () => {
   beforeEach(() => {
