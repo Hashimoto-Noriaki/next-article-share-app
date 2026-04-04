@@ -15,6 +15,10 @@ import {
   UpdateUserInput,
 } from '@/shared/lib/validations/user';
 import { useCurrentUser } from '@/shared/hooks';
+import {
+  updateUserProfileAction,
+  updateUserImageAction,
+} from '@/features/users/actions/user.action';
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -25,7 +29,6 @@ export default function SettingsPage() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // ユーザー情報（TanStack Query）
   const { data: user, isLoading: isUserLoading, isError } = useCurrentUser();
 
   const {
@@ -37,14 +40,12 @@ export default function SettingsPage() {
     resolver: zodResolver(updateUserSchema),
   });
 
-  // 認証エラー時はログインページへ
   useEffect(() => {
     if (isError) {
       router.push('/login');
     }
   }, [isError, router]);
 
-  // ユーザー情報をフォームにセット
   useEffect(() => {
     if (user) {
       setValue('name', user.name || '');
@@ -70,6 +71,7 @@ export default function SettingsPage() {
       formData.append('file', file);
       formData.append('folder', 'profiles');
 
+      // uploadはRoute Handlerのまま（ファイルアップロードはServer Actionで扱えないため）
       const uploadRes = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -82,15 +84,8 @@ export default function SettingsPage() {
       }
 
       const { url } = await uploadRes.json();
-
-      // ユーザー情報を更新
-      const updateRes = await fetch('/api/users/me/image', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: url }),
-      });
-
-      if (!updateRes.ok) {
+      const result = await updateUserImageAction({ image: url });
+      if (!result.success) {
         setServerError('プロフィール画像の更新に失敗しました');
         return;
       }
@@ -109,16 +104,13 @@ export default function SettingsPage() {
     setSuccess('');
     setServerError('');
 
-    const res = await fetch('/api/users/me', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+    const result = await updateUserProfileAction({
+      name: data.name,
+      email: data.email,
     });
 
-    const result = await res.json();
-
-    if (!res.ok) {
-      setServerError(result.message || '更新に失敗しました');
+    if (!result.success) {
+      setServerError(result.error || '更新に失敗しました');
       return;
     }
 
@@ -153,7 +145,6 @@ export default function SettingsPage() {
       </header>
       <main className="container mx-auto px-5 py-8 max-w-md grow">
         <h1 className="text-2xl font-bold mb-8 text-center">プロフィール</h1>
-        {/* プロフィール画像 */}
         <div className="bg-white rounded-lg shadow-md p-8 mb-6">
           <h2 className="font-bold mb-4">プロフィール画像</h2>
           <div className="flex flex-col items-center">
