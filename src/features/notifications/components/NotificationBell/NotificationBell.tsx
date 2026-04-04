@@ -37,7 +37,7 @@ export function NotificationBell() {
             <h3 className="font-bold text-gray-800">通知</h3>
             {unreadCount > 0 && (
               <button
-                onClick={markAllAsRead}
+                onClick={() => markAllAsRead()}
                 className="text-xs text-cyan-600 hover:text-cyan-800"
               >
                 全て既読にする
