@@ -14,7 +14,8 @@ export async function getCurrentUserAction() {
   if (!userId) return { success: false as const, error: '認証が必要です' };
 
   const user = await getCurrentUserHandler({ userId });
-  if (!user) return { success: false as const, error: 'ユーザーが見つかりません' };
+  if (!user)
+    return { success: false as const, error: 'ユーザーが見つかりません' };
 
   return { success: true as const, user };
 }
