@@ -11,7 +11,8 @@ export default function WithdrawPage() {
   const [error, setError] = useState('');
 
   const handleWithdraw = async () => {
-    if (!confirm('本当に退会しますか？投稿した記事も全て削除されます。')) return;
+    if (!confirm('本当に退会しますか？投稿した記事も全て削除されます。'))
+      return;
 
     setIsSubmitting(true);
     setError('');
