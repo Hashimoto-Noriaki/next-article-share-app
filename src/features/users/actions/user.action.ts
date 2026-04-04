@@ -1,11 +1,23 @@
 'use server';
 
 import { auth } from '@/external/auth';
+import { getCurrentUserHandler } from '@/external/handler/user/query.server';
 import {
   updateUserProfileHandler,
   updateUserImageHandler,
   deleteUserHandler,
 } from '@/external/handler/user/mutation.server';
+
+export async function getCurrentUserAction() {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { success: false as const, error: '認証が必要です' };
+
+  const user = await getCurrentUserHandler({ userId });
+  if (!user) return { success: false as const, error: 'ユーザーが見つかりません' };
+
+  return { success: true as const, user };
+}
 
 export async function updateUserProfileAction({
   name,
