@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { logout } from '@/features/auth/actions/auth.action'
+import { logout } from '@/features/auth/actions/auth.action';
 import { UserDropdown } from '../UserDropdown';
 import { NotificationBell } from '@/features/notifications/components';
 

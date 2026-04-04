@@ -6,7 +6,7 @@ import {
   validateResetTokenHandler,
   resetPasswordHandler,
 } from '@/external/handler/auth/mutation.server';
-import { signOut } from '@/external/auth' 
+import { signOut } from '@/external/auth';
 
 export async function signupAction(body: unknown) {
   return signupHandler(body);
@@ -31,5 +31,5 @@ export async function resetPasswordAction({
 }
 
 export async function logout() {
-  await signOut({ redirectTo: '/login' })
+  await signOut({ redirectTo: '/login' });
 }
