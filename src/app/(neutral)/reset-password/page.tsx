@@ -9,10 +9,7 @@ import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
-import {
-  resetPasswordSchema,
-  ResetPasswordInput,
-} from '@/shared/lib/validations/auth';
+import { resetPasswordSchema, ResetPasswordInput } from '@/external/dto/auth';
 import {
   validateResetTokenAction,
   resetPasswordAction,

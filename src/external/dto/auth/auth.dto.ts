@@ -24,10 +24,6 @@ export const loginSchema = z.object({
   password: z.string().min(1, 'パスワードを入力してください'),
 });
 
-export type SignUpInput = z.infer<typeof signupSchema>;
-export type LoginInput = z.infer<typeof loginSchema>;
-
-// パスワードリセットリクエスト
 export const forgotPasswordSchema = z.object({
   email: z
     .string()
@@ -35,7 +31,6 @@ export const forgotPasswordSchema = z.object({
     .email('有効なメールアドレスを入力してください'),
 });
 
-// パスワードリセット
 export const resetPasswordSchema = z
   .object({
     token: z.string().min(1, 'トークンが必要です'),
@@ -51,5 +46,7 @@ export const resetPasswordSchema = z
     path: ['confirmPassword'],
   });
 
+export type SignUpInput = z.infer<typeof signupSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

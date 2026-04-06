@@ -10,10 +10,7 @@ import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { Footer } from '../../../../shared/components/organisms/Footer';
-import {
-  updateUserSchema,
-  UpdateUserInput,
-} from '@/shared/lib/validations/user';
+import { updateUserSchema, UpdateUserInput } from '@/external/dto/user';
 import { useCurrentUser } from '@/shared/hooks';
 import {
   updateUserProfileAction,

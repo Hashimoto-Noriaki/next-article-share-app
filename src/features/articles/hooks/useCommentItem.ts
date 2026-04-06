@@ -22,17 +22,18 @@ export function useCommentItem({
   const [isLoading, setIsLoading] = useState(false);
 
   const updateComment = async () => {
-    if (!editContent.trim()) {
-      alert('コメントを入力してください');
-      return;
-    }
     setIsLoading(true);
     try {
       const result = await updateCommentAction({
         commentId,
         content: editContent,
       });
-      if (!result.success) throw new Error(result.error);
+      if (!result.success)
+        throw new Error(
+          'errors' in result
+            ? result.errors?.map((e) => e.message).join('\n')
+            : result.error,
+        );
       setIsEditing(false);
       router.refresh();
     } catch (error) {

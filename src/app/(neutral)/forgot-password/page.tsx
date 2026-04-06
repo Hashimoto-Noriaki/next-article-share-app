@@ -7,10 +7,7 @@ import Link from 'next/link';
 import { FaLaptopCode } from 'react-icons/fa';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
-import {
-  forgotPasswordSchema,
-  ForgotPasswordInput,
-} from '@/shared/lib/validations/auth';
+import { forgotPasswordSchema, ForgotPasswordInput } from '@/external/dto/auth';
 import { forgotPasswordAction } from '@/features/auth/actions/auth.action';
 
 export default function ForgotPasswordPage() {

@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { userRepository } from '@/external/repository/user';
 import { passwordResetTokenRepository } from '@/external/repository/auth';
 import { sendPasswordResetEmail } from '@/external/email';
-import { signupSchema } from '@/shared/lib/validations/auth';
+import { signupSchema } from '@/external/dto/auth';
 
 const TOKEN_EXPIRY_HOURS = 1;
 

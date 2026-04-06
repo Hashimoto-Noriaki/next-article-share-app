@@ -10,7 +10,7 @@ import { signIn } from 'next-auth/react';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { OAuthButton } from '@/shared/components/atoms/OAuthButton';
-import { loginSchema, LoginInput } from '@/shared/lib/validations/auth';
+import { loginSchema, LoginInput } from '@/external/dto/auth';
 
 export default function LoginPage() {
   const router = useRouter();
