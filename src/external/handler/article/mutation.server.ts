@@ -1,11 +1,8 @@
 import { prisma } from '@/external/repository/client';
 import { createNotification } from '@/external/service/notification';
 import { articleRepository } from '@/external/repository/article';
-import { createArticleSchema } from '@/shared/lib/validations/article';
-import {
-  draftArticleSchema,
-  DRAFT_LIMIT,
-} from '@/shared/lib/validations/draft';
+import { createArticleSchema } from '@/external/dto/article';
+import { draftArticleSchema, DRAFT_LIMIT } from '@/external/dto/article';
 
 export async function likeHandler({
   articleId,
