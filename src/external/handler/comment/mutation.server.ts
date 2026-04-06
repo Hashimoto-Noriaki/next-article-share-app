@@ -1,6 +1,10 @@
 import { commentRepository } from '@/external/repository/comment';
 import { articleRepository } from '@/external/repository/article';
 import { createNotification } from '@/external/service/notification';
+import {
+  createCommentSchema,
+  updateCommentSchema,
+} from '@/external/dto/comment/comment.dto';
 
 export async function createCommentHandler({
   content,
@@ -11,8 +15,9 @@ export async function createCommentHandler({
   userId: string;
   articleId: string;
 }) {
-  if (!content || content.trim() === '') {
-    return { success: false as const, error: 'コメント内容を入力してください' };
+  const parsed = createCommentSchema.safeParse({ content, articleId });
+  if (!parsed.success) {
+    return { success: false as const, errors: parsed.error.issues };
   }
 
   const article = await articleRepository.findAuthorById(articleId);
@@ -21,7 +26,7 @@ export async function createCommentHandler({
   }
 
   const comment = await commentRepository.create({
-    content: content.trim(),
+    content: parsed.data.content.trim(),
     userId,
     articleId,
   });
@@ -48,8 +53,9 @@ export async function updateCommentHandler({
   content: string;
   userId: string;
 }) {
-  if (!content || content.trim() === '') {
-    return { success: false as const, error: 'コメント内容を入力してください' };
+  const parsed = updateCommentSchema.safeParse({ content });
+  if (!parsed.success) {
+    return { success: false as const, errors: parsed.error.issues };
   }
 
   const comment = await commentRepository.findById(commentId);
@@ -61,7 +67,10 @@ export async function updateCommentHandler({
     return { success: false as const, error: '自分のコメントのみ編集できます' };
   }
 
-  const updated = await commentRepository.update(commentId, content.trim());
+  const updated = await commentRepository.update(
+    commentId,
+    parsed.data.content.trim(),
+  );
   return { success: true as const, comment: updated };
 }
 
