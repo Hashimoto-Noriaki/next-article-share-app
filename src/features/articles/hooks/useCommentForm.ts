@@ -14,16 +14,17 @@ export function useCommentForm({ articleId }: UseCommentFormParams) {
   const [isLoading, setIsLoading] = useState(false);
 
   const submitComment = async () => {
-    if (!content.trim()) {
-      alert('コメントを入力してください');
-      return;
-    }
-
     setIsLoading(true);
 
     try {
       const result = await createCommentAction({ articleId, content });
-      if (!result.success) throw new Error(result.error);
+      console.log('result:', JSON.stringify(result));
+      if (!result.success)
+        throw new Error(
+          'errors' in result
+            ? result.errors?.map((e) => e.message).join('\n')
+            : result.error,
+        );
 
       setContent('');
       router.refresh();
