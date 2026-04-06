@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { userRepository } from '@/external/repository/user';
 import { passwordResetTokenRepository } from '@/external/repository/auth';
 import { sendPasswordResetEmail } from '@/external/email';
-import { signupSchema } from '@/external/dto/auth';
+import { signupSchema, resetPasswordServerSchema } from '@/external/dto/auth';
 
 const TOKEN_EXPIRY_HOURS = 1;
 
@@ -84,25 +84,13 @@ export async function validateResetTokenHandler({ token }: { token: string }) {
   return { valid: true as const };
 }
 
-export async function resetPasswordHandler({
-  token,
-  password,
-}: {
-  token: string;
-  password: string;
-}) {
-  if (password.length < 8) {
-    return {
-      success: false as const,
-      error: 'パスワードは8文字以上で入力してください',
-    };
+export async function resetPasswordHandler(body: unknown) {
+  const parsed = resetPasswordServerSchema.safeParse(body);
+  if (!parsed.success) {
+    return { success: false as const, errors: parsed.error.issues };
   }
-  if (password.length > 50) {
-    return {
-      success: false as const,
-      error: 'パスワードは50文字以内で入力してください',
-    };
-  }
+
+  const { token, password } = parsed.data;
 
   const resetToken = await passwordResetTokenRepository.findByToken(token);
   if (!resetToken) {

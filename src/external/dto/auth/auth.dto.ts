@@ -46,6 +46,15 @@ export const resetPasswordSchema = z
     path: ['confirmPassword'],
   });
 
+export const resetPasswordServerSchema = z.object({
+  token: z.string().min(1, 'トークンが必要です'),
+  password: z
+    .string()
+    .min(1, 'パスワードを入力してください')
+    .min(8, 'パスワードは8文字以上にしてください')
+    .max(50, 'パスワードは50文字以内にしてください'),
+});
+
 export type SignUpInput = z.infer<typeof signupSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
