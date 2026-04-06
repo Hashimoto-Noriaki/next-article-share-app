@@ -10,7 +10,7 @@ import { signIn } from 'next-auth/react';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { Button } from '@/shared/components/atoms/Button';
 import { OAuthButton } from '@/shared/components/atoms/OAuthButton';
-import { signupSchema, SignUpInput } from '@/shared/lib/validations/auth';
+import { signupSchema, SignUpInput } from '@/external/dto/auth';
 import { signupAction } from '@/features/auth/actions/auth.action';
 
 export default function SignUpPage() {
