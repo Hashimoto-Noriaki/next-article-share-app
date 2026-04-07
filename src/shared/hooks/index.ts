@@ -1,2 +1,2 @@
-export { useDropdown } from './useDropdown';
+export { useDropdown } from './useDropdown/useDropdown';
 export { useCurrentUser } from './useCurrentUser';
