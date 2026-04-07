@@ -30,14 +30,20 @@ describe('useLike', () => {
       (likeArticleAction as jest.Mock).mockResolvedValue({ success: true });
 
       const { result } = renderHook(() =>
-        useLike({ articleId: 'article-1', initialLiked: false, initialCount: 5 }),
+        useLike({
+          articleId: 'article-1',
+          initialLiked: false,
+          initialCount: 5,
+        }),
       );
 
       await act(async () => {
         await result.current.toggleLike();
       });
 
-      expect(likeArticleAction).toHaveBeenCalledWith({ articleId: 'article-1' });
+      expect(likeArticleAction).toHaveBeenCalledWith({
+        articleId: 'article-1',
+      });
       expect(result.current.isLiked).toBe(true);
       expect(result.current.likeCount).toBe(6);
     });
@@ -46,14 +52,20 @@ describe('useLike', () => {
       (unlikeArticleAction as jest.Mock).mockResolvedValue({ success: true });
 
       const { result } = renderHook(() =>
-        useLike({ articleId: 'article-1', initialLiked: true, initialCount: 5 }),
+        useLike({
+          articleId: 'article-1',
+          initialLiked: true,
+          initialCount: 5,
+        }),
       );
 
       await act(async () => {
         await result.current.toggleLike();
       });
 
-      expect(unlikeArticleAction).toHaveBeenCalledWith({ articleId: 'article-1' });
+      expect(unlikeArticleAction).toHaveBeenCalledWith({
+        articleId: 'article-1',
+      });
       expect(result.current.isLiked).toBe(false);
       expect(result.current.likeCount).toBe(4);
     });
@@ -66,7 +78,11 @@ describe('useLike', () => {
       jest.spyOn(window, 'alert').mockImplementation(() => {});
 
       const { result } = renderHook(() =>
-        useLike({ articleId: 'article-1', initialLiked: false, initialCount: 5 }),
+        useLike({
+          articleId: 'article-1',
+          initialLiked: false,
+          initialCount: 5,
+        }),
       );
 
       await act(async () => {
@@ -80,11 +96,17 @@ describe('useLike', () => {
     it('処理中はisLoadingがtrueになる', async () => {
       let resolve: (value: unknown) => void;
       (likeArticleAction as jest.Mock).mockReturnValue(
-        new Promise((r) => { resolve = r; }),
+        new Promise((r) => {
+          resolve = r;
+        }),
       );
 
       const { result } = renderHook(() =>
-        useLike({ articleId: 'article-1', initialLiked: false, initialCount: 5 }),
+        useLike({
+          articleId: 'article-1',
+          initialLiked: false,
+          initialCount: 5,
+        }),
       );
 
       act(() => {

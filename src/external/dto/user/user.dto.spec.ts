@@ -20,7 +20,9 @@ describe('updateUserSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('名前は10文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          '名前は10文字以内にしてください',
+        );
       }
     });
   });
@@ -33,7 +35,9 @@ describe('updateUserSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('メールアドレスを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'メールアドレスを入力してください',
+        );
       }
     });
 
@@ -44,7 +48,9 @@ describe('updateUserSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('有効なメールアドレスを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          '有効なメールアドレスを入力してください',
+        );
       }
     });
   });

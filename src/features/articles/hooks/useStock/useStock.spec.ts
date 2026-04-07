@@ -36,7 +36,9 @@ describe('useStock', () => {
         await result.current.toggleStock();
       });
 
-      expect(stockArticleAction).toHaveBeenCalledWith({ articleId: 'article-1' });
+      expect(stockArticleAction).toHaveBeenCalledWith({
+        articleId: 'article-1',
+      });
       expect(result.current.isStocked).toBe(true);
     });
 
@@ -51,7 +53,9 @@ describe('useStock', () => {
         await result.current.toggleStock();
       });
 
-      expect(unstockArticleAction).toHaveBeenCalledWith({ articleId: 'article-1' });
+      expect(unstockArticleAction).toHaveBeenCalledWith({
+        articleId: 'article-1',
+      });
       expect(result.current.isStocked).toBe(false);
     });
 
@@ -76,7 +80,9 @@ describe('useStock', () => {
     it('処理中はisLoadingがtrueになる', async () => {
       let resolve: (value: unknown) => void;
       (stockArticleAction as jest.Mock).mockReturnValue(
-        new Promise((r) => { resolve = r; }),
+        new Promise((r) => {
+          resolve = r;
+        }),
       );
 
       const { result } = renderHook(() =>

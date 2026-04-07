@@ -10,7 +10,9 @@ describe('createArticleSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('タイトルを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'タイトルを入力してください',
+        );
       }
     });
 
@@ -22,7 +24,9 @@ describe('createArticleSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('タイトルは100文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'タイトルは100文字以内にしてください',
+        );
       }
     });
 
@@ -59,7 +63,9 @@ describe('createArticleSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('タグは1つ以上指定してください');
+        expect(result.error.issues[0].message).toBe(
+          'タグは1つ以上指定してください',
+        );
       }
     });
 
@@ -71,7 +77,9 @@ describe('createArticleSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('タグは5つ以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'タグは5つ以内にしてください',
+        );
       }
     });
 
@@ -130,7 +138,9 @@ describe('draftArticleSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('タイトルは100文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'タイトルは100文字以内にしてください',
+        );
       }
     });
 
@@ -165,7 +175,9 @@ describe('draftArticleSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('タグは5つ以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'タグは5つ以内にしてください',
+        );
       }
     });
 

@@ -44,7 +44,9 @@ describe('useDropdown', () => {
     // ref に実際の DOM 要素をセットする
     const div = document.createElement('div');
     document.body.appendChild(div);
-    (result.current.ref as React.MutableRefObject<HTMLDivElement | null>).current = div;
+    (
+      result.current.ref as React.MutableRefObject<HTMLDivElement | null>
+    ).current = div;
 
     act(() => {
       result.current.toggle();

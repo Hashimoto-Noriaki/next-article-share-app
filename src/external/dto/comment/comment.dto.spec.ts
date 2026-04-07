@@ -9,7 +9,9 @@ describe('createCommentSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('コメント内容を入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'コメント内容を入力してください',
+        );
       }
     });
 
@@ -20,7 +22,9 @@ describe('createCommentSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('コメントは1000文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'コメントは1000文字以内にしてください',
+        );
       }
     });
   });
@@ -61,22 +65,30 @@ describe('updateCommentSchema', () => {
       const result = updateCommentSchema.safeParse({ content: '' });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('コメント内容を入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'コメント内容を入力してください',
+        );
       }
     });
 
     it('1000文字を超える場合はエラー', () => {
-      const result = updateCommentSchema.safeParse({ content: 'a'.repeat(1001) });
+      const result = updateCommentSchema.safeParse({
+        content: 'a'.repeat(1001),
+      });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('コメントは1000文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'コメントは1000文字以内にしてください',
+        );
       }
     });
   });
 
   describe('正常系', () => {
     it('有効な値なら成功', () => {
-      const result = updateCommentSchema.safeParse({ content: '更新後のコメント' });
+      const result = updateCommentSchema.safeParse({
+        content: '更新後のコメント',
+      });
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data).toEqual({ content: '更新後のコメント' });

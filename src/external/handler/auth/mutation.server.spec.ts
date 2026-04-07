@@ -98,7 +98,9 @@ describe('forgotPasswordHandler', () => {
         email: 'test@example.com',
         password: 'hashed_password',
       });
-      (prisma.passwordResetToken.deleteMany as jest.Mock).mockResolvedValue({ count: 0 });
+      (prisma.passwordResetToken.deleteMany as jest.Mock).mockResolvedValue({
+        count: 0,
+      });
       (prisma.passwordResetToken.create as jest.Mock).mockResolvedValue({});
 
       const result = await forgotPasswordHandler({ email: 'test@example.com' });
@@ -112,7 +114,9 @@ describe('forgotPasswordHandler', () => {
     it('ユーザーが存在しない場合もsuccessを返す（セキュリティのため）', async () => {
       (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
 
-      const result = await forgotPasswordHandler({ email: 'notfound@example.com' });
+      const result = await forgotPasswordHandler({
+        email: 'notfound@example.com',
+      });
 
       expect(result.success).toBe(true);
       expect(sendPasswordResetEmail).not.toHaveBeenCalled();
@@ -165,9 +169,13 @@ describe('validateResetTokenHandler', () => {
 
   describe('異常系', () => {
     it('トークンが存在しない場合はエラー', async () => {
-      (prisma.passwordResetToken.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.passwordResetToken.findUnique as jest.Mock).mockResolvedValue(
+        null,
+      );
 
-      const result = await validateResetTokenHandler({ token: 'invalid-token' });
+      const result = await validateResetTokenHandler({
+        token: 'invalid-token',
+      });
 
       expect(result.valid).toBe(false);
       if (!result.valid) {
@@ -182,7 +190,9 @@ describe('validateResetTokenHandler', () => {
         expires: new Date(Date.now() - 1000),
       });
 
-      const result = await validateResetTokenHandler({ token: 'expired-token' });
+      const result = await validateResetTokenHandler({
+        token: 'expired-token',
+      });
 
       expect(result.valid).toBe(false);
       if (!result.valid) {
@@ -210,7 +220,9 @@ describe('resetPasswordHandler', () => {
         email: 'test@example.com',
       });
       (prisma.user.update as jest.Mock).mockResolvedValue({});
-      (prisma.passwordResetToken.deleteMany as jest.Mock).mockResolvedValue({ count: 1 });
+      (prisma.passwordResetToken.deleteMany as jest.Mock).mockResolvedValue({
+        count: 1,
+      });
 
       const result = await resetPasswordHandler({
         token: 'valid-token',
@@ -223,7 +235,9 @@ describe('resetPasswordHandler', () => {
 
   describe('異常系', () => {
     it('トークンが存在しない場合はエラー', async () => {
-      (prisma.passwordResetToken.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.passwordResetToken.findUnique as jest.Mock).mockResolvedValue(
+        null,
+      );
 
       const result = await resetPasswordHandler({
         token: 'invalid-token',

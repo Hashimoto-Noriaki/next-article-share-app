@@ -28,7 +28,9 @@ describe('signupSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('名前は10文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          '名前は10文字以内にしてください',
+        );
       }
     });
   });
@@ -42,7 +44,9 @@ describe('signupSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('メールアドレスを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'メールアドレスを入力してください',
+        );
       }
     });
 
@@ -54,7 +58,9 @@ describe('signupSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('有効なメールアドレスを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          '有効なメールアドレスを入力してください',
+        );
       }
     });
   });
@@ -68,7 +74,9 @@ describe('signupSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('パスワードを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'パスワードを入力してください',
+        );
       }
     });
 
@@ -80,7 +88,9 @@ describe('signupSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('パスワードは8文字以上にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'パスワードは8文字以上にしてください',
+        );
       }
     });
 
@@ -92,7 +102,9 @@ describe('signupSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('パスワードは50文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'パスワードは50文字以内にしてください',
+        );
       }
     });
   });
@@ -118,7 +130,9 @@ describe('loginSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('メールアドレスを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'メールアドレスを入力してください',
+        );
       }
     });
 
@@ -129,7 +143,9 @@ describe('loginSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('有効なメールアドレスを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          '有効なメールアドレスを入力してください',
+        );
       }
     });
   });
@@ -142,7 +158,9 @@ describe('loginSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('パスワードを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'パスワードを入力してください',
+        );
       }
     });
   });
@@ -164,7 +182,9 @@ describe('forgotPasswordSchema', () => {
       const result = forgotPasswordSchema.safeParse({ email: '' });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('メールアドレスを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          'メールアドレスを入力してください',
+        );
       }
     });
 
@@ -172,14 +192,18 @@ describe('forgotPasswordSchema', () => {
       const result = forgotPasswordSchema.safeParse({ email: 'invalid-email' });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('有効なメールアドレスを入力してください');
+        expect(result.error.issues[0].message).toBe(
+          '有効なメールアドレスを入力してください',
+        );
       }
     });
   });
 
   describe('正常系', () => {
     it('有効なメールアドレスなら成功', () => {
-      const result = forgotPasswordSchema.safeParse({ email: 'test@example.com' });
+      const result = forgotPasswordSchema.safeParse({
+        email: 'test@example.com',
+      });
       expect(result.success).toBe(true);
     });
   });
@@ -209,7 +233,9 @@ describe('resetPasswordSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('パスワードは8文字以上にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'パスワードは8文字以上にしてください',
+        );
       }
     });
 
@@ -221,7 +247,9 @@ describe('resetPasswordSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('パスワードは50文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'パスワードは50文字以内にしてください',
+        );
       }
     });
   });
@@ -275,7 +303,9 @@ describe('resetPasswordServerSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('パスワードは8文字以上にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'パスワードは8文字以上にしてください',
+        );
       }
     });
 
@@ -286,7 +316,9 @@ describe('resetPasswordServerSchema', () => {
       });
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.issues[0].message).toBe('パスワードは50文字以内にしてください');
+        expect(result.error.issues[0].message).toBe(
+          'パスワードは50文字以内にしてください',
+        );
       }
     });
   });
