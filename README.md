@@ -114,6 +114,10 @@ npm run type-check
 npm run test
 ```
 
+```bash
+npx playwright test                   
+```
+
 ### StoryBook起動
 
 ```bash
