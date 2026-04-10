@@ -115,7 +115,7 @@ npm run test
 ```
 
 ```bash
-npx playwright test                   
+npx playwright test
 ```
 
 ### StoryBook起動
