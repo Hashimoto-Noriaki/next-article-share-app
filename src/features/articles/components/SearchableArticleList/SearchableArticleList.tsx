@@ -100,7 +100,6 @@ export function SearchableArticleList({
 
   return (
     <div>
-      {/* 検索バー */}
       <form onSubmit={handleSearch} className="flex justify-center gap-2 mb-8">
         <input
           type="text"
@@ -127,14 +126,12 @@ export function SearchableArticleList({
         )}
       </form>
 
-      {/* 検索結果表示 */}
       {isSearched && (
         <p className="text-center text-gray-600 mb-4">
           「{query}」の検索結果: {articles.length}件
         </p>
       )}
 
-      {/* 記事一覧 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {articles.length === 0 ? (
           <p className="text-gray-500 col-span-full text-center">
@@ -160,7 +157,6 @@ export function SearchableArticleList({
         )}
       </div>
 
-      {/* ページネーション */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

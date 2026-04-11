@@ -22,10 +22,8 @@ export function NewArticleForm() {
   const [isDraftSubmitting, setIsDraftSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
 
-  // ユーザー情報（TanStack Query）
   const { data: user, isLoading: isUserLoading, isError } = useCurrentUser();
 
-  // 認証エラー時はログインページへ
   useEffect(() => {
     if (isError) {
       router.push('/login');
