@@ -3,14 +3,15 @@ import { FaLaptopCode } from 'react-icons/fa';
 import { Footer } from '../../../shared/components/organisms/Footer';
 import { Button } from '../../../shared/components/atoms/Button';
 import { WelcomeHeader } from '../../../features/home/WelcomeHeader';
+import styles from './WelcomePage.module.css';
 
 export default function WelcomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       <WelcomeHeader />
-      <main className="grow flex flex-col items-center justify-center">
-        <div className="bg-linear-to-r from-rose-300 to-cyan-600 px-16 py-24 font-bold text-white w-full max-w-5xl text-center rounded-lg shadow-lg">
-          <h1 className="text-5xl flex items-center justify-center gap-3">
+      <main className={styles.main}>
+        <div className={styles.hero}>
+          <h1 className={styles.heading}>
             <FaLaptopCode className="text-white" />
             テックブログ共有アプリ
           </h1>
@@ -21,7 +22,7 @@ export default function WelcomePage() {
         <p className="text-center text-xl p-5">
           お気に入りの技術記事があれば投稿しよう🎵
         </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-3">
+        <div className={styles.buttonGroup}>
           <Link href="/login" className="w-64">
             <Button variant="primary">ログインはこちら</Button>
           </Link>
