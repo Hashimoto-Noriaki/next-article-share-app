@@ -65,7 +65,6 @@ export default function SignUpPage() {
           <div className={styles.errorMessage}>{serverError}</div>
         )}
 
-        {/* メール/パスワードフォーム */}
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <div>
             <p className="font-bold mb-3">名前</p>
@@ -109,14 +108,12 @@ export default function SignUpPage() {
           </Button>
         </form>
 
-        {/* 区切り線 */}
         <div className="flex items-center gap-4 my-6">
           <hr className="flex-1 border-white/50" />
           <span className="text-white text-sm">または</span>
           <hr className="flex-1 border-white/50" />
         </div>
 
-        {/* GitHub と Google のボタン */}
         <div className="flex flex-col gap-3">
           <OAuthButton provider="github" mode="signup" />
           <OAuthButton provider="google" mode="signup" />
