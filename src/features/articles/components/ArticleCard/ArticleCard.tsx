@@ -57,7 +57,6 @@ export function ArticleCard({
           ))}
         </div>
         <div className="flex justify-between items-center mt-4 text-sm text-gray-500">
-          {/* 著者名と画像 */}
           <div className="flex items-center gap-2">
             {authorImage ? (
               <div className="relative w-6 h-6 rounded-full overflow-hidden">
