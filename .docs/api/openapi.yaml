@@ -23,6 +23,8 @@ tags:
     description: 下書き関連
   - name: Users
     description: ユーザー関連
+  - name: Upload
+    description: ファイルアップロード関連
 
 paths:
   # ============ Articles ============
@@ -627,6 +629,52 @@ paths:
           description: ユーザー情報
         '404':
           description: ユーザーが見つからない
+
+  # ============ Upload ============
+  /api/upload:
+    post:
+      tags: [Upload]
+      summary: 画像をアップロード
+      description: Cloudinaryに画像をアップロードします（認証必須）
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: アップロードする画像ファイル（JPEG・PNG・GIF・WebP、5MB以下）
+                folder:
+                  type: string
+                  description: "Cloudinary上の保存先フォルダ名（デフォルト: uploads）"
+      responses:
+        '200':
+          description: アップロード成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: アップロードが完了しました
+                  url:
+                    type: string
+                    format: uri
+                    description: アップロードされた画像のURL
+                  publicId:
+                    type: string
+                    description: Cloudinary上のPublic ID
+        '400':
+          description: ファイル未選択 / 5MB超過 / 非対応形式
+        '401':
+          description: 認証が必要
+        '500':
+          description: アップロード失敗
 
   /api/users/me:
     get:
