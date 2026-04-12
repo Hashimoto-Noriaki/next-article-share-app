@@ -14,6 +14,7 @@ import {
   validateResetTokenAction,
   resetPasswordAction,
 } from '@/features/auth/actions/auth.action';
+import styles from './ResetPasswordPage.module.css';
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -69,9 +70,9 @@ function ResetPasswordForm() {
 
   if (isValidating) {
     return (
-      <div className="flex items-center justify-center p-20 max-h-screen">
-        <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
-          <h1 className="text-2xl flex items-center text-white font-bold">
+      <div className={styles.wrapper}>
+        <div className={styles.card}>
+          <h1 className={styles.heading}>
             <FaLaptopCode />
             テックブログ共有アプリ
           </h1>
@@ -83,14 +84,14 @@ function ResetPasswordForm() {
 
   if (!isTokenValid) {
     return (
-      <div className="flex items-center justify-center p-20 max-h-screen">
-        <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
-          <h1 className="text-2xl flex items-center text-white font-bold">
+      <div className={styles.wrapper}>
+        <div className={styles.card}>
+          <h1 className={styles.heading}>
             <FaLaptopCode />
             テックブログ共有アプリ
           </h1>
           <h2 className="text-xl text-white font-bold mt-3">無効なリンク</h2>
-          <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-3 text-sm text-center shadow-sm mt-5">
+          <div className={styles.tokenErrorMessage}>
             このパスワードリセットリンクは無効または期限切れです。
             再度パスワードリセットをリクエストしてください。
           </div>
@@ -104,25 +105,22 @@ function ResetPasswordForm() {
 
   if (isSuccess) {
     return (
-      <div className="flex items-center justify-center p-20 max-h-screen">
-        <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
-          <h1 className="text-2xl flex items-center text-white font-bold">
+      <div className={styles.wrapper}>
+        <div className={styles.card}>
+          <h1 className={styles.heading}>
             <FaLaptopCode />
             テックブログ共有アプリ
           </h1>
           <h2 className="text-xl text-white font-bold mt-3">
             パスワード変更完了
           </h2>
-          <div className="w-full rounded-md bg-green-200 border-green-300 text-green-800 px-4 py-3 text-sm text-center shadow-sm mt-5">
+          <div className={styles.successMessage}>
             パスワードを変更しました。新しいパスワードでログインできます。
           </div>
           <p className="text-white text-sm mt-5">
             自動的にログインページへ移動します...
           </p>
-          <Link
-            href="/login"
-            className="block text-center underline mt-5 hover:text-cyan-800"
-          >
+          <Link href="/login" className={styles.link}>
             ログインページへ
           </Link>
         </div>
@@ -131,9 +129,9 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="flex items-center justify-center p-20 max-h-screen">
-      <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
-        <h1 className="text-2xl flex items-center text-white font-bold">
+    <div className={styles.wrapper}>
+      <div className={styles.card}>
+        <h1 className={styles.heading}>
           <FaLaptopCode />
           テックブログ共有アプリ
         </h1>
@@ -144,14 +142,9 @@ function ResetPasswordForm() {
           安全な新しいパスワードを入力してください。
         </p>
         {serverError && (
-          <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm mt-3">
-            {serverError}
-          </div>
+          <div className={styles.errorMessage}>{serverError}</div>
         )}
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-5 text-left mt-5"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <input type="hidden" {...register('token')} />
           <div>
             <p className="font-bold mb-3">新しいパスワード</p>
@@ -187,10 +180,7 @@ function ResetPasswordForm() {
             {isPending ? '変更中...' : 'パスワードを変更'}
           </Button>
         </form>
-        <Link
-          href="/login"
-          className="block text-center underline mt-5 hover:text-cyan-800"
-        >
+        <Link href="/login" className={styles.link}>
           ログインページに戻る
         </Link>
       </div>
@@ -202,8 +192,8 @@ export default function ResetPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex items-center justify-center p-20 max-h-screen">
-          <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
+        <div className={styles.wrapper}>
+          <div className={styles.card}>
             <p className="text-white">読み込み中...</p>
           </div>
         </div>
