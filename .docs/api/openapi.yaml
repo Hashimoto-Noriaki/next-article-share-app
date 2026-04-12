@@ -650,7 +650,7 @@ paths:
                   description: アップロードする画像ファイル（JPEG・PNG・GIF・WebP、5MB以下）
                 folder:
                   type: string
-                  description: "Cloudinary上の保存先フォルダ名（デフォルト: uploads）"
+                  description: 'Cloudinary上の保存先フォルダ名（デフォルト: uploads）'
       responses:
         '200':
           description: アップロード成功
