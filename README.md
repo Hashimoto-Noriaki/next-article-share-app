@@ -185,7 +185,7 @@ http://localhost:3000/api-docs
 
 ![スクリーンショット 2026-02-02 1.35.17.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/1748789/0ec95660-c6b1-4107-9368-07348acbbfc0.png)
 
-![スクリーンショット 2026-02-02 1.35.32.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/1748789/eebc5c5d-e89b-4cc7-9fa6-6496b1258980.png)
+![スクリーンショット 2026-02-02 1.35.17.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/1748789/0ec95660-c6b1-4107-9368-07348acbbfc0.png)
 
 ### 各画面構成
 
