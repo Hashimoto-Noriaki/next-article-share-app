@@ -21,7 +21,9 @@ async function globalTeardown() {
     });
 
     if (deleted.count > 0) {
-      console.log(`[teardown] テストユーザーを ${deleted.count} 件削除しました`);
+      console.log(
+        `[teardown] テストユーザーを ${deleted.count} 件削除しました`,
+      );
     }
   } finally {
     await prisma.$disconnect();
