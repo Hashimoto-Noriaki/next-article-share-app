@@ -10,7 +10,6 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {/* 開発環境のみ表示、本番ビルドでは自動的に除外される */}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cloudinary } from '@/external/cloudinary';
-import { requireAuth } from '@/lib/auth';
+import { auth } from '@/external/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    // 認証チェック
-    const authResult = await requireAuth();
-    if (authResult instanceof Response) return authResult;
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ message: '認証が必要です' }, { status: 401 });
+    }
 
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
@@ -19,7 +20,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ファイルサイズチェック（5MB まで）
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       return NextResponse.json(
@@ -28,7 +28,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 許可する画像形式
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
@@ -37,12 +36,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ファイルを Base64 に変換
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const base64 = `data:${file.type};base64,${buffer.toString('base64')}`;
 
-    // Cloudinary にアップロード
     const result = await cloudinary.uploader.upload(base64, {
       folder: folder,
       resource_type: 'image',

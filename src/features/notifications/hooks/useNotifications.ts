@@ -1,65 +1,61 @@
-import { useState, useEffect } from 'react';
+'use client';
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDropdown } from '@/shared/hooks';
-import { NotificationWithRelations } from '@/types';
+import { NotificationWithRelations } from '@/features/notifications/types';
+import {
+  listNotificationsAction,
+  markAllNotificationsAsReadAction,
+  markNotificationAsReadAction,
+} from '@/features/notifications/actions/notification.action';
+
+export const notificationKeys = {
+  all: ['notifications'] as const,
+  list: () => [...notificationKeys.all, 'list'] as const,
+};
 
 export function useNotifications() {
   const { isOpen, ref, toggle, close } = useDropdown();
-  const [notifications, setNotifications] = useState<
-    NotificationWithRelations[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  const fetchNotifications = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch('/api/notifications');
-      if (res.ok) {
-        const data = await res.json();
-        setNotifications(data);
-      }
-    } catch (error) {
-      console.error('通知取得エラー:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data: notifications = [], isLoading } = useQuery({
+    queryKey: notificationKeys.list(),
+    queryFn: async (): Promise<NotificationWithRelations[]> => {
+      const result = await listNotificationsAction();
+      if (!result.success) return [];
+      return result.notifications as NotificationWithRelations[];
+    },
+    staleTime: 1 * 60 * 1000,
+  });
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
+  const { mutate: markAllAsRead } = useMutation({
+    mutationFn: markAllNotificationsAsReadAction,
+    onSuccess: () => {
+      queryClient.setQueryData(
+        notificationKeys.list(),
+        (prev: NotificationWithRelations[] = []) =>
+          prev.map((n) => ({ ...n, isRead: true })),
+      );
+    },
+  });
 
-  const markAllAsRead = async () => {
-    try {
-      const res = await fetch('/api/notifications', { method: 'PUT' });
-      if (res.ok) {
-        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-      }
-    } catch (error) {
-      console.error('既読更新エラー:', error);
-    }
-  };
-
-  // 個別の通知を既読にする（追加）
-  const markAsRead = async (notificationId: string) => {
-    try {
-      const res = await fetch(`/api/notifications/${notificationId}`, {
-        method: 'PUT',
-      });
-      if (res.ok) {
-        setNotifications((prev) =>
+  const { mutate: markAsRead } = useMutation({
+    mutationFn: (notificationId: string) =>
+      markNotificationAsReadAction({ notificationId }),
+    onSuccess: (_, notificationId) => {
+      queryClient.setQueryData(
+        notificationKeys.list(),
+        (prev: NotificationWithRelations[] = []) =>
           prev.map((n) =>
             n.id === notificationId ? { ...n, isRead: true } : n,
           ),
-        );
-      }
-    } catch (error) {
-      console.error('既読更新エラー:', error);
-    }
-  };
+      );
+    },
+  });
 
   const handleToggle = () => {
     if (!isOpen) {
-      fetchNotifications();
+      queryClient.invalidateQueries({ queryKey: notificationKeys.list() });
     }
     toggle();
   };

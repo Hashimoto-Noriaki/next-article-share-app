@@ -15,6 +15,8 @@
 
 - [Next.jsのApp Routerを用いてテックブログの共有アプリを作成(現場での運用を見据えた技術構成と設計)](https://qiita.com/Hashimoto-Noriaki/items/caac04a808c8ec4b2a0d)
 
+## トランクベース開発を採用
+
 ## 技術構成
 
 - TypeScript
@@ -47,6 +49,7 @@
 
 - Claude Code
 - ChatGPT
+- PlayWright MCP
 
 ## 機能一覧
 
@@ -109,6 +112,10 @@ npm run type-check
 
 ```bash
 npm run test
+```
+
+```bash
+npx playwright test
 ```
 
 ### StoryBook起動
