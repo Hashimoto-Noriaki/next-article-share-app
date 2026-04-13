@@ -75,6 +75,7 @@ npm run test:e2e      # Playwright E2E
 - Critical が 0 件なら `--approve`、1件以上なら `--request-changes`、それ以外は `--comment`
 - 推測でレビューしない。不明な点はコードを `Read` / `Grep` で確認してから判断する
 - セキュリティ・認証・認可の問題は必ず Critical として扱う
+- CI（lint / type-check / test）が1つでも失敗していたら必ず Critical として扱い `--request-changes` にする
 - `any` の使用・型キャストは Warning として扱う
 
 ## Skills
