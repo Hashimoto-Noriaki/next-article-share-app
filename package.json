@@ -15,6 +15,7 @@
     "test": "jest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:cleanup": "tsx -e \"import f from './e2e/global-teardown.ts'; f()\"",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
