@@ -10,6 +10,10 @@
       "Read",
       "Grep",
       "Glob"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)"
     ]
   }
 }
