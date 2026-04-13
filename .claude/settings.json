@@ -11,9 +11,6 @@
       "Grep",
       "Glob"
     ],
-    "deny": [
-      "Read(.env)",
-      "Read(.env.*)"
-    ]
+    "deny": ["Read(.env)", "Read(.env.*)"]
   }
 }
