@@ -13,7 +13,6 @@ permissions:
 
 jobs:
   pr-review:
-    # @claude /pr_review が含まれるコメントのみ実行
     if: |
       (github.event_name == 'issue_comment' && github.event.issue.pull_request != null &&
        contains(github.event.comment.body, '@claude') &&
@@ -33,7 +32,5 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          # .claude/commands/review_pr.md のスラッシュコマンドを直接呼び出す
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: '/review_pr'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # gh CLI 認証用
