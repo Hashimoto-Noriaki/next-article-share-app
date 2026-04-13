@@ -33,7 +33,7 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          prompt: '/review_pr ${{ github.event.issue.number }}'
+          prompt: '/review_pr'
           claude_args: "--allowedTools 'Bash(gh:*)'"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
