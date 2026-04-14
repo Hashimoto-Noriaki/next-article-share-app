@@ -7,6 +7,9 @@
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
       "Bash(gh pr review:*)",
+      "Bash(git diff:*)",
+      "Bash(git status)",
+      "Bash(git commit:*)",
       "Read",
       "Grep",
       "Glob"
