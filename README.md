@@ -51,6 +51,36 @@
 - ChatGPT
 - PlayWright MCP
 
+## ハーネスエンジニアリング（AI自動コードレビュー）
+
+Claude Code によるAI自動コードレビューを実現するための仕組みです。AIが安全・確実にレビューを実行できるよう、**実行できる操作・判断基準・出力フォーマット**を構造化しています。
+
+### 構成ファイル
+
+| ファイル                        | 役割                               |
+| ------------------------------- | ---------------------------------- |
+| `.claude/settings.json`         | 許可コマンドのホワイトリスト管理   |
+| `.claude/commands/review_pr.md` | `/review_pr` スキル定義            |
+| `.claude/rules/frontend.md`     | フロントエンド規約                 |
+| `.claude/rules/testing.md`      | テスト規約                         |
+| `CLAUDE.md`                     | プロジェクト全体の指示・判定ルール |
+
+### レビューフロー
+
+`/review_pr` を実行すると以下を自動処理します：
+
+1. PR情報・差分取得
+2. CI（lint / type-check / test）の合否確認
+3. レビュー観点（セキュリティ・型安全性・パフォーマンス・認証認可）でdiffを分析
+4. GitHubにレビューを投稿
+
+### 判定ルール
+
+- CI失敗 → 無条件で Critical → `--request-changes`
+- Critical 0件 → `--approve`
+- Critical 1件以上 → `--request-changes`
+- それ以外 → `--comment`
+
 ## 機能一覧
 
 - ユーザーの新規登録
