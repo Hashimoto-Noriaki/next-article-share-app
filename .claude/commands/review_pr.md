@@ -7,6 +7,7 @@ Review the code changes in the current GitHub PR and post the review directly to
 1. Run `gh pr view --json number,title,baseRefName,url 2>/dev/null` to get PR info. If no PR exists, say "PRが見つかりません。先に `gh pr create` でPRを作成してください。" and stop.
 2. Run `gh pr diff` to get the full diff of this PR
 3. Run `gh pr view --json commits --jq '.commits[].messageHeadline'` to see commit messages
+4. Run `gh pr checks` to get CI status. If any check has failed, treat it as a Critical issue.
 
 Review the diff thoroughly, then post the review to GitHub using one of the following commands.
 

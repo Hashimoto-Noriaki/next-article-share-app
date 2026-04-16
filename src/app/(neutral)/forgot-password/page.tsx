@@ -40,7 +40,6 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // 送信完了画面
   if (isSubmitted) {
     return (
       <div className="flex items-center justify-center p-20 max-h-screen">

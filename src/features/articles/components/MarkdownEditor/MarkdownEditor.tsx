@@ -46,7 +46,6 @@ export function MarkdownEditor({
 
   const { uploadState, uploadImage, resetError } = useImageUpload();
 
-  // カーソル位置に画像マークダウンを挿入
   const insertImageMarkdown = useCallback(
     (imageUrl: string, altText: string = '画像') => {
       const textarea =
@@ -60,21 +59,18 @@ export function MarkdownEditor({
           body.substring(0, start) + markdownImage + body.substring(end);
         onBodyChange(newBody);
 
-        // カーソル位置を画像の後ろに移動
         setTimeout(() => {
           textarea.focus();
           const newPosition = start + markdownImage.length;
           textarea.setSelectionRange(newPosition, newPosition);
         }, 0);
       } else {
-        // テキストエリアがない場合は末尾に追加
         onBodyChange(body + '\n' + markdownImage);
       }
     },
     [body, onBodyChange, activeTab],
   );
 
-  // 画像アップロード処理
   const handleImageUpload = useCallback(
     async (file: File) => {
       const imageUrl = await uploadImage(file);
@@ -86,7 +82,6 @@ export function MarkdownEditor({
     [uploadImage, insertImageMarkdown],
   );
 
-  // ドラッグ&ドロップハンドラー
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -115,7 +110,6 @@ export function MarkdownEditor({
     [handleImageUpload],
   );
 
-  // ペースト時の画像処理
   const handlePaste = useCallback(
     async (e: React.ClipboardEvent) => {
       const items = Array.from(e.clipboardData.items);
@@ -132,7 +126,6 @@ export function MarkdownEditor({
     [handleImageUpload],
   );
 
-  // 共通のテキストエリアクラス
   const getTextareaClass = (isError: boolean) =>
     `w-full min-h-[600px] p-4 border rounded-md text-base leading-7 bg-white focus:outline-none transition-colors ${
       isError ? 'border-red-500' : 'border-slate-200'
@@ -140,7 +133,6 @@ export function MarkdownEditor({
 
   return (
     <>
-      {/* タイトル */}
       <div className="mb-3">
         <input
           value={title}
@@ -155,7 +147,6 @@ export function MarkdownEditor({
         )}
       </div>
 
-      {/* タグ */}
       <div className="mb-3">
         <input
           value={tags}
@@ -170,7 +161,6 @@ export function MarkdownEditor({
         )}
       </div>
 
-      {/* ツールバー：タブ + 画像アップロード */}
       <div className="flex items-center gap-2 mb-2 border-b border-slate-200 pb-2">
         {TABS.map((tab) => (
           <Tab
@@ -181,10 +171,8 @@ export function MarkdownEditor({
           />
         ))}
 
-        {/* 区切り線 */}
         <div className="w-px h-6 bg-slate-300 mx-2" />
 
-        {/* 画像アップロードボタン */}
         <ImageUploadButton
           isUploading={uploadState.isUploading}
           onFileSelect={handleImageUpload}
@@ -196,7 +184,6 @@ export function MarkdownEditor({
         </span>
       </div>
 
-      {/* エラーメッセージ */}
       {errors.content && (
         <p className="text-red-500 text-sm mb-2">{errors.content}</p>
       )}
@@ -213,14 +200,12 @@ export function MarkdownEditor({
         </div>
       )}
 
-      {/* ドラッグ&ドロップのヒント */}
       {activeTab !== 'preview' && (
         <p className="text-xs text-slate-400 mb-2">
           💡 画像はドラッグ&ドロップまたはペーストでも挿入できます
         </p>
       )}
 
-      {/* 編集モード */}
       {activeTab === 'edit' && (
         <textarea
           ref={textareaRef}
@@ -235,14 +220,12 @@ export function MarkdownEditor({
         />
       )}
 
-      {/* プレビューモード */}
       {activeTab === 'preview' && (
         <div className="w-full min-h-[600px] p-6 border border-slate-200 rounded-md bg-white overflow-auto">
           <MarkdownPreview content={body} />
         </div>
       )}
 
-      {/* 2ペインモード */}
       {activeTab === 'split' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <textarea

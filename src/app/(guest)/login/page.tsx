@@ -11,6 +11,7 @@ import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
 import { OAuthButton } from '@/shared/components/atoms/OAuthButton';
 import { loginSchema, LoginInput } from '@/external/dto/auth';
+import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,25 +45,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center p-20 max-h-screen">
-      <div className="bg-linear-to-r from-rose-300 to-cyan-400 px-16 py-24 text-center w-full max-w-md rounded-md">
-        <h1 className="text-2xl flex items-center text-white font-bold">
+    <div className={styles.wrapper}>
+      <div className={styles.card}>
+        <h1 className={styles.heading}>
           <FaLaptopCode />
           テックブログ共有アプリ
         </h1>
         <h2 className="text-xl text-white font-bold mt-3">ログイン</h2>
 
         {serverError && (
-          <div className="w-full rounded-md bg-rose-200 border-rose-300 text-rose-800 px-4 py-2 text-sm text-center shadow-sm mt-3">
-            {serverError}
-          </div>
+          <div className={styles.errorMessage}>{serverError}</div>
         )}
 
-        {/* メール/パスワードフォーム */}
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-5 text-left mt-5"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <div>
             <p className="font-bold mb-3">メールアドレス</p>
             <InputForm
@@ -94,30 +89,22 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        {/* 区切り線 */}
         <div className="flex items-center gap-4 my-6">
           <hr className="flex-1 border-white/50" />
           <span className="text-white text-sm">または</span>
           <hr className="flex-1 border-white/50" />
         </div>
 
-        {/* GitHub と Google のボタン */}
         <div className="flex flex-col gap-3">
           <OAuthButton provider="github" mode="login" />
           <OAuthButton provider="google" mode="login" />
         </div>
 
-        <Link
-          href="/forgot-password"
-          className="block text-center underline mt-5 hover:text-cyan-800"
-        >
+        <Link href="/forgot-password" className={styles.link}>
           パスワードをお忘れの方
         </Link>
 
-        <Link
-          href="/signup"
-          className="block text-center underline mt-5 hover:text-cyan-800"
-        >
+        <Link href="/signup" className={styles.link}>
           新規登録はこちら
         </Link>
       </div>
