@@ -15,6 +15,24 @@
 
 - [Next.jsのApp Routerを用いてテックブログの共有アプリを作成(現場での運用を見据えた技術構成と設計)](https://qiita.com/Hashimoto-Noriaki/items/caac04a808c8ec4b2a0d)
 
+## 設計
+
+- [AI駆動開発においてNext.jsのAppRouterの最適な設計方針](https://qiita.com/Hashimoto-Noriaki/private/b2ada6ca9e3c98c512ef)
+
+### app/ — 薄く保つ
+
+ルーティングの定義だけ（薄くする）
+
+```bash
+src/
+├─ app/           # App Router: ルート・レイアウト・メタデータ（薄く保つ）
+├─ features/      # 専属ロジック、ドメインごとの機能群
+├─ shared/        # 共通UI・レイアウト・providerなど(アプリ全体で使うもの)
+└─ external/      # 外部接続（dto, handler, service, repository, client）
+```
+
+詳細: [docs/architecture/architecture.md](docs/architecture/architecture.md)
+
 ## トランクベース開発を採用
 
 ## 技術構成
