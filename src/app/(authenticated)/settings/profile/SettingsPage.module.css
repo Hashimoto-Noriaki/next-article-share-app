@@ -1,0 +1,161 @@
+.page {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: linear-gradient(to right, #06b6d4, #0891b2);
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerLink {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.headerLink:hover {
+  text-decoration: underline;
+}
+
+.main {
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  max-width: 28rem;
+  flex: 1;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardTitle {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.avatarWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatarButton {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 2px solid #d1d5db;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.avatarButton:hover {
+  border-color: #06b6d4;
+}
+
+.avatarButton:disabled {
+  cursor: not-allowed;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.avatarUploading {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(0 0 0 / 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.875rem;
+}
+
+.avatarHint {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+.fileInput {
+  display: none;
+}
+
+.form {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  padding: 2rem;
+}
+
+.successMessage {
+  background-color: #dcfce7;
+  border: 1px solid #4ade80;
+  color: #15803d;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.375rem;
+}
+
+.errorMessage {
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+  color: #b91c1c;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.375rem;
+}
+
+.fieldGroup {
+  margin-bottom: 1rem;
+}
+
+.fieldGroupLast {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.fieldError {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.loading {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
