@@ -4,9 +4,13 @@ import storybook from 'eslint-plugin-storybook';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
+import { createRequire } from 'module';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const require = createRequire(import.meta.url);
+const localRules = require('./eslint-local-rules.js');
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -26,6 +30,14 @@ const eslintConfig = [
     ],
   },
   ...storybook.configs['flat/recommended'],
+  {
+    plugins: {
+      'local-rules': { rules: localRules },
+    },
+    rules: {
+      'local-rules/restrict-service-imports': 'error',
+    },
+  },
 ];
 
 export default eslintConfig;
