@@ -27,7 +27,7 @@ module.exports = {
   },
 
   create(context) {
-    const filePath = context.getFilename();
+    const filePath = context.filename ?? context.getFilename();
 
     const ACTION_IMPORT_PATTERN = /^@\/features\/[^/]+\/actions\//;
 

@@ -25,7 +25,7 @@ module.exports = {
   },
 
   create(context) {
-    const filePath = context.getFilename();
+    const filePath = context.filename ?? context.getFilename();
 
     const CLIENT_LAYER_PATTERN =
       /\/features\/[^/]+\/(?:hooks|components\/client)\//;
