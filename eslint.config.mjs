@@ -37,6 +37,7 @@ const eslintConfig = [
     rules: {
       'local-rules/restrict-service-imports': 'error',
       'local-rules/restrict-action-imports': 'error',
+      'local-rules/use-client-check': 'error',
     },
   },
 ];
