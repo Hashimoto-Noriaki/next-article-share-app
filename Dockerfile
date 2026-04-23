@@ -31,6 +31,9 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
+ARG DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DATABASE_URL=$DATABASE_URL
+
 # Prisma Client 生成
 RUN npx prisma generate
 
