@@ -11,7 +11,11 @@ env:
 
 jobs:
   deploy:
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout
@@ -22,7 +26,8 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_DEPLOYER_SA }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -32,15 +37,15 @@ jobs:
 
       - name: Pull staging image
         run: |
-          if ! docker pull ${{ env.IMAGE_NAME }}:stg-latest; then
-            echo "Error: stg-latest image not found. Ensure staging deployment succeeded first."
+          if ! docker pull ${{ env.IMAGE_NAME }}:${{ github.sha }}; then
+            echo "Error: image for ${{ github.sha }} not found. Ensure staging deployment for this commit succeeded first."
             exit 1
           fi
 
       - name: Retag image for production
         run: |
-          docker tag ${{ env.IMAGE_NAME }}:stg-latest ${{ env.IMAGE_NAME }}:${{ github.event.release.tag_name }}
-          docker tag ${{ env.IMAGE_NAME }}:stg-latest ${{ env.IMAGE_NAME }}:latest
+          docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:${{ github.event.release.tag_name }}
+          docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.IMAGE_NAME }}:latest
 
       - name: Push Docker image
         run: |
@@ -55,19 +60,19 @@ jobs:
             --platform managed \
             --allow-unauthenticated \
             --update-env-vars "NODE_ENV=production" \
-            --update-env-vars "APP_URL=${{ secrets.PROD_APP_URL }}" \
-            --update-env-vars "NEXTAUTH_URL=${{ secrets.PROD_NEXTAUTH_URL }}" \
-            --update-env-vars "NEXTAUTH_SECRET=${{ secrets.PROD_NEXTAUTH_SECRET }}" \
-            --update-env-vars "DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}" \
-            --update-env-vars "JWT_SECRET=${{ secrets.PROD_JWT_SECRET }}" \
-            --update-env-vars "OAUTH_GITHUB_ID=${{ secrets.OAUTH_GITHUB_ID }}" \
-            --update-env-vars "OAUTH_GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_SECRET }}" \
-            --update-env-vars "DIRECT_URL=${{ secrets.PROD_DIRECT_URL }}" \
-            --update-env-vars "OAUTH_GOOGLE_ID=${{ secrets.OAUTH_GOOGLE_ID }}" \
-            --update-env-vars "OAUTH_GOOGLE_SECRET=${{ secrets.OAUTH_GOOGLE_SECRET }}" \
-            --update-env-vars "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" \
-            --update-env-vars "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" \
-            --update-env-vars "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" \
-            --update-env-vars "GMAIL_USER=${{ secrets.GMAIL_USER }}" \
-            --update-env-vars "GMAIL_APP_PASSWORD=${{ secrets.GMAIL_APP_PASSWORD }}" \
+            --set-secrets "APP_URL=PROD_APP_URL:latest" \
+            --set-secrets "NEXTAUTH_URL=PROD_NEXTAUTH_URL:latest" \
+            --set-secrets "NEXTAUTH_SECRET=PROD_NEXTAUTH_SECRET:latest" \
+            --set-secrets "DATABASE_URL=PROD_DATABASE_URL:latest" \
+            --set-secrets "DIRECT_URL=PROD_DIRECT_URL:latest" \
+            --set-secrets "JWT_SECRET=PROD_JWT_SECRET:latest" \
+            --set-secrets "OAUTH_GITHUB_ID=OAUTH_GITHUB_ID:latest" \
+            --set-secrets "OAUTH_GITHUB_SECRET=OAUTH_GITHUB_SECRET:latest" \
+            --set-secrets "OAUTH_GOOGLE_ID=OAUTH_GOOGLE_ID:latest" \
+            --set-secrets "OAUTH_GOOGLE_SECRET=OAUTH_GOOGLE_SECRET:latest" \
+            --set-secrets "CLOUDINARY_CLOUD_NAME=CLOUDINARY_CLOUD_NAME:latest" \
+            --set-secrets "CLOUDINARY_API_KEY=CLOUDINARY_API_KEY:latest" \
+            --set-secrets "CLOUDINARY_API_SECRET=CLOUDINARY_API_SECRET:latest" \
+            --set-secrets "GMAIL_USER=GMAIL_USER:latest" \
+            --set-secrets "GMAIL_APP_PASSWORD=GMAIL_APP_PASSWORD:latest" \
             --project ${{ secrets.GCP_PROJECT_ID }}
