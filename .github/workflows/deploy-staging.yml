@@ -36,7 +36,6 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg DATABASE_URL=dummy://dummy \
             --tag ${{ env.IMAGE_NAME }}:${{ github.event.workflow_run.head_sha }} \
             --tag ${{ env.IMAGE_NAME }}:stg-latest \
             .
