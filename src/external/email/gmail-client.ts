@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'テックブログ共有アプリ';
+const APP_NAME = 'テックブログ共有アプリ';
 
 // Gmail SMTPトランスポーター
 const transporter = nodemailer.createTransport({
@@ -23,7 +23,7 @@ export async function sendPasswordResetEmail({
   success: boolean;
   error?: string;
 }> {
-  const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
+  const resetUrl = `${process.env.APP_URL}/reset-password?token=${token}`;
 
   const htmlContent = `
     <!DOCTYPE html>
