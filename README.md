@@ -68,6 +68,7 @@ src/
 - Claude Code
 - ChatGPT
 - PlayWright MCP
+- CodeRabbit
 
 ### ハーネスエンジニアリング（品質の自動化）
 
@@ -79,7 +80,7 @@ src/
 | コミット前 | ESLintカスタムルール           | CI / save時      |
 | PR時       | CodeRabbit（.coderabbit.yaml） | マージ前         |
 
-Claude Code による自動コードレビューも採用しています。PRコメントで `@claude /review_pr` を投稿するか、ターミナルで `/review_pr` を実行するだけでCI確認・diff分析・GitHubへのレビュー投稿を自動処理します。
+PR時は2つのAIを役割で分担しています。CodeRabbit はマージ前に自動でバグ・セキュリティ・可読性をチェックします。Claude Code の `/review_pr` はプロジェクト固有のアーキテクチャルール（層の依存、認証漏れなど）を手動で確認するときに使います。
 
 詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
 
