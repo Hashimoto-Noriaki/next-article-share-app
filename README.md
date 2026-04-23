@@ -69,9 +69,17 @@ src/
 - ChatGPT
 - PlayWright MCP
 
-### ハーネスエンジニアリング（AI自動コードレビュー）
+### ハーネスエンジニアリング（品質の自動化）
 
-Claude Code による自動コードレビューを採用しています。PRコメントで `@claude /review_pr` を投稿するか、ターミナルで `/review_pr` を実行するだけでCI確認・diff分析・GitHubへのレビュー投稿を自動処理します。
+「人が守るルール」ではなく「仕組みが守るルール」として、フェーズごとに自動チェックを配置しています。
+
+| レイヤー   | ツール                         | タイミング       |
+| ---------- | ------------------------------ | ---------------- |
+| 開発中     | CLAUDE.md（Claude Code）       | コードを書くとき |
+| コミット前 | ESLintカスタムルール           | CI / save時      |
+| PR時       | CodeRabbit（.coderabbit.yaml） | マージ前         |
+
+Claude Code による自動コードレビューも採用しています。PRコメントで `@claude /review_pr` を投稿するか、ターミナルで `/review_pr` を実行するだけでCI確認・diff分析・GitHubへのレビュー投稿を自動処理します。
 
 詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
 
