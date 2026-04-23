@@ -8,6 +8,9 @@ reviews:
   collapse_walkthrough: false
   path_filters:
     - '!**/*.lock'
+    - '!**/package-lock.json'
+    - '!**/pnpm-lock.yaml'
+    - '!**/bun.lockb'
     - '!**/node_modules/**'
   path_instructions:
     - path: '**/*.{ts,tsx}'
