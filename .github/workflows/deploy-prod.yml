@@ -31,7 +31,11 @@ jobs:
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
       - name: Pull staging image
-        run: docker pull ${{ env.IMAGE_NAME }}:stg-latest
+        run: |
+          if ! docker pull ${{ env.IMAGE_NAME }}:stg-latest; then
+            echo "Error: stg-latest image not found. Ensure staging deployment succeeded first."
+            exit 1
+          fi
 
       - name: Retag image for production
         run: |
