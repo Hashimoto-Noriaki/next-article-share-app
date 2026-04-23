@@ -80,7 +80,7 @@ src/
 | コミット前 | ESLintカスタムルール           | CI / save時      |
 | PR時       | CodeRabbit（.coderabbit.yaml） | マージ前         |
 
-PR時は2つのAIを役割で分担しています。CodeRabbit はPR作成時に自動でバグ・セキュリティ・可読性をチェックします。Claude Code の `/review_pr` はプロジェクト固有のアーキテクチャルール（層の依存、認証漏れなど）を手動で確認するときに使います。
+PR時は2つのAIを役割で分担しています。CodeRabbit はマージ前に自動でバグ・セキュリティ・可読性をチェックします。Claude Code の `/review_pr` はプロジェクト固有のアーキテクチャルール（層の依存、認証漏れなど）を手動で確認するときに使います。
 
 詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
 
