@@ -1,4 +1,5 @@
-FROM node:20.15-alpine AS base
+FROM node:20.19-alpine AS base
+RUN apk upgrade --no-cache
 WORKDIR /app
 
 # Dependencies: 依存関係インストール
@@ -30,11 +31,14 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
+ARG DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DATABASE_URL=$DATABASE_URL
+
 # Prisma Client 生成
 RUN npx prisma generate
 
 # Next.js ビルド
-RUN npm run build
+RUN npm run build:ci
 
 # Production: 本番環境
 FROM base AS production

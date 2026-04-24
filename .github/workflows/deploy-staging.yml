@@ -1,0 +1,71 @@
+name: Deploy Staging
+
+on:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+    branches: [master]
+
+env:
+  GCP_REGION: asia-northeast1
+  SERVICE_NAME: next-article-share-app-stg
+  IMAGE_NAME: asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/next-article-share-app/app
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --tag ${{ env.IMAGE_NAME }}:${{ github.event.workflow_run.head_sha }} \
+            --tag ${{ env.IMAGE_NAME }}:stg-latest \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.IMAGE_NAME }}:${{ github.event.workflow_run.head_sha }}
+          docker push ${{ env.IMAGE_NAME }}:stg-latest
+
+      - name: Deploy to Cloud Run (Staging)
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image ${{ env.IMAGE_NAME }}:${{ github.event.workflow_run.head_sha }} \
+            --region ${{ env.GCP_REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --update-env-vars "NODE_ENV=production" \
+            --update-env-vars "APP_URL=${{ secrets.STG_APP_URL }}" \
+            --update-env-vars "NEXTAUTH_URL=${{ secrets.STG_NEXTAUTH_URL }}" \
+            --update-env-vars "NEXTAUTH_SECRET=${{ secrets.STG_NEXTAUTH_SECRET }}" \
+            --update-env-vars "DATABASE_URL=${{ secrets.STG_DATABASE_URL }}" \
+            --update-env-vars "DIRECT_URL=${{ secrets.STG_DIRECT_URL }}" \
+            --update-env-vars "JWT_SECRET=${{ secrets.STG_JWT_SECRET }}" \
+            --update-env-vars "OAUTH_GITHUB_ID=${{ secrets.OAUTH_GITHUB_ID }}" \
+            --update-env-vars "OAUTH_GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_SECRET }}" \
+            --update-env-vars "OAUTH_GOOGLE_ID=${{ secrets.OAUTH_GOOGLE_ID }}" \
+            --update-env-vars "OAUTH_GOOGLE_SECRET=${{ secrets.OAUTH_GOOGLE_SECRET }}" \
+            --update-env-vars "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" \
+            --update-env-vars "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" \
+            --update-env-vars "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" \
+            --update-env-vars "GMAIL_USER=${{ secrets.GMAIL_USER }}" \
+            --update-env-vars "GMAIL_APP_PASSWORD=${{ secrets.GMAIL_APP_PASSWORD }}" \
+            --project ${{ secrets.GCP_PROJECT_ID }}
