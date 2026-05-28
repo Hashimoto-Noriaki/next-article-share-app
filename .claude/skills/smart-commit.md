@@ -1,15 +1,19 @@
-# Commit
+# Smart Commit
 
 ステージされた変更を確認し、Conventional Commits 形式でコミットを作成する。
 
 ## Steps
 
-1. `git diff --staged` でステージ済みの変更を確認する。変更がなければ `git status` を確認し、「ステージされた変更がありません。`git add` でファイルをステージしてください。」と伝えて終了する。
-2. 変更内容からコミットメッセージを生成する。
+1. `git diff --staged` でステージ済みの変更を確認する。  
+   変更がなければ `git status` を確認し、「ステージされた変更がありません。`git add` でファイルをステージしてください。」と伝えて終了する。
+
+2. `git log --oneline -5` で直近のコミットメッセージのスタイルを確認する。
+
+3. 変更内容から以下の形式でコミットメッセージを生成する。
 
 ## Conventional Commits 形式
 
-```
+```text
 <type>: <description>
 ```
 
@@ -34,10 +38,13 @@
 
 ## 実行
 
-以下のコマンドでコミットを作成する：
+HEREDOC を使ってコミットを作成する：
 
 ```sh
-git commit -m "<生成したメッセージ>"
+git commit -m "$(cat <<'EOF'
+<type>: <description>
+EOF
+)"
 ```
 
 コミット後、コミットハッシュとメッセージを表示する。
