@@ -1,3 +1,8 @@
+---
+name: test
+description: lint・型チェック・Jest を順番に実行して結果を報告する
+---
+
 # Test
 
 lint・型チェック・Jest を順番に実行し、結果をまとめて報告する。

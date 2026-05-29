@@ -1,3 +1,8 @@
+---
+name: pr-description
+description: コミットと diff から PR 説明文を生成して GitHub に投稿する
+---
+
 # PR Description
 
 現在のブランチのコミットと diff から PR 説明文を生成し、GitHub に投稿する。

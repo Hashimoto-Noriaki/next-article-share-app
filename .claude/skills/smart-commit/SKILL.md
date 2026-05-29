@@ -1,3 +1,8 @@
+---
+name: smart-commit
+description: ステージ済みの変更を Conventional Commits 形式でコミットする
+---
+
 # Smart Commit
 
 ステージされた変更を確認し、Conventional Commits 形式でコミットを作成する。

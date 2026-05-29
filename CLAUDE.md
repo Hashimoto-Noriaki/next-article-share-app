@@ -80,7 +80,7 @@ npm run test:e2e      # Playwright E2E
 
 ## Skills
 
-- `/smart-commit` — ステージ済みの変更を Conventional Commits 形式でコミットする（`.claude/skills/smart-commit.md`）
-- `/review_pr` — PRのdiffを取得し、GitHubにレビューを投稿する（`.claude/skills/review_pr.md`）
-- `/pr-description` — コミット・diffからPR説明文を生成しGitHubに投稿する（`.claude/skills/pr-description.md`）
-- `/test` — lint・型チェック・Jest を順番に実行し結果を報告する（`.claude/skills/test.md`）
+- `/smart-commit` — ステージ済みの変更を Conventional Commits 形式でコミットする（`.claude/skills/smart-commit/SKILL.md`）
+- `/pr-description` — コミット・diffからPR説明文を生成しGitHubに投稿する（`.claude/skills/pr-description/SKILL.md`）
+- `/create-issue` — 説明をもとに GitHub Issue を作成する（`.claude/skills/create-issue/SKILL.md`）
+- `/test` — lint・型チェック・Jest を順番に実行し結果を報告する（`.claude/skills/test/SKILL.md`）
