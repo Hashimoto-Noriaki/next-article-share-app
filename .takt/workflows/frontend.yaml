@@ -166,7 +166,7 @@ steps:
         next: ai-antipattern-fix
     output_contracts:
       report:
-        - name: ai-antipattern-review.md
+        - name: ai-antipattern-review-1st.md
           format: ai-antipattern-review
   - name: ai-antipattern-fix
     edit: true
@@ -313,7 +313,7 @@ steps:
           - condition: needs_fix
         output_contracts:
           report:
-            - name: ai-antipattern-review.md
+            - name: ai-antipattern-review-2nd.md
               format: ai-antipattern-review
     rules:
       - condition: all("approved")
