@@ -131,9 +131,9 @@ steps:
       - condition: Implementation is complete
         next: ai-antipattern-review-1st
       - condition: No implementation (report only)
-        next: ai-antipattern-review-1st
+        next: plan
       - condition: Cannot proceed with implementation
-        next: ai-antipattern-review-1st
+        next: ABORT
       - condition: User input required
         next: implement
         requires_user_input: true
