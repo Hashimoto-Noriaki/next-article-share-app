@@ -66,6 +66,7 @@ src/
 ## 使用したAI
 
 - Claude Code
+- TAKT
 - ChatGPT
 - PlayWright MCP
 - CodeRabbit
@@ -74,15 +75,40 @@ src/
 
 「人が守るルール」ではなく「仕組みが守るルール」として、フェーズごとに自動チェックを配置しています。
 
-| レイヤー   | ツール                       | タイミング       |
-| ---------- | ---------------------------- | ---------------- |
-| 開発中     | CLAUDE.md + `.claude/rules/` | コードを書くとき |
-| コミット前 | ESLint カスタムルール        | CI / save 時     |
-| PR 時      | CodeRabbit + `/code-review`  | マージ前         |
+| レイヤー     | ツール                       | タイミング               |
+| ------------ | ---------------------------- | ------------------------ |
+| 開発中       | CLAUDE.md + `.claude/rules/` | コードを書くとき         |
+| タスク実行時 | TAKT ワークフロー            | 実装・レビュー・修正全体 |
+| コミット前   | ESLint カスタムルール        | CI / save 時             |
+| PR 時        | CodeRabbit + `/code-review`  | マージ前                 |
 
 CodeRabbit はマージ前に自動でバグ・セキュリティ・可読性をチェックします。Claude Code のスキル（`/code-review` `/smart-commit` `/test` など）はプロジェクト固有のルールに基づいた操作を手動で実行するときに使います。
 
 詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
+
+### TAKT — AIエージェントワークフロー管理
+
+「AIに実装させるだけ」から「開発プロセス全体をAIに実行させる」へ。  
+TAKT はワークフローを YAML で定義し、plan・実装・レビュー・修正・最終承認の一連の工程を AI エージェントに強制実行させます。
+
+```text
+plan → write_tests → implement → ai-antipattern-review（ループ）→ 並列レビュー → supervise → COMPLETE
+```
+
+主なワークフロー:
+
+- **default.yaml** — 汎用（plan → テスト → 実装 → 並列レビュー）
+- **frontend.yaml** — フロントエンド向け拡張（11ステップ、ループ監視・並列レビュー付き）
+
+```bash
+# インタラクティブ起動
+takt
+
+# ワークフローとタスクを直接指定
+takt --workflow frontend --task "記事一覧のページネーション実装"
+```
+
+詳細: [docs/ai/takt.md](docs/ai/takt.md)
 
 ## 機能一覧
 

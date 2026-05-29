@@ -49,13 +49,13 @@ language: ja
 
 ### default.yaml — 汎用ワークフロー
 
-```
+```bash
 plan → write_tests → draft（実装 + AI自己レビュー）→ peer-review（並列3本）→ COMPLETE
 ```
 
 ### frontend.yaml — フロントエンド向け拡張ワークフロー
 
-```
+```bash
 plan
   ↓
 write_tests（テストファースト）
