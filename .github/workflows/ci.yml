@@ -11,6 +11,28 @@ env:
   JWT_SECRET: 'dummy-secret-for-ci'
 
 jobs:
+  storybook:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
   ci:
     runs-on: ubuntu-latest
 
