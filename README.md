@@ -183,6 +183,12 @@ npx playwright test
 npm run storybook
 ```
 
+### StoryBookのビルド
+
+```bash
+npm run build-storybook
+```
+
 ![スクリーンショット 2026-01-28 5 02 59](https://github.com/user-attachments/assets/14971429-0f75-47da-bb14-b66409dc84d2)
 
 詳細: [docs/ui/storybook.md](docs/ui/storybook.md)

@@ -16,10 +16,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@<full-length-commit-sha>
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@<full-length-commit-sha>
         with:
           node-version: '20.19'
           cache: 'npm'
