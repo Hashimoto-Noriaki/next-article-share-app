@@ -54,6 +54,7 @@ src/
 - PlayWright
 - Docker(マルチステージビルド)
 - GitHubActions
+- Dependabot
 - Prisma
 - Swagger
 - Supabase
@@ -192,6 +193,10 @@ npm run build-storybook
 ![スクリーンショット 2026-01-28 5 02 59](https://github.com/user-attachments/assets/14971429-0f75-47da-bb14-b66409dc84d2)
 
 詳細: [docs/ui/storybook.md](docs/ui/storybook.md)
+
+### Storybook バージョンアップ対策
+
+Dependabot により、毎週月曜に `@storybook/*` 関連パッケージの更新 PR が自動作成されます。
 
 ## このプロジェクトを Next.js App Router へリプレイス
 
