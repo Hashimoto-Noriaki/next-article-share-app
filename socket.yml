@@ -1,0 +1,21 @@
+version: 2
+
+projectIgnorePaths:
+  - node_modules
+  - .next
+  - coverage
+  - e2e
+
+githubApp:
+  pullRequestAlertsEnabled: true
+  ignoreUsers:
+    - dependabot[bot]
+    - renovate[bot]
+
+issueRules:
+  malware: true
+  installScripts: true
+  hasNativeCode: false
+  gitDependency: true
+  unmaintained: true
+  typosquatting: true
