@@ -66,7 +66,7 @@ issueRules:
   typosquatting: true
 ```
 
-`hasNativeCode` を `true`（ブロック）にすると `esbuild` や `sharp` が引っかかるため `warn` にしている。
+`hasNativeCode` を `true`（ブロック）にすると `esbuild` や `sharp` が引っかかるため `false`（無効化）にしている。
 
 ### インストール
 
