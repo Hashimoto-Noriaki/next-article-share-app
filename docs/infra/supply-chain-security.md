@@ -7,11 +7,11 @@ npm パッケージを乗っ取り、悪意あるコードを仕込む攻撃。
 
 ## このプロジェクトの対策
 
-| 対策 | ツール・設定 | 内容 |
-| ---- | ------------ | ---- |
-| lockfile の厳格適用 | `npm ci` | lockfile と一致しない場合はインストールを失敗させる |
-| バージョン更新のクールダウン | Dependabot cooldown | 公開直後の悪意あるバージョンを避ける |
-| マルウェア・タイポスクワッティング検知 | Socket.dev | PR 時に依存パッケージを自動スキャン |
+| 対策                                   | ツール・設定        | 内容                                                |
+| -------------------------------------- | ------------------- | --------------------------------------------------- |
+| lockfile の厳格適用                    | `npm ci`            | lockfile と一致しない場合はインストールを失敗させる |
+| バージョン更新のクールダウン           | Dependabot cooldown | 公開直後の悪意あるバージョンを避ける                |
+| マルウェア・タイポスクワッティング検知 | Socket.dev          | PR 時に依存パッケージを自動スキャン                 |
 
 ## lockfile（npm ci）
 
@@ -42,13 +42,13 @@ PR に npm パッケージの変更が含まれる場合に自動スキャンを
 
 ### 検知対象
 
-| 設定 | 内容 |
-| ---- | ---- |
-| `malware` | 悪意あるコードの埋め込み |
+| 設定             | 内容                          |
+| ---------------- | ----------------------------- |
+| `malware`        | 悪意あるコードの埋め込み      |
 | `installScripts` | 不審な postinstall スクリプト |
-| `gitDependency` | npm レジストリ外の git 依存 |
-| `typosquatting` | タイポスクワッティング |
-| `unmaintained` | メンテナンス放棄パッケージ |
+| `gitDependency`  | npm レジストリ外の git 依存   |
+| `typosquatting`  | タイポスクワッティング        |
+| `unmaintained`   | メンテナンス放棄パッケージ    |
 
 ### 設定ファイル
 
@@ -60,7 +60,7 @@ version: 2
 issueRules:
   malware: true
   installScripts: true
-  hasNativeCode: false  # esbuild / sharp が該当するため無効化
+  hasNativeCode: false # esbuild / sharp が該当するため無効化
   gitDependency: true
   unmaintained: true
   typosquatting: true
