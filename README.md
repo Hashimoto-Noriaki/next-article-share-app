@@ -87,6 +87,16 @@ CodeRabbit はマージ前に自動でバグ・セキュリティ・可読性を
 
 詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
 
+## サプライチェーン攻撃の対策
+
+| 対策 | ツール・設定 | 内容 |
+| ---- | ------------ | ---- |
+| 依存パッケージの自動更新 | Dependabot | 毎週月曜に更新 PR を自動作成 |
+| バージョン更新のクールダウン | Dependabot cooldown | 公開直後の悪意あるバージョンを避ける（patch: 3日 / minor: 7日 / major: 14日） |
+| マルウェア・タイポスクワッティング検知 | Socket.dev | PR 時に依存パッケージを自動スキャン |
+
+詳細: [docs/infra/supply-chain-security.md](docs/infra/supply-chain-security.md)
+
 ### TAKT — AIエージェントワークフロー管理
 
 「AIに実装させるだけ」から「開発プロセス全体をAIに実行させる」へ。  
