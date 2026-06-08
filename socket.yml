@@ -15,7 +15,7 @@ githubApp:
 issueRules:
   malware: true
   installScripts: true
-  hasNativeCode: warn
+  hasNativeCode: false
   gitDependency: true
-  unmaintained: warn
+  unmaintained: true
   typosquatting: true
