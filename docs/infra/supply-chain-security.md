@@ -10,6 +10,7 @@ npm パッケージを乗っ取り、悪意あるコードを仕込む攻撃。
 | 対策                                   | ツール・設定        | 内容                                                |
 | -------------------------------------- | ------------------- | --------------------------------------------------- |
 | lockfile の厳格適用                    | `npm ci`            | lockfile と一致しない場合はインストールを失敗させる |
+| 依存パッケージの自動更新               | Dependabot          | 毎週月曜に更新 PR を自動作成                        |
 | バージョン更新のクールダウン           | Dependabot cooldown | 公開直後の悪意あるバージョンを避ける                |
 | マルウェア・タイポスクワッティング検知 | Socket.dev          | PR 時に依存パッケージを自動スキャン                 |
 
@@ -28,11 +29,12 @@ npm ci
 `.github/dependabot.yml` に cooldown を設定。
 新バージョン公開からクールダウン期間を過ぎた更新のみ PR を作成する。
 
-| バージョン種別 | クールダウン |
-| -------------- | ------------ |
-| major          | 14日         |
-| minor          | 7日          |
-| patch          | 3日          |
+| バージョン種別 | クールダウン           |
+| -------------- | ---------------------- |
+| major          | 14日                   |
+| minor          | 7日                    |
+| patch          | 3日                    |
+| デフォルト     | 7日（上記以外に適用）  |
 
 セキュリティ更新はクールダウン対象外（即時 PR 作成）。
 
@@ -57,6 +59,18 @@ PR に npm パッケージの変更が含まれる場合に自動スキャンを
 ```yaml
 version: 2
 
+projectIgnorePaths:
+  - node_modules
+  - .next
+  - coverage
+  - e2e
+
+githubApp:
+  pullRequestAlertsEnabled: true
+  ignoreUsers:
+    - dependabot[bot]
+    - renovate[bot]
+
 issueRules:
   malware: true
   installScripts: true
@@ -68,6 +82,8 @@ issueRules:
 
 `hasNativeCode` を `true`（ブロック）にすると `esbuild` や `sharp` が引っかかるため `false`（無効化）にしている。
 
+`ignoreUsers` に Dependabot / Renovate を指定することで、自動更新 PR でのスキャンをスキップしている。これらのボットが追加するパッケージは別途 `issueRules` で検知されるため、二重チェックを避ける意図がある。
+
 ### インストール
 
-https://github.com/apps/socket-security からリポジトリを指定してインストール。
+[github.com/apps/socket-security](https://github.com/apps/socket-security) からリポジトリを指定してインストール。
