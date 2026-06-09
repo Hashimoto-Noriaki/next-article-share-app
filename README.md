@@ -111,6 +111,17 @@ takt --workflow frontend --task "記事一覧のページネーション実装"
 
 詳細: [docs/ai/takt.md](docs/ai/takt.md)
 
+## サプライチェーン攻撃の対策
+
+| 対策                                   | ツール・設定        | 内容                                                                          |
+| -------------------------------------- | ------------------- | ----------------------------------------------------------------------------- |
+| lockfile の厳格適用                    | `npm ci`            | lockfile と一致しない場合はインストールを失敗させる                           |
+| 依存パッケージの自動更新               | Dependabot          | 毎週月曜に更新 PR を自動作成                                                  |
+| バージョン更新のクールダウン           | Dependabot cooldown | 公開直後の悪意あるバージョンを避ける（patch: 3日 / minor: 7日 / major: 14日） |
+| マルウェア・タイポスクワッティング検知 | Socket.dev          | PR 時に依存パッケージを自動スキャン                                           |
+
+詳細: [docs/infra/supply-chain-security.md](docs/infra/supply-chain-security.md)
+
 ## 機能一覧
 
 - ユーザーの新規登録
