@@ -31,7 +31,7 @@
     "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "cookies-next": "^6.1.1",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.4.2",
     "github-markdown-css": "^5.8.1",
     "jose": "^6.1.0",
     "lucide-react": "^0.546.0",
