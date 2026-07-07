@@ -59,6 +59,7 @@ src/
 - Swagger
 - Supabase
 - ESLint Prettier
+- SAST(Semgrep)
 - cloudinary
 - nodemailer
 - Gmail SMTP
@@ -122,6 +123,15 @@ takt --workflow frontend --task "記事一覧のページネーション実装"
 
 詳細: [docs/infra/supply-chain-security.md](docs/infra/supply-chain-security.md)
 
+## SAST（静的アプリケーションセキュリティテスト）
+
+| 対策                     | ツール・設定  | 内容                                       |
+| ------------------------ | ------------- | ------------------------------------------ |
+| コードの静的解析         | Semgrep       | PR・push時に自動スキャン                   |
+| ローカルでの手動スキャン | `semgrep` CLI | `npm run scan:sast` でいつでも手元実行可能 |
+
+詳細: [docs/infra/sast.md](docs/infra/sast.md)
+
 ## 機能一覧
 
 - ユーザーの新規登録
@@ -178,6 +188,14 @@ npm run format
 ```bash
 npm run type-check
 ```
+
+### SAST（Semgrep）
+
+```bash
+npm run scan:sast
+```
+
+ローカル実行には [Semgrep CLI](https://semgrep.dev/docs/getting-started/) のインストールが必要（`pip install semgrep` または `brew install semgrep`）。
 
 ### テスト
 

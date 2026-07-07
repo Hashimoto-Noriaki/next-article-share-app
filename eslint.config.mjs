@@ -28,6 +28,7 @@ const eslintConfig = [
       'playwright-report/**',
       'test-results/**',
       'src/generated/**',
+      'storybook-static/**',
     ],
   },
   ...storybook.configs['flat/recommended'],
