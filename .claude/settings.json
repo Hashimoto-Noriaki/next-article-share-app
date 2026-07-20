@@ -12,7 +12,6 @@
       "Bash(git diff:*)",
       "Bash(git status)",
       "Bash(git commit:*)",
-      "Bash(takt *)",
       "Read",
       "Grep",
       "Glob"
