@@ -63,7 +63,9 @@ src/
 - cloudinary
 - nodemailer
 - Gmail SMTP
+- Vercel
 - GCP(予定)
+- Sentry(予定)
 
 ## 使用したAI
 
@@ -105,6 +107,22 @@ CodeRabbit はマージ前に自動でバグ・セキュリティ・可読性を
 | ローカルでの手動スキャン | `semgrep` CLI | `npm run scan:sast` でいつでも手元実行可能 |
 
 詳細: [docs/infra/sast.md](docs/infra/sast.md)
+
+## デプロイ
+
+| 環境             | デプロイ先          | 内容                                    |
+| ---------------- | ------------------- | --------------------------------------- |
+| 本番             | Vercel              | `master` マージで自動デプロイ           |
+| ステージング     | Vercel（構築予定）  | リリース前検証用環境                    |
+| 将来的な移行検討 | GCP Cloud Run       | Dockerfile（マルチステージ）を活用予定  |
+
+詳細: [docs/infra/deployment.md](docs/infra/deployment.md)
+
+## エラーモニタリング（Sentry）
+
+`@sentry/nextjs` は未導入。開発は大枠完了しており、e2e テストを拡充しつつ、本番デプロイ前に導入予定。
+
+詳細: [docs/infra/sentry.md](docs/infra/sentry.md)
 
 ## 機能一覧
 
