@@ -54,6 +54,7 @@ src/
 - PlayWright
 - Docker(マルチステージビルド)
 - GitHubActions
+- Claude Code Actions
 - Dependabot
 - Prisma
 - Swagger
