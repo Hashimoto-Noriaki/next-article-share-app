@@ -27,16 +27,16 @@ tools: Read, Grep, Glob, Bash
 
 ## このリポジトリで重点的に見る場所
 
-| 場所 | 見ること |
-| --- | --- |
-| `src/middleware.ts` / `src/external/auth/` | 保護ルートの漏れ、セッション・JWT の callback で余計な情報を載せていないか |
-| `src/app/api/**/route.ts` | Route Handler ごとの `auth()` 検証。`(authenticated)` 配下のページ保護とは別物 |
-| `src/features/*/actions/*.action.ts` | 冒頭の `auth()` 検証。`userId` をクライアント引数から受け取っていないか（セッションから取るべき） |
-| `src/external/handler/` | Zod `safeParse` による入力検証、ID を受け取る操作の所有者チェック |
-| `src/external/repository/` | `where` に所有者条件があるか、`$queryRawUnsafe` / `$executeRawUnsafe` を使っていないか |
-| `src/app/api/upload/` / `src/external/cloudinary/` | 認証、サイズ・MIME 検証、`folder` など Cloudinary に渡すパラメータをユーザーが自由に指定できないか |
-| パスワードリセット（`passwordResetToken.repository.ts`・auth handler） | トークンの推測困難性・有効期限・使い捨て、ユーザー存在有無が応答から推測できないか |
-| Markdown 表示（`react-markdown`） | `rehype-raw` や `dangerouslySetInnerHTML` で生 HTML を描画していないか、`javascript:` URL |
+| 場所                                                                   | 見ること                                                                                           |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `src/middleware.ts` / `src/external/auth/`                             | 保護ルートの漏れ、セッション・JWT の callback で余計な情報を載せていないか                         |
+| `src/app/api/**/route.ts`                                              | Route Handler ごとの `auth()` 検証。`(authenticated)` 配下のページ保護とは別物                     |
+| `src/features/*/actions/*.action.ts`                                   | 冒頭の `auth()` 検証。`userId` をクライアント引数から受け取っていないか（セッションから取るべき）  |
+| `src/external/handler/`                                                | Zod `safeParse` による入力検証、ID を受け取る操作の所有者チェック                                  |
+| `src/external/repository/`                                             | `where` に所有者条件があるか、`$queryRawUnsafe` / `$executeRawUnsafe` を使っていないか             |
+| `src/app/api/upload/` / `src/external/cloudinary/`                     | 認証、サイズ・MIME 検証、`folder` など Cloudinary に渡すパラメータをユーザーが自由に指定できないか |
+| パスワードリセット（`passwordResetToken.repository.ts`・auth handler） | トークンの推測困難性・有効期限・使い捨て、ユーザー存在有無が応答から推測できないか                 |
+| Markdown 表示（`react-markdown`）                                      | `rehype-raw` や `dangerouslySetInnerHTML` で生 HTML を描画していないか、`javascript:` URL          |
 
 ## レビュー観点
 
