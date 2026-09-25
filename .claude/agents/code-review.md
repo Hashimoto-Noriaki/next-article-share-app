@@ -1,7 +1,7 @@
 ---
 name: code-review
 description: コードレビューを行う専門家エージェント。「レビューして」「コードをチェックして」「このファイルを確認して」と言われたときに使う。読み取り専用で分析し、指摘のみを返す。
-tools: Read, Grep, Glob, Bash
+tools: Read, Grep, Glob
 ---
 
 ## 役割
