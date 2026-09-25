@@ -28,12 +28,16 @@ src/
 ├─ app/           # App Router: ルート・レイアウト・メタデータ（薄く保つ）
 ├─ features/      # 専属ロジック、ドメインごとの機能群
 ├─ shared/        # 共通UI・レイアウト・providerなど(アプリ全体で使うもの)
-└─ external/      # 外部接続（dto, handler, service, repository, client）
+└─ external/      # 外部接続（auth, dto, handler, service, repository など）
 ```
 
 詳細: [docs/architecture/architecture.md](docs/architecture/architecture.md)
 
-## トランクベース開発を採用
+## GitHub Flow を採用
+
+`master` から作業ブランチを切り、PR + CI を通して `master` にマージします。`master` へのマージでステージング、GitHub Release の公開で本番へデプロイします。
+
+詳細: [docs/git/branch-strategy.md](docs/git/branch-strategy.md)
 
 ## 技術構成
 
@@ -79,13 +83,38 @@ src/
 
 「人が守るルール」ではなく「仕組みが守るルール」として、フェーズごとに自動チェックを配置しています。
 
-| レイヤー   | ツール                       | タイミング       |
-| ---------- | ---------------------------- | ---------------- |
-| 開発中     | CLAUDE.md + `.claude/rules/` | コードを書くとき |
-| コミット前 | ESLint カスタムルール        | CI / save 時     |
-| PR 時      | CodeRabbit + `/code-review`  | マージ前         |
+| レイヤー   | ツール                                                                 | タイミング       |
+| ---------- | ---------------------------------------------------------------------- | ---------------- |
+| 開発中     | CLAUDE.md + `.claude/rules/` + スキル                                  | コードを書くとき |
+| コミット前 | ESLint カスタムルール（層の依存方向・`'use client'`）                  | CI / save 時     |
+| PR 時      | Claude Code Review（GitHub Actions・自動）+ CodeRabbit（手動トリガー） | PR 作成・更新時  |
+| PR / Issue | Claude Code（`@claude` メンション）                                    | 必要なとき       |
 
-CodeRabbit はマージ前に自動でバグ・セキュリティ・可読性をチェックします。Claude Code のスキル（`/code-review` `/smart-commit` `/test` など）はプロジェクト固有のルールに基づいた操作を手動で実行するときに使います。
+#### rules（Claude が参照する規約）
+
+| ファイル                        | 内容                                                              |
+| ------------------------------- | ----------------------------------------------------------------- |
+| `.claude/rules/architecture.md` | レイヤーの責務・依存方向・`app/` を薄く保つ・handler の責務・命名 |
+| `.claude/rules/frontend.md`     | コンポーネント設計・`'use client'` の基準・スタイリング・import   |
+| `.claude/rules/testing.md`      | テストの命名・書き方・モック・カバレッジ方針                      |
+| `.claude/rules/git.md`          | ブランチ命名・コミットメッセージ・PR のルール                     |
+
+Prettier / ESLint で担保できることは rules に書かず、ツールで検出できない規約だけを置いています。`architecture.md` / `frontend.md` は `paths` 指定で `src/` のコードを触るときだけ読み込まれます。
+
+#### Claude Code Actions（GitHub Actions）
+
+| ワークフロー                               | 動作                                                                   |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| `.github/workflows/claude-code-review.yml` | PR の作成・更新時に自動でコードレビューし、インラインコメントを投稿    |
+| `.github/workflows/claude.yml`             | Issue / PR のコメントで `@claude` とメンションすると Claude が対応する |
+
+Claude Code Review は公式の `code-review` プラグインで動いており、バグと CLAUDE.md への準拠を確信度の高いものに絞って指摘します（`.claude/rules/` は参照しません）。
+
+CodeRabbit はリポジトリのスター数が少ないため自動レビューの対象外となっており、PR の CodeRabbit コメントにある「Trigger review」から手動で実行します。
+
+#### スキル
+
+`/smart-commit`（コミット）・`/pr-description`（PR 説明文）・`/create-issue`（Issue 作成）・`/test`（lint・型チェック・テスト）をプロジェクト規約に沿って実行できます。
 
 詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
 

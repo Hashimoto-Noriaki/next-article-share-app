@@ -9,8 +9,9 @@ description: コミットと diff から PR 説明文を生成して GitHub に�
 
 ## Steps
 
-1. `gh pr view --json number,title,baseRefName 2>/dev/null` で PR 情報を取得する。  
-   PR が存在しない場合は「PRが見つかりません。先に `gh pr create` でPRを作成してください。」と伝えて終了する。
+1. `gh pr view --json number,title,baseRefName,body,state 2>/dev/null` で PR 情報を取得する。  
+   PR が存在しない、または `state` が `OPEN` でない（`MERGED` / `CLOSED`）場合は「オープンな PR が見つかりません。先に `gh pr create` で PR を作成してください。」と伝えて終了する。  
+   同じブランチ名で過去にマージ済みの PR があると `gh pr view` はそれを返すため、マージ済み・クローズ済みの PR の本文は絶対に上書きしない。
 
 2. `git log --oneline origin/<baseRefName>...HEAD` でブランチのコミット一覧を取得する。
 
@@ -43,7 +44,7 @@ description: コミットと diff から PR 説明文を生成して GitHub に�
 - **概要**: コミットメッセージと diff から変更の目的・背景を要約する
 - **変更内容**: 変更されたファイル・機能を箇条書きにする（技術的な詳細より「何が変わったか」を書く）
 - **テスト方法**: 変更内容に応じた確認手順をチェックリスト形式で記載する
-- **関連 Issue**: コミットメッセージに `#番号` が含まれていれば記載する。なければセクションごと省略する
+- **関連 Issue**: 自動で記載しない。コメント行のテンプレートのまま残し、作成者が判断して記入する。既存の PR 本文に記載済みの内容があればそのまま引き継ぐ
 
 ## 実行
 
