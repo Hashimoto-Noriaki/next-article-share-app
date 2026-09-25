@@ -19,9 +19,9 @@
 
 - [AI駆動開発においてNext.jsのAppRouterの最適な設計方針](https://qiita.com/Hashimoto-Noriaki/private/b2ada6ca9e3c98c512ef)
 
-### app/ — 薄く保つ
+### ディレクトリ構成
 
-ルーティングの定義だけ（薄くする）
+`app/` はルーティングの定義だけにして薄く保ち、ロジックは `features/`、共通部品は `shared/`、外部との I/O は `external/` に分離しています。
 
 ```bash
 src/
@@ -31,7 +31,73 @@ src/
 └─ external/      # 外部接続（auth, dto, handler, service, repository など）
 ```
 
+### レイヤーと責務
+
+| レイヤー                        | 責務                                                                             |
+| ------------------------------- | -------------------------------------------------------------------------------- |
+| `app/`                          | ルーティング定義のみ。features の server テンプレートか client コンテナを呼ぶ    |
+| `features/*/components/server/` | ページ単位のテンプレート。`auth()` / query handler でデータを取得し props で渡す |
+| `features/*/components/client/` | ページ専用の Client コンテナ（フォームなど）                                     |
+| `features/*/hooks/`             | TanStack Query・状態管理。Server Actions を呼ぶ                                  |
+| `features/*/actions/`           | Server Actions。セッション検証して handler を呼ぶだけの薄いラッパー              |
+| `external/handler/`             | features 層からの入口。入力検証（Zod）・認可（所有者チェック）                   |
+| `external/service/`             | 複数 handler で共有するビジネスロジック                                          |
+| `external/repository/`          | DB アクセス（Prisma）                                                            |
+| `external/dto/`                 | Zod スキーマと入力型。クライアントのフォームとサーバーで共有する                 |
+
+### 依存の方向
+
+```txt
+components/client, hooks → features/*/actions → external/handler → external/service → external/repository
+components/server        → external/handler（query）
+
+app/ → features/ → shared/
+```
+
+- `external/repository` は `external/` 内からのみ import する
+- `shared/` は `features/` に依存しない
+- 依存方向の一部は ESLint カスタムルール（`src/eslint-local-rules/`）で強制している
+
 詳細: [docs/architecture/architecture.md](docs/architecture/architecture.md)
+
+## ハーネスエンジニアリング（品質の自動化）
+
+「人が守るルール」ではなく「仕組みが守るルール」として、フェーズごとに自動チェックを配置しています。
+
+| レイヤー   | ツール                                                                 | タイミング       |
+| ---------- | ---------------------------------------------------------------------- | ---------------- |
+| 開発中     | CLAUDE.md + `.claude/rules/` + スキル                                  | コードを書くとき |
+| コミット前 | ESLint カスタムルール（層の依存方向・`'use client'`）                  | CI / save 時     |
+| PR 時      | Claude Code Review（GitHub Actions・自動）+ CodeRabbit（手動トリガー） | PR 作成・更新時  |
+| PR / Issue | Claude Code（`@claude` メンション）                                    | 必要なとき       |
+
+### rules（Claude が参照する規約）
+
+| ファイル                        | 内容                                                              |
+| ------------------------------- | ----------------------------------------------------------------- |
+| `.claude/rules/architecture.md` | レイヤーの責務・依存方向・`app/` を薄く保つ・handler の責務・命名 |
+| `.claude/rules/frontend.md`     | コンポーネント設計・`'use client'` の基準・スタイリング・import   |
+| `.claude/rules/testing.md`      | テストの命名・書き方・モック・カバレッジ方針                      |
+| `.claude/rules/git.md`          | ブランチ命名・コミットメッセージ・PR のルール                     |
+
+Prettier / ESLint で担保できることは rules に書かず、ツールで検出できない規約だけを置いています。`architecture.md` / `frontend.md` は `paths` 指定で `src/` のコードを触るときだけ読み込まれます。
+
+### Claude Code Actions（GitHub Actions）
+
+| ワークフロー                               | 動作                                                                   |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| `.github/workflows/claude-code-review.yml` | PR の作成・更新時に自動でコードレビューし、インラインコメントを投稿    |
+| `.github/workflows/claude.yml`             | Issue / PR のコメントで `@claude` とメンションすると Claude が対応する |
+
+Claude Code Review は公式の `code-review` プラグインで動いており、バグと CLAUDE.md への準拠を確信度の高いものに絞って指摘します（`.claude/rules/` は参照しません）。
+
+CodeRabbit はリポジトリのスター数が少ないため自動レビューの対象外となっており、PR の CodeRabbit コメントにある「Trigger review」から手動で実行します。
+
+### スキル
+
+`/smart-commit`（コミット）・`/pr-description`（PR 説明文）・`/create-issue`（Issue 作成）・`/test`（lint・型チェック・テスト）をプロジェクト規約に沿って実行できます。
+
+詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
 
 ## GitHub Flow を採用
 
@@ -78,45 +144,6 @@ src/
 - ChatGPT
 - PlayWright MCP
 - CodeRabbit
-
-### ハーネスエンジニアリング（品質の自動化）
-
-「人が守るルール」ではなく「仕組みが守るルール」として、フェーズごとに自動チェックを配置しています。
-
-| レイヤー   | ツール                                                                 | タイミング       |
-| ---------- | ---------------------------------------------------------------------- | ---------------- |
-| 開発中     | CLAUDE.md + `.claude/rules/` + スキル                                  | コードを書くとき |
-| コミット前 | ESLint カスタムルール（層の依存方向・`'use client'`）                  | CI / save 時     |
-| PR 時      | Claude Code Review（GitHub Actions・自動）+ CodeRabbit（手動トリガー） | PR 作成・更新時  |
-| PR / Issue | Claude Code（`@claude` メンション）                                    | 必要なとき       |
-
-#### rules（Claude が参照する規約）
-
-| ファイル                        | 内容                                                              |
-| ------------------------------- | ----------------------------------------------------------------- |
-| `.claude/rules/architecture.md` | レイヤーの責務・依存方向・`app/` を薄く保つ・handler の責務・命名 |
-| `.claude/rules/frontend.md`     | コンポーネント設計・`'use client'` の基準・スタイリング・import   |
-| `.claude/rules/testing.md`      | テストの命名・書き方・モック・カバレッジ方針                      |
-| `.claude/rules/git.md`          | ブランチ命名・コミットメッセージ・PR のルール                     |
-
-Prettier / ESLint で担保できることは rules に書かず、ツールで検出できない規約だけを置いています。`architecture.md` / `frontend.md` は `paths` 指定で `src/` のコードを触るときだけ読み込まれます。
-
-#### Claude Code Actions（GitHub Actions）
-
-| ワークフロー                               | 動作                                                                   |
-| ------------------------------------------ | ---------------------------------------------------------------------- |
-| `.github/workflows/claude-code-review.yml` | PR の作成・更新時に自動でコードレビューし、インラインコメントを投稿    |
-| `.github/workflows/claude.yml`             | Issue / PR のコメントで `@claude` とメンションすると Claude が対応する |
-
-Claude Code Review は公式の `code-review` プラグインで動いており、バグと CLAUDE.md への準拠を確信度の高いものに絞って指摘します（`.claude/rules/` は参照しません）。
-
-CodeRabbit はリポジトリのスター数が少ないため自動レビューの対象外となっており、PR の CodeRabbit コメントにある「Trigger review」から手動で実行します。
-
-#### スキル
-
-`/smart-commit`（コミット）・`/pr-description`（PR 説明文）・`/create-issue`（Issue 作成）・`/test`（lint・型チェック・テスト）をプロジェクト規約に沿って実行できます。
-
-詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
 
 ## サプライチェーン攻撃の対策
 
