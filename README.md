@@ -33,7 +33,11 @@ src/
 
 詳細: [docs/architecture/architecture.md](docs/architecture/architecture.md)
 
-## トランクベース開発を採用
+## GitHub Flow を採用
+
+`master` から作業ブランチを切り、PR + CI を通して `master` にマージします。`master` へのマージでステージング、GitHub Release の公開で本番へデプロイします。
+
+詳細: [docs/git/branch-strategy.md](docs/git/branch-strategy.md)
 
 ## 技術構成
 
