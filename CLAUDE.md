@@ -37,14 +37,13 @@ prisma/                # スキーマ・マイグレーション
 
 - Route Handlers でセッション検証が抜けていないか（`(authenticated)` 配下でも API は別途確認が必要）
 - Prisma クエリで生 SQL (`$queryRawUnsafe`) を使っていないか
-- ユーザー入力は Zod でバリデーションしているか
+- ユーザー入力が Zod で検証されているか（Server Actions 経由は `src/external/handler/` 側、Route Handlers はハンドラ内で検証する）
 - Cloudinary への画像アップロード時に認証チェックがあるか
 
 ### 型安全性
 
 - `any` を使っていないか
 - Prisma の返却値に不要な型キャストをしていないか
-- ユーザー入力が Zod で検証されているか（Server Actions 経由は `src/external/handler/` 側、Route Handlers はハンドラ内で検証する）
 
 ### パフォーマンス
 
