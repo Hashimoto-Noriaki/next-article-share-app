@@ -37,6 +37,20 @@ components/server        → external/handler（query）
 
 上記の一部は ESLint（`src/eslint-local-rules/`）で強制している。ESLint は `components/` 直下の Client Component から handler への import を検出しないので、レビューで確認する。
 
+### ディレクトリ間の依存
+
+```text
+app/ → features/ → shared/
+```
+
+- `shared/` は `features/` に依存しない。features の部品が必要な共通コンポーネントは props（slot）で受け取る
+- 他の feature を参照するときは、コンポーネントのディレクトリ（`@/features/<機能>/components/Xxx`）や `types/` など公開された入口から import し、内部ファイルを直接 import しない
+- 特定の機能に属さず複数の feature で使う部品は `shared/` に置く（例: ユーザーメニュー、ヘッダー部品）。記事カードのようにドメインに属する部品は元の feature に残してよい
+
+### 読み取り
+
+- クライアントからの読み取り（TanStack Query の `queryFn`）で Server Actions を呼んでよい。初期表示のデータは server テンプレートで取得する
+
 ## app/ を薄く保つ
 
 - `page.tsx` / `layout.tsx` は features の server テンプレートか client コンテナを呼ぶだけにする
