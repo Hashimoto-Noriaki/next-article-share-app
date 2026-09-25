@@ -16,10 +16,10 @@ reviews:
     - path: '**/*.{ts,tsx}'
       instructions: |
         Next.js App RouterのTypeScriptファイルです。以下の観点でレビューしてください：
-        - 不要なuse clientディレクティブがないか（Server Componentの恩恵を失うためCritical）
+        - 不要なuse clientディレクティブがないか（Warning）
         - Server Actionsは冒頭でauth()を呼んでセッションを検証しているか
         - Route Handlersでもセッションチェックがあるか（(authenticated)配下でもAPIは別途確認が必要）
-        - ユーザー入力にZodバリデーションがあるか
+        - ユーザーが自由入力する値は external/handler で external/dto の Zod スキーマにより safeParse しているか（Route Handlersはハンドラ内で検証）
         - anyの使用・不要な型キャストがないか（Warning）
         - 他ユーザーのリソースを操作できるような認可漏れがないか（Critical）
         - TanStack Queryのキーが適切か（過度な再フェッチ、キャッシュ漏れ）
@@ -28,15 +28,16 @@ reviews:
     - path: 'src/app/**/*.{ts,tsx}'
       instructions: |
         app/配下はルーティングのみを担う薄いレイヤーです。以下を確認してください：
+        - page.tsxに'use client'を付けていないか（フォームや状態を持つUIはfeatures/*/components/client/に置く）
         - page.tsxでデータフェッチ（fetch・Prismaクエリ・Server Action呼び出し）を直接行っていないか
         - データフェッチやUIロジックはfeatures/配下のServer Componentテンプレートに委譲しているか
         - params・searchParamsはawaitで受け取り、型付きで渡しているか
     - path: 'src/external/dto/**'
       instructions: |
-        external/dto/配下はAPIレスポンスの検証レイヤーです。以下を確認してください：
-        - 外部データ（APIレスポンス・Server Actionの戻り値）をそのままReactに渡していないか
-        - ZodスキーマまたはDTO関数で構造を検証・保証してからfeatures/に渡しているか
-        - バックエンドの変更に対して型が追従できる設計になっているか
+        external/dto/配下はクライアントのフォームとサーバーで共有する入力値のZodスキーマと型を置くレイヤーです。以下を確認してください：
+        - ユーザーが自由入力する値のZodスキーマが定義され、external/handlerでsafeParseに使われているか
+        - 入力型はz.inferでスキーマから導出し、フォーム（React Hook Form）とサーバーで同じスキーマ・型を共有しているか
+        - 命名が external/dto/<対象>/<対象>.dto.ts、export が xxxSchema / XxxInput になっているか
     - path: 'prisma/**/*.prisma'
       instructions: |
         Prismaスキーマです。以下の観点でレビューしてください：
