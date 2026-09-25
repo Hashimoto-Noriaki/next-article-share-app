@@ -83,12 +83,12 @@ src/
 
 「人が守るルール」ではなく「仕組みが守るルール」として、フェーズごとに自動チェックを配置しています。
 
-| レイヤー   | ツール                                                | タイミング       |
-| ---------- | ----------------------------------------------------- | ---------------- |
-| 開発中     | CLAUDE.md + `.claude/rules/` + スキル                 | コードを書くとき |
-| コミット前 | ESLint カスタムルール（層の依存方向・`'use client'`） | CI / save 時     |
-| PR 時      | Claude Code Review（GitHub Actions）+ CodeRabbit      | PR 作成・更新時  |
-| PR / Issue | Claude Code（`@claude` メンション）                   | 必要なとき       |
+| レイヤー   | ツール                                                                 | タイミング       |
+| ---------- | ---------------------------------------------------------------------- | ---------------- |
+| 開発中     | CLAUDE.md + `.claude/rules/` + スキル                                  | コードを書くとき |
+| コミット前 | ESLint カスタムルール（層の依存方向・`'use client'`）                  | CI / save 時     |
+| PR 時      | Claude Code Review（GitHub Actions・自動）+ CodeRabbit（手動トリガー） | PR 作成・更新時  |
+| PR / Issue | Claude Code（`@claude` メンション）                                    | 必要なとき       |
 
 #### rules（Claude が参照する規約）
 
@@ -108,7 +108,9 @@ Prettier / ESLint で担保できることは rules に書かず、ツールで�
 | `.github/workflows/claude-code-review.yml` | PR の作成・更新時に自動でコードレビューし、インラインコメントを投稿    |
 | `.github/workflows/claude.yml`             | Issue / PR のコメントで `@claude` とメンションすると Claude が対応する |
 
-Claude Code Review はリポジトリの CLAUDE.md と `.claude/rules/` を参照するため、プロジェクト固有の設計ルールに沿ってレビューされます。
+Claude Code Review は公式の `code-review` プラグインで動いており、バグと CLAUDE.md への準拠を確信度の高いものに絞って指摘します（`.claude/rules/` は参照しません）。
+
+CodeRabbit はリポジトリのスター数が少ないため自動レビューの対象外となっており、PR の CodeRabbit コメントにある「Trigger review」から手動で実行します。
 
 #### スキル
 
