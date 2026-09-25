@@ -44,7 +44,7 @@ prisma/                # スキーマ・マイグレーション
 
 - `any` を使っていないか
 - Prisma の返却値に不要な型キャストをしていないか
-- Server Actions / Route Handlers の引数に Zod スキーマがあるか
+- ユーザー入力が Zod で検証されているか（Server Actions 経由は `src/external/handler/` 側、Route Handlers はハンドラ内で検証する）
 
 ### パフォーマンス
 
@@ -66,9 +66,6 @@ npm run test          # Jest
 npm run test:e2e      # Playwright E2E
 ```
 
-@.claude/rules/frontend.md
-@.claude/rules/testing.md
-
 ## Rules
 
 - レビューコメントは**必ず日本語**で書く
@@ -77,6 +74,7 @@ npm run test:e2e      # Playwright E2E
 - セキュリティ・認証・認可の問題は必ず Critical として扱う
 - CI（lint / type-check / test）が1つでも失敗していたら必ず Critical として扱い `--request-changes` にする
 - `any` の使用・型キャストは Warning として扱う
+- 不要な `'use client'` は Warning として扱う
 
 ## Skills
 
