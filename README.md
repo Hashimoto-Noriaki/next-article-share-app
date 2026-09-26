@@ -64,12 +64,13 @@ app/ → features/ → shared/
 
 「人が守るルール」ではなく「仕組みが守るルール」として、フェーズごとに自動チェックを配置しています。
 
-| レイヤー   | ツール                                                                 | タイミング       |
-| ---------- | ---------------------------------------------------------------------- | ---------------- |
-| 開発中     | CLAUDE.md + `.claude/rules/` + スキル                                  | コードを書くとき |
-| コミット前 | ESLint カスタムルール（層の依存方向・`'use client'`）                  | CI / save 時     |
-| PR 時      | Claude Code Review（GitHub Actions・自動）+ CodeRabbit（手動トリガー） | PR 作成・更新時  |
-| PR / Issue | Claude Code（`@claude` メンション）                                    | 必要なとき       |
+| レイヤー       | ツール                                                                 | タイミング                |
+| -------------- | ---------------------------------------------------------------------- | ------------------------- |
+| 開発中         | CLAUDE.md + `.claude/rules/` + スキル + サブエージェント               | コードを書くとき          |
+| コマンド実行時 | `.claude/settings.json`（権限）+ hooks（`guard.sh`）                   | Claude がツールを使うとき |
+| コミット前     | ESLint カスタムルール（層の依存方向・`'use client'`）                  | CI / save 時              |
+| PR 時          | Claude Code Review（GitHub Actions・自動）+ CodeRabbit（手動トリガー） | PR 作成・更新時           |
+| PR / Issue     | Claude Code（`@claude` メンション）                                    | 必要なとき                |
 
 ### rules（Claude が参照する規約）
 
@@ -96,6 +97,39 @@ CodeRabbit はリポジトリのスター数が少ないため自動レビュー
 ### スキル
 
 `/smart-commit`（コミット）・`/pr-description`（PR 説明文）・`/create-issue`（Issue 作成）・`/test`（lint・型チェック・テスト）をプロジェクト規約に沿って実行できます。
+
+### settings.json（Claude の権限）
+
+`.claude/settings.json` で、Claude Code が確認なしで実行できるコマンドと、実行を禁止するコマンドを決めています。
+
+| 設定                | 内容                                                                                  |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| `permissions.allow` | スキルに必要なコマンドだけを許可（`npm run lint` / `gh pr view` / `git commit` など） |
+| `permissions.deny`  | 強制プッシュ・`git reset --hard`・`git clean -f`・`rm -rf`・`.env` の読み書きを禁止   |
+| `hooks`             | Bash を実行する前に `.claude/hooks/guard.sh` を呼び出す                               |
+
+### hooks（コマンド実行前のガード）
+
+`.claude/hooks/guard.sh` は PreToolUse フックで、Claude が Bash コマンドを実行する前に内容をチェックし、本番環境への操作をブロックします。
+
+- `production` / `prod` を含むコマンドをブロックする（大文字小文字は区別しない。`--prod`・`prod_us`・`DATABASE_URL_PROD` なども対象、`product` は対象外）
+- ブロックした理由は stderr に出し、Claude に伝わるようにする
+- 読み取り専用のコマンド（`grep`・`cat`・`git log` など）、`git commit`、一部の `gh` コマンドは、単体で実行する場合だけチェックを省く
+- `&&` `;` `|` `$(` やリダイレクト・改行を含むコマンドは、チェックを省かない（`git commit -m x; <本番操作>` のようなすり抜けを防ぐ）
+
+`permissions.deny` はコマンドの形で禁止するのに対し、hooks はコマンドの中身を見て判定できます。
+
+### agents（サブエージェント）
+
+`.claude/agents/` に、観点ごとのレビュー専用サブエージェントを置いています。どれもコードを読むだけで変更はせず、`ファイルパス:行番号 [Critical/Warning/Suggestion] 指摘内容` の形式で指摘を返します。
+
+| エージェント          | 見る観点                                                                  | 使えるツール              |
+| --------------------- | ------------------------------------------------------------------------- | ------------------------- |
+| `code-review`         | バグ・論理エラー、明らかな認証漏れ、可読性、テスト                        | Read / Grep / Glob        |
+| `security-review`     | 認証・認可（IDOR）・入力検証・インジェクション・機密情報の露出            | Read / Grep / Glob / Bash |
+| `architecture-review` | レイヤーの責務・依存の方向・ファイルの置き場所（`.claude/rules/` が基準） | Read / Grep / Glob        |
+
+「セキュリティチェックして」「設計を見て」のように頼むと、Claude が内容に合ったエージェントを呼び出します。
 
 詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
 
