@@ -35,7 +35,9 @@ if [ "$IS_SIMPLE" -eq 1 ]; then
   fi
 
   # 読み取り専用コマンドは除外（例: `grep -r production src/`）
-  if printf '%s' "$COMMAND" | grep -Eq "^(grep|rg|cat|head|tail|less|wc|ls|git (diff|log|show|status|grep))( |$)"; then
+  # 外部プログラムを実行できるオプションを持つコマンドは除外しない
+  # （`rg --pre <cmd>` や `git grep -O<cmd>` は任意のプログラムを実行できるため）
+  if printf '%s' "$COMMAND" | grep -Eq "^(grep|cat|head|tail|less|wc|ls|git (diff|log|show|status))( |$)"; then
     exit 0
   fi
 
@@ -46,8 +48,9 @@ if [ "$IS_SIMPLE" -eq 1 ]; then
 fi
 
 # 本番環境への直接操作をブロック
-# 大文字小文字を区別せず、単語としての production / prod を検出する（`--prod` なども含む）
-if printf '%s' "$COMMAND" | grep -Eiq "(^|[^[:alnum:]_])prod(uction)?([^[:alnum:]_]|$)"; then
+# 大文字小文字を区別せず、英字に挟まれていない production / prod を検出する
+# （`--prod`、`prod_us`、`us-prod`、`DATABASE_URL_PROD`、`prod1` なども含む。`product` は対象外）
+if printf '%s' "$COMMAND" | grep -Eiq "(^|[^[:alpha:]])prod(uction)?([^[:alpha:]]|$)"; then
   echo "本番環境への直接操作は禁止されています" >&2
   exit 2
 fi
