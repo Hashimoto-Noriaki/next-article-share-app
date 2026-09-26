@@ -33,11 +33,22 @@ if [ "$IS_SIMPLE" -eq 1 ]; then
   if printf '%s' "$COMMAND" | grep -Eq "^git commit( |$)"; then
     exit 0
   fi
+
+  # 読み取り専用コマンドは除外（例: `grep -r production src/`）
+  if printf '%s' "$COMMAND" | grep -Eq "^(grep|rg|cat|head|tail|less|wc|ls|git (diff|log|show|status|grep))( |$)"; then
+    exit 0
+  fi
+
+  # ローカルでの本番モードビルド・起動は除外（例: `NODE_ENV=production npm run build`）
+  if printf '%s' "$COMMAND" | grep -Eq "^NODE_ENV=production npm run (build|start|lint|type-check|test)$"; then
+    exit 0
+  fi
 fi
 
 # 本番環境への直接操作をブロック
-if echo "$COMMAND" | grep -q "production"; then
-  echo "本番環境への直接操作は禁止されています"
+# 大文字小文字を区別せず、単語としての production / prod を検出する（`--prod` なども含む）
+if printf '%s' "$COMMAND" | grep -Eiq "(^|[^[:alnum:]_])prod(uction)?([^[:alnum:]_]|$)"; then
+  echo "本番環境への直接操作は禁止されています" >&2
   exit 2
 fi
 
