@@ -13,14 +13,26 @@ if [ -z "$COMMAND" ]; then
   exit 0
 fi
 
-# 安全と判断した gh サブコマンドのみ除外
-if echo "$COMMAND" | grep -Eq "^gh (pr create|pr view|issue view)\b"; then
-  exit 0
-fi
+# コマンド連結・置換・リダイレクト・改行を含む場合は除外対象にしない
+# （例: `gh pr view 1 && <本番操作>` で production チェックをすり抜けるのを防ぐ）
+NL=$'\n'
+IS_SIMPLE=1
+case "$COMMAND" in
+  *';'* | *'&'* | *'|'* | *'`'* | *'$('* | *'<'* | *'>'* | *"$NL"*)
+    IS_SIMPLE=0
+    ;;
+esac
 
-# git commitは除外
-if echo "$COMMAND" | grep -q "^git commit"; then
-  exit 0
+if [ "$IS_SIMPLE" -eq 1 ]; then
+  # 安全と判断した gh サブコマンドのみ除外
+  if printf '%s' "$COMMAND" | grep -Eq "^gh (pr create|pr view|issue view)( |$)"; then
+    exit 0
+  fi
+
+  # git commitは除外
+  if printf '%s' "$COMMAND" | grep -Eq "^git commit( |$)"; then
+    exit 0
+  fi
 fi
 
 # 本番環境への直接操作をブロック
