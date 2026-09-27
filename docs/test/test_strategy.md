@@ -38,6 +38,21 @@ Zodスキーマの単体テスト。
 - 記事CRUD（作成 → 編集 → 削除）
 - プロフィール編集
 
+### Playwright Agents による E2E の作成
+
+E2E テストは [Playwright Agents](https://playwright.dev/docs/test-agents) を Claude Code から使って作成・修正する（`.claude/agents/playwright-test-*.md`）。
+
+| エージェント                | 役割                                       | 出力先   |
+| --------------------------- | ------------------------------------------ | -------- |
+| `playwright-test-planner`   | アプリを実際に操作してテスト計画を作る     | `specs/` |
+| `playwright-test-generator` | テスト計画をもとにテストコードを生成する   | `e2e/`   |
+| `playwright-test-healer`    | 失敗したテストを実行・デバッグして修正する | `e2e/`   |
+
+- 流れは planner → generator → healer の順
+- ブラウザ操作は `.mcp.json` に登録した `playwright-test` MCP サーバー経由で行う
+- seed（`e2e/seed.spec.ts`）: 各エージェントが最初に実行するテスト。新規ユーザーを登録してログイン済みの状態にする
+- テストの書き方のルールは `.claude/rules/testing-e2e.md` を参照
+
 ### 4. コンポーネント（Storybook）
 
 視覚的な確認はStorybookで行う。Jestでのテストは基本不要。
@@ -69,6 +84,12 @@ Zodスキーマの単体テスト。
 | 検索・フィルター | APIテスト、E2E |
 
 ## 実行コマンド
+
+E2E の実行前に DB と dev サーバーを起動しておく。
+
+- DB は `docker compose up db -d` で起動する（`db` を付けないと app サービスが 3000 番で dev サーバーと衝突する）
+- DB が空の場合は `npx prisma migrate dev` でテーブルを作る。テーブルがないと新規登録が失敗し、`waitForURL` のタイムアウトとして表れる
+- `npm run dev` で dev サーバーを起動する
 
 ```bash
 # 単体テスト

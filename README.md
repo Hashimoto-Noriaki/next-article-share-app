@@ -122,7 +122,7 @@ CodeRabbit はリポジトリのスター数が少ないため自動レビュー
 
 ### agents（サブエージェント）
 
-`.claude/agents/` に、観点ごとのレビュー専用サブエージェントを置いています。どれもコードを読むだけで変更はせず、`ファイルパス:行番号 [Critical/Warning/Suggestion] 指摘内容` の形式で指摘を返します。
+`.claude/agents/` に、観点ごとのレビュー専用サブエージェントを置いています（E2E 用の [Playwright Agents](#playwright-agentse2e-テストの作成修正) も同じ場所に置いています）。レビュー用のエージェントはどれもコードを読むだけで変更はせず、`ファイルパス:行番号 [Critical/Warning/Suggestion] 指摘内容` の形式で指摘を返します。
 
 | エージェント          | 見る観点                                                                  | 使えるツール              |
 | --------------------- | ------------------------------------------------------------------------- | ------------------------- |
@@ -133,6 +133,21 @@ CodeRabbit はリポジトリのスター数が少ないため自動レビュー
 「セキュリティチェックして」「設計を見て」のように頼むと、Claude が内容に合ったエージェントを呼び出します。
 
 詳細: [docs/ai/ai-review.md](docs/ai/ai-review.md)
+
+### Playwright Agents（E2E テストの作成・修正）
+
+[Playwright Agents](https://playwright.dev/docs/test-agents) を Claude Code から使い、E2E テストの計画・生成・修正を自動化しています（`npx playwright init-agents --loop=claude` で導入）。
+
+| エージェント                | 役割                                       | 出力先   |
+| --------------------------- | ------------------------------------------ | -------- |
+| `playwright-test-planner`   | アプリを実際に操作してテスト計画を作る     | `specs/` |
+| `playwright-test-generator` | テスト計画をもとにテストコードを生成する   | `e2e/`   |
+| `playwright-test-healer`    | 失敗したテストを実行・デバッグして修正する | `e2e/`   |
+
+- ブラウザ操作は `.mcp.json` に登録した `playwright-test` MCP サーバー経由で行います
+- どのエージェントも最初に `e2e/seed.spec.ts` を実行し、新規登録してログイン済みの状態から作業を始めます
+
+詳細: [docs/test/test_strategy.md](docs/test/test_strategy.md)
 
 ## GitHub Flow を採用
 
@@ -287,7 +302,16 @@ npm run scan:sast
 npm run test
 ```
 
+E2E は DB と dev サーバーを起動してから実行します。
+
 ```bash
+# 1. DB だけ起動（DB が空なら npx prisma migrate dev でテーブルを作る）
+docker compose up db -d
+
+# 2. dev サーバーを起動
+npm run dev
+
+# 3. 別のターミナルで E2E を実行
 npx playwright test
 ```
 
