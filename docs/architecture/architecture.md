@@ -70,6 +70,20 @@ components/server        → external/handler（query）
 
 一部は ESLint（`src/eslint-local-rules/`）で強制している。Claude Code 向けのルールは `.claude/rules/architecture.md` を参照。
 
+### レイヤーと責務（早見表）
+
+| レイヤー                        | 責務                                                                             |
+| ------------------------------- | -------------------------------------------------------------------------------- |
+| `app/`                          | ルーティング定義のみ。features の server テンプレートか client コンテナを呼ぶ    |
+| `features/*/components/server/` | ページ単位のテンプレート。`auth()` / query handler でデータを取得し props で渡す |
+| `features/*/components/client/` | ページ専用の Client コンテナ（フォームなど）                                     |
+| `features/*/hooks/`             | TanStack Query・状態管理。Server Actions を呼ぶ                                  |
+| `features/*/actions/`           | Server Actions。セッション検証して handler を呼ぶだけの薄いラッパー              |
+| `external/handler/`             | features 層からの入口。入力検証（Zod）・認可（所有者チェック）                   |
+| `external/service/`             | 複数 handler で共有するビジネスロジック                                          |
+| `external/repository/`          | DB アクセス（Prisma）                                                            |
+| `external/dto/`                 | Zod スキーマと入力型。クライアントのフォームとサーバーで共有する                 |
+
 ## サービスの成長に強いフロントエンドの設計方針
 
 ![サービス成長の設計方針](../image.png)
