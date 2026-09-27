@@ -72,17 +72,17 @@ components/server        → external/handler（query）
 
 ### レイヤーと責務（早見表）
 
-| レイヤー                        | 責務                                                                             |
-| ------------------------------- | -------------------------------------------------------------------------------- |
-| `app/`                          | ルーティング定義のみ。features の server テンプレートか client コンテナを呼ぶ    |
-| `features/*/components/server/` | ページ単位のテンプレート。`auth()` / query handler でデータを取得し props で渡す |
-| `features/*/components/client/` | ページ専用の Client コンテナ（フォームなど）                                     |
-| `features/*/hooks/`             | TanStack Query・状態管理。Server Actions を呼ぶ                                  |
-| `features/*/actions/`           | Server Actions。セッション検証して handler を呼ぶだけの薄いラッパー              |
-| `external/handler/`             | features 層からの入口。入力検証（Zod）・認可（所有者チェック）                   |
-| `external/service/`             | 複数 handler で共有するビジネスロジック                                          |
-| `external/repository/`          | DB アクセス（Prisma）                                                            |
-| `external/dto/`                 | Zod スキーマと入力型。クライアントのフォームとサーバーで共有する                 |
+| レイヤー                        | 責務                                                                                |
+| ------------------------------- | ----------------------------------------------------------------------------------- |
+| `app/`                          | ルーティング定義のみ。features の server テンプレートか client コンテナを呼ぶ       |
+| `features/*/components/server/` | ページ単位のテンプレート。`auth()` / query handler でデータを取得し props で渡す    |
+| `features/*/components/client/` | ページ専用の Client コンテナ（フォームなど）                                        |
+| `features/*/hooks/`             | TanStack Query・状態管理。Server Actions を呼ぶ                                     |
+| `features/*/actions/`           | Server Actions。認証が必要な操作ではセッションを検証して handler を呼ぶ薄いラッパー |
+| `external/handler/`             | features 層からの入口。操作に応じて入力検証（Zod）や認可（所有者チェック）を行う    |
+| `external/service/`             | 複数 handler で共有するビジネスロジック                                             |
+| `external/repository/`          | DB アクセス（Prisma）                                                               |
+| `external/dto/`                 | Zod スキーマと入力型。クライアントのフォームとサーバーで共有する                    |
 
 ## サービスの成長に強いフロントエンドの設計方針
 
