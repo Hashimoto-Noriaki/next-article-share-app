@@ -244,6 +244,7 @@ npm run lint
 
 ```bash
 npm run format
+npm run format:check
 ```
 
 ### 型チェック
