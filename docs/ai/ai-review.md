@@ -261,10 +261,11 @@ GitHub の「Files changed」タブでレビューステータス（Approved / R
 
 `.claude/rules/` 以下のファイルを Claude が自動参照し、規約に沿ったコードを書きます。
 
-| ファイル      | 内容                                                             |
-| ------------- | ---------------------------------------------------------------- |
-| `frontend.md` | コンポーネント設計・ディレクティブ・スタイリング・Server Actions |
-| `testing.md`  | テストファイル命名・Jest の書き方・モック・カバレッジ方針        |
+| ファイル          | 内容                                                             |
+| ----------------- | ---------------------------------------------------------------- |
+| `frontend.md`     | コンポーネント設計・ディレクティブ・スタイリング・Server Actions |
+| `testing-unit.md` | Jest のテストファイル命名・書き方・モック・カバレッジ方針        |
+| `testing-e2e.md`  | E2E のテストファイル命名・テストユーザー・Playwright Agents      |
 
 ### frontend.md の主なルール
 
@@ -274,11 +275,17 @@ GitHub の「Files changed」タブでレビューステータス（Approved / R
 - スタイルは Tailwind CSS のみ（インラインスタイル禁止）
 - Server Actions は冒頭で `auth()` を呼びセッションを検証する
 
-### testing.md の主なルール
+### testing-unit.md の主なルール
 
 - `describe` / `it` の説明は日本語で書く
 - カバレッジは **C1（分岐カバレッジ）** まで
 - UI コンポーネントより hooks / utils のロジックを優先してテスト
+
+### testing-e2e.md の主なルール
+
+- 新規ユーザーは `createTestUser()` + `signup()` で作り、メールは `test-` 始まりにする（テスト後に自動削除）
+- `test@example.com` は削除対象外の既存ユーザーなので、状態を変える操作には使わない
+- Playwright Agents の seed は `e2e/seed.spec.ts`、テスト計画は `specs/` に置く
 
 ---
 

@@ -78,10 +78,11 @@ app/ → features/ → shared/
 | ------------------------------- | ----------------------------------------------------------------- |
 | `.claude/rules/architecture.md` | レイヤーの責務・依存方向・`app/` を薄く保つ・handler の責務・命名 |
 | `.claude/rules/frontend.md`     | コンポーネント設計・`'use client'` の基準・スタイリング・import   |
-| `.claude/rules/testing.md`      | テストの命名・書き方・モック・カバレッジ方針                      |
+| `.claude/rules/testing-unit.md` | Jest の命名・書き方・モック・カバレッジ方針                       |
+| `.claude/rules/testing-e2e.md`  | E2E の命名・テストユーザーの作り方・Playwright Agents の seed     |
 | `.claude/rules/git.md`          | ブランチ命名・コミットメッセージ・PR のルール                     |
 
-Prettier / ESLint で担保できることは rules に書かず、ツールで検出できない規約だけを置いています。`architecture.md` / `frontend.md` は `paths` 指定で `src/` のコードを触るときだけ読み込まれます。
+Prettier / ESLint で担保できることは rules に書かず、ツールで検出できない規約だけを置いています。`paths` 指定により、`architecture.md` / `frontend.md` は `src/` のコード、`testing-unit.md` は `src/` の `*.spec.ts(x)`、`testing-e2e.md` は `e2e/` と `specs/` を触るときだけ読み込まれます。
 
 ### Claude Code Actions（GitHub Actions）
 
