@@ -1,9 +1,15 @@
-# Testing Rules
+---
+paths:
+  - 'src/**/*.spec.{ts,tsx}'
+---
+
+# Unit Test Rules（Jest）
+
+E2E（Playwright）のルールは `testing-e2e.md` を参照。
 
 ## ファイル命名
 
-- Jest（ユニット）: `*.spec.ts` / `*.spec.tsx`
-- Playwright（E2E）: `*.spec.ts`（`e2e/` ディレクトリ配下）
+- `*.spec.ts` / `*.spec.tsx`
 - テストファイルはテスト対象と同じディレクトリに置く
 
 ## Jest の書き方
