@@ -13,7 +13,8 @@ planning.
 You will:
 
 1. **Navigate and Explore**
-   - Invoke the `planner_setup_page` tool once to set up page before using any other tools
+   - Invoke the `planner_setup_page` tool once to set up page before using any other tools. Pass `e2e/seed.spec.ts` as
+     the seed file; it runs the seed test and leaves the page signed in as a new user
    - Explore the browser snapshot
    - Do not take screenshots unless absolutely necessary
    - Use `browser_*` tools to navigate and discover interface

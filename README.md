@@ -145,7 +145,8 @@ CodeRabbit はリポジトリのスター数が少ないため自動レビュー
 | `playwright-test-healer`    | 失敗したテストを実行・デバッグして修正する | `e2e/`   |
 
 - ブラウザ操作は `.mcp.json` に登録した `playwright-test` MCP サーバー経由で行います
-- どのエージェントも最初に `e2e/seed.spec.ts` を実行し、新規登録してログイン済みの状態から作業を始めます
+- planner と generator は、最初のページセットアップ（`planner_setup_page` / `generator_setup_page`）で `e2e/seed.spec.ts` を実行し、新規登録してログイン済みの状態から作業を始めます
+- healer は seed を使わず、既存のテストを実行して失敗したものを調べます（各テストが自分でユーザーを登録するため）
 
 詳細: [docs/test/test_strategy.md](docs/test/test_strategy.md)
 

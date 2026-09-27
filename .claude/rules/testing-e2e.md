@@ -22,4 +22,5 @@ Unit（Jest）のルールは `testing-unit.md` を参照。
 ## Playwright Agents
 
 - seed は `e2e/seed.spec.ts`（新規登録してログイン済みの状態にする）
+- seed のログイン状態は後続のテストに引き継がれない。ログインが必要なテストは、各テストの冒頭で `createTestUser()` + `signup()` を行う
 - テスト計画は `specs/`、生成したテストは `e2e/` に置く

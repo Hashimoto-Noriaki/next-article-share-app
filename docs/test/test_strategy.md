@@ -50,7 +50,10 @@ E2E テストは [Playwright Agents](https://playwright.dev/docs/test-agents) �
 
 - 流れは planner → generator → healer の順
 - ブラウザ操作は `.mcp.json` に登録した `playwright-test` MCP サーバー経由で行う
-- seed（`e2e/seed.spec.ts`）: 各エージェントが最初に実行するテスト。新規ユーザーを登録してログイン済みの状態にする
+- seed（`e2e/seed.spec.ts`）: 新規ユーザーを登録してログイン済みの状態にするテスト
+  - planner と generator は、最初のページセットアップ（`planner_setup_page` / `generator_setup_page`）で seed を実行し、その画面から作業を始める
+  - healer は seed を使わず、既存のテストを実行して失敗したものを調べる
+  - seed のログイン状態は後続のテストに引き継がれないため、ログインが必要なテストは各テストの冒頭で `createTestUser()` + `signup()` を行う
 - テストの書き方のルールは `.claude/rules/testing-e2e.md` を参照
 
 ### 4. コンポーネント（Storybook）

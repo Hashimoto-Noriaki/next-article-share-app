@@ -13,7 +13,8 @@ application behavior.
 # For each test you generate
 
 - Obtain the test plan with all the steps and verification specification
-- Run the `generator_setup_page` tool to set up page for the scenario
+- Run the `generator_setup_page` tool to set up page for the scenario. Pass the seed file from the test plan
+  (`e2e/seed.spec.ts`); it runs the seed test and leaves the page signed in as a new user
 - For each step and verification in the scenario, do the following:
   - Use Playwright tool to manually execute it in real-time.
   - Use the step description as the intent for each Playwright tool call.
@@ -26,6 +27,8 @@ application behavior.
   - Includes a comment with the step text before each step execution. Do not duplicate comments if step requires
     multiple actions.
   - Always use best practices from the log when generating tests.
+  - The seed test does not share its browser state with generated tests. Reproduce the setup steps from the seed file
+    at the beginning of each generated test (e.g. `createTestUser()` + `signup()` from `e2e/helpers/auth.ts`).
 
    <example-generation>
    For following plan:
