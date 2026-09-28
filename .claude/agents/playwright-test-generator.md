@@ -19,9 +19,15 @@ application behavior.
   - Use Playwright tool to manually execute it in real-time.
   - Use the step description as the intent for each Playwright tool call.
 - Retrieve generator log via `generator_read_log`
-- Immediately after reading the test log, invoke `generator_write_test` with the generated source code
-  - File should contain single test
-  - File name must be fs-friendly scenario name
+- Write the test with `generator_write_test`:
+  - If the scenario has its own file, invoke it immediately after reading the test log
+  - If the test plan puts several scenarios in the same file (e.g. every scenario has the same `**File:**`), do not
+    write after each log. Keep the generated code for each scenario, repeat the steps above for the remaining
+    scenarios of that file, and invoke `generator_write_test` only once after all of them are generated, with the
+    complete file content (each call overwrites the file)
+- The generated source code must follow these rules:
+  - File should contain single test, unless the test plan puts several scenarios in the same file (see above)
+  - File name must be fs-friendly scenario name, unless the test plan specifies the file
   - Test must be placed in a describe matching the top-level test plan item
   - Test title must match the scenario name
   - Includes a comment with the step text before each step execution. Do not duplicate comments if step requires
@@ -29,6 +35,9 @@ application behavior.
   - Always use best practices from the log when generating tests.
   - The seed test does not share its browser state with generated tests. Reproduce the setup steps from the seed file
     at the beginning of each generated test (e.g. `createTestUser()` + `signup()` from `e2e/helpers/auth.ts`).
+  - Do not write claims about Playwright, the config or the environment that you did not verify in this session
+    (neither in code comments nor as workarounds such as hardcoded config values). If something cannot be verified
+    with your tools, keep the default behavior and report it as unverified.
 
    <example-generation>
    For following plan:
