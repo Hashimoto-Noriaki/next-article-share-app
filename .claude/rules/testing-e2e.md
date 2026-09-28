@@ -19,6 +19,11 @@ Unit（Jest）のルールは `testing-unit.md` を参照。
 - メールは `test-` 始まりにする（`e2e/global-teardown.ts` がテスト後に削除する）
 - `testUsers.valid`（`test@example.com`）は削除対象外の既存ユーザーなので、状態を変える操作には使わない
 
+## 複数ユーザー
+
+- 2人目のユーザーが必要なときは `browser.newContext()` で別コンテキストを作る（ログアウトして切り替えない）
+- `browser` フィクスチャの `newContext()` は config の `baseURL` を引き継ぐので、URL を明示しない
+
 ## Playwright Agents
 
 - seed は `e2e/seed.spec.ts`（新規登録してログイン済みの状態にする）
