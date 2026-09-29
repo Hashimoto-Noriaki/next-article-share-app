@@ -18,7 +18,6 @@ export function useCommentForm({ articleId }: UseCommentFormParams) {
 
     try {
       const result = await createCommentAction({ articleId, content });
-      console.log('result:', JSON.stringify(result));
       if (!result.success)
         throw new Error(
           'errors' in result
