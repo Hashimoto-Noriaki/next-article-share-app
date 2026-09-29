@@ -45,7 +45,7 @@ AI の出力を「人が守るルール」ではなく「仕組みが守るル�
 | 開発中（スキル）       | `.claude/skills/`：`/smart-commit`・`/pr-description`・`/create-issue`・`/test`                                     |
 | 開発中（エージェント） | `.claude/agents/`：レビュー用（code / security / architecture）と Playwright Agents（planner / generator / healer） |
 | コマンド実行時         | `settings.json` で権限を限定、hooks で本番環境への操作をブロック                                                    |
-| CI                     | lint（層の依存方向を含む）・型チェック・Jest・Semgrep（E2E は予定）                                                 |
+| CI                     | lint（層の依存方向を含む）・型チェック・Jest・Semgrep・E2E（Playwright）                                            |
 | 依存関係               | Dependabot（クールダウン付き）・Socket.dev                                                                          |
 | PR                     | Claude Code Review（自動）・CodeRabbit・`@claude` メンション                                                        |
 | リリース後             | ステージング環境・Sentry（予定）                                                                                    |
@@ -279,3 +279,10 @@ npm run dev
 # 3. 別のターミナルで E2E を実行
 npx playwright test
 ```
+
+CI では `.github/workflows/e2e.yml` が E2E を実行します。
+
+- **実行タイミング**：`src/`・`e2e/`・`prisma/`・`playwright.config.ts`・`package.json`・`package-lock.json` が変わった PR と `master` への push。Actions 画面から手動でも実行できる（`workflow_dispatch`）
+- **環境**：Postgres をサービスコンテナで起動し、`prisma migrate deploy` でテーブルを作成。`playwright.config.ts` の `webServer` で本番ビルド（`npm run build:ci && npm start`）を起動してからテストする（`CI=true` のときだけ。ローカルは起動済みの dev サーバーを使う）
+- **環境変数**：すべてテスト専用のダミー値を `e2e.yml` に直接書いている（Secrets 不要）
+- **失敗したとき**：Actions の Artifact から `playwright-report/` をダウンロードし、`npx playwright show-report <展開先>/playwright-report` で確認する
