@@ -11,5 +11,13 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   retries: 1,
-  reporter: 'html',
+  reporter: process.env.CI ? [['html', { open: 'never' }], ['github']] : 'html',
+  // CI では本番ビルドを起動してからテストする。ローカルは起動済みの dev サーバーを使う
+  webServer: process.env.CI
+    ? {
+        command: 'npm run build:ci && npm start',
+        url: 'http://localhost:3000',
+        timeout: 300000,
+      }
+    : undefined,
 });
