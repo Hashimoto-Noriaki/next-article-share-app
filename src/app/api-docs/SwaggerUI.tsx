@@ -7,6 +7,6 @@ type Props = {
   spec: Record<string, unknown>;
 };
 
-export default function SwaggerUI({ spec }: Props) {
+export function SwaggerUI({ spec }: Props) {
   return <SwaggerUIReact spec={spec} />;
 }
