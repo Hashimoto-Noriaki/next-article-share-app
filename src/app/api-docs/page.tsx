@@ -1,5 +1,5 @@
 import { getApiDocs } from '@/lib/swagger';
-import SwaggerUI from './SwaggerUI';
+import { SwaggerUI } from './SwaggerUI';
 
 export default async function ApiDocsPage() {
   const spec = getApiDocs();

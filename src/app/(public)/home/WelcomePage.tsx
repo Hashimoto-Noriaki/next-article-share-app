@@ -5,7 +5,7 @@ import { Button } from '../../../shared/components/atoms/Button';
 import { WelcomeHeader } from '../../../features/home/WelcomeHeader';
 import styles from './WelcomePage.module.css';
 
-export default function WelcomePage() {
+export function WelcomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       <WelcomeHeader />
