@@ -1,7 +1,9 @@
 'use client';
 
+import { MouseEvent } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { NotificationWithRelations } from '@/features/notifications/types';
 import { timeAgo } from '@/shared/utils/date';
 import { AiFillHeart } from 'react-icons/ai';
@@ -10,22 +12,36 @@ import { FaComment } from 'react-icons/fa';
 type Props = {
   notification: NotificationWithRelations;
   onClose: () => void;
-  onRead: () => void;
+  onRead: () => Promise<unknown>;
 };
 
 export function NotificationItem({ notification, onClose, onRead }: Props) {
-  const handleClick = () => {
-    if (!notification.isRead) {
-      onRead();
+  const router = useRouter();
+  const href = notification.articleId
+    ? `/articles/${notification.articleId}`
+    : '#';
+
+  const handleClick = async (e: MouseEvent<HTMLAnchorElement>) => {
+    if (notification.isRead) {
+      onClose();
+      return;
+    }
+
+    // 遷移と同時に既読化のサーバーアクションを送ると、遷移でリクエストが中断されて既読にならない。
+    // 既読化の完了を待ってから遷移する
+    e.preventDefault();
+    try {
+      await onRead();
+    } catch {
+      // 既読化に失敗しても記事への遷移は行う
     }
     onClose();
+    router.push(href);
   };
 
   return (
     <Link
-      href={
-        notification.articleId ? `/articles/${notification.articleId}` : '#'
-      }
+      href={href}
       onClick={handleClick}
       className={`flex items-start gap-3 px-4 py-3 hover:bg-gray-50 border-b border-gray-100 ${
         !notification.isRead ? 'bg-cyan-50' : ''

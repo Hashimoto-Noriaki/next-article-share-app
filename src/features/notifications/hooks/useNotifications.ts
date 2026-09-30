@@ -39,7 +39,7 @@ export function useNotifications() {
     },
   });
 
-  const { mutate: markAsRead } = useMutation({
+  const { mutateAsync: markAsRead } = useMutation({
     mutationFn: (notificationId: string) =>
       markNotificationAsReadAction({ notificationId }),
     onSuccess: (_, notificationId) => {
