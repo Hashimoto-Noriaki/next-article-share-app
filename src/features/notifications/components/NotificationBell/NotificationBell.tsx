@@ -21,6 +21,7 @@ export function NotificationBell() {
     <div className="relative" ref={ref}>
       <button
         onClick={handleToggle}
+        aria-label="通知"
         className="relative p-2 hover:text-amber-400"
       >
         <AiOutlineBell className="w-6 h-6" />
