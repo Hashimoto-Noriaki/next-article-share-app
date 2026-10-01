@@ -27,6 +27,14 @@ export function NotificationItem({ notification, onClose, onRead }: Props) {
       return;
     }
 
+    // Ctrl／Cmd／Shift／Alt + クリックや中クリックは、新しいタブで開くなどのブラウザ標準の動作に任せる。
+    // 現在のページは遷移しないのでリクエストは中断されず、既読化の完了を待つ必要はない
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+      onRead().catch(() => {});
+      onClose();
+      return;
+    }
+
     // 遷移と同時に既読化のサーバーアクションを送ると、遷移でリクエストが中断されて既読にならない。
     // 既読化の完了を待ってから遷移する
     e.preventDefault();
