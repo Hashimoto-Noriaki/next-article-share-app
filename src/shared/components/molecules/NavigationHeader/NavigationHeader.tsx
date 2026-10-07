@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { UserDropdown } from '../../../../features/articles/components/UserDropdown';
+import { UserDropdown } from '@/features/articles/components/UserDropdown';
 import { NotificationBell } from '@/features/notifications/components';
 
 type Props = {

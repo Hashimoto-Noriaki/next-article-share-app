@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ArticleCard } from '../ArticleCard';
-import { Pagination } from '../../../../shared/components/molecules/Pagination';
+import { Pagination } from '@/shared/components/molecules/Pagination';
 
 type Article = {
   id: string;

@@ -40,6 +40,19 @@ const eslintConfig = [
       'local-rules/restrict-service-imports': 'error',
       'local-rules/restrict-action-imports': 'error',
       'local-rules/use-client-check': 'error',
+      // shared/・features/・external/ を ../ で参照せず @/ を使う（.claude/rules/frontend.md）
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '^(\\.\\./)+(shared|features|external)/',
+              message:
+                'shared/・features/・external/ は @/ エイリアスで import してください',
+            },
+          ],
+        },
+      ],
     },
   },
 ];
