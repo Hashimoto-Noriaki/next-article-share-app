@@ -16,11 +16,11 @@ import {
 } from '@/features/auth/actions/auth.action';
 import styles from './ResetPasswordForm.module.css';
 
-type ResetPasswordFormProps = {
+type Props = {
   token: string | null;
 };
 
-export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
+export function ResetPasswordForm({ token }: Props) {
   const router = useRouter();
 
   const [serverError, setServerError] = useState('');
