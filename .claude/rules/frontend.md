@@ -15,6 +15,7 @@ paths:
 - コンポーネントは `ComponentName/` ディレクトリにまとめ、`index.ts(x)` で re-export する
   - Storybook（`ComponentName.stories.tsx`）は同じディレクトリに置く（推奨）
   - そのコンポーネント専用の hook は同じディレクトリに置いてよい
+  - 例外: `features/*/components/server/` の `XxxPageTemplate` は `XxxPageTemplate.tsx` を直置きにする（`architecture.md` の命名表に従う）
 - コンポーネントは **named export**（default export 禁止）
   - 例外: Next.js の特殊ファイル（`page.tsx` / `layout.tsx` / `loading.tsx` / `error.tsx` / `not-found.tsx` など）、`middleware.ts`、`*.stories.tsx`
 - Props の型は `type Props = { ... }` で定義する
