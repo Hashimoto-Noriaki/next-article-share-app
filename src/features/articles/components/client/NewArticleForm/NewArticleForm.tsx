@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
 import { NewArticleHeader } from '@/features/articles/components/NewArticleHeader';
-import { useCurrentUser } from '@/shared/hooks';
+import { useCurrentUser } from '@/features/users/hooks';
 import { createArticleAction } from '@/features/articles/actions/article.action';
 
 type FieldErrors = {

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { auth } from '@/external/auth';
 import { getUserProfileHandler } from '@/external/handler/user/query.server';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
+import { NotificationBell } from '@/features/notifications/components';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { Footer } from '@/shared/components/organisms/Footer';
 
@@ -35,6 +36,7 @@ export async function UserProfilePageTemplate({ userId }: Props) {
             userId={currentUserId}
             userName={currentUserName}
             userImage={currentUserImage}
+            actions={<NotificationBell />}
           />
         )}
       </header>

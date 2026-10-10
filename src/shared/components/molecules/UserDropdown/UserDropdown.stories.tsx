@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs';
 import { UserDropdown } from './UserDropdown';
 
 const meta: Meta<typeof UserDropdown> = {
-  title: 'Features/Articles/UserDropdown',
+  title: 'Shared/Molecules/UserDropdown',
   component: UserDropdown,
   decorators: [
     (Story) => (
