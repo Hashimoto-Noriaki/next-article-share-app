@@ -22,3 +22,11 @@ export const Default: Story = {
     userName: 'テストユーザー',
   },
 };
+
+export const WithActions: Story = {
+  args: {
+    userId: '1',
+    userName: 'テストユーザー',
+    actions: <button type="button">🔔</button>,
+  },
+};
