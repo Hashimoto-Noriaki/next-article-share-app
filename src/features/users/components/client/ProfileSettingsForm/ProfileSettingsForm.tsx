@@ -8,10 +8,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/shared/components/atoms/Button';
 import { InputForm } from '@/shared/components/atoms/InputForm';
+import { NotificationBell } from '@/features/notifications/components';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { Footer } from '@/shared/components/organisms/Footer';
 import { updateUserSchema, UpdateUserInput } from '@/external/dto/user';
-import { useCurrentUser } from '@/shared/hooks';
+import { useCurrentUser } from '@/features/users/hooks';
 import {
   updateUserProfileAction,
   updateUserImageAction,
@@ -135,6 +136,7 @@ export function ProfileSettingsForm() {
             userId={user.id}
             userName={userName}
             userImage={userImage}
+            actions={<NotificationBell />}
           />
         )}
       </header>

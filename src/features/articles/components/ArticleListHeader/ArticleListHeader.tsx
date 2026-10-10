@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { logout } from '@/features/auth/actions/auth.action';
-import { UserDropdown } from '../UserDropdown';
+import { UserDropdown } from '@/shared/components/molecules/UserDropdown';
 import { NotificationBell } from '@/features/notifications/components';
 
 type Props = {

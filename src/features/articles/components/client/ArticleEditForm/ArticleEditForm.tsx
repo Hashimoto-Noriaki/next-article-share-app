@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
-import { UserDropdown } from '@/features/articles/components/UserDropdown';
-import { useCurrentUser } from '@/shared/hooks';
+import { UserDropdown } from '@/shared/components/molecules/UserDropdown';
+import { useCurrentUser } from '@/features/users/hooks';
 import { updateArticleAction } from '@/features/articles/actions/article.action';
 
 type FieldErrors = {

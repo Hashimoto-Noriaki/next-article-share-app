@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { auth } from '@/external/auth';
 import { listStocksHandler } from '@/external/handler/stock/query.server';
 import { ArticleCard } from '@/features/articles/components/ArticleCard';
+import { NotificationBell } from '@/features/notifications/components';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { Footer } from '@/shared/components/organisms/Footer';
 
@@ -26,6 +27,7 @@ export async function StocksPageTemplate() {
           userId={userId}
           userName={userName}
           userImage={userImage}
+          actions={<NotificationBell />}
         />
       </header>
       <main className="container mx-auto px-5 py-8 max-w-2xl grow">

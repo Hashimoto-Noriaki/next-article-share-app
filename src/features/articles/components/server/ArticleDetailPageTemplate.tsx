@@ -9,6 +9,7 @@ import { StockButton } from '@/features/articles/components/StockButton';
 import { CommentList } from '@/features/articles/components/Comment/CommentList';
 import { CommentForm } from '@/features/articles/components/Comment/CommentForm';
 import { Footer } from '@/shared/components/organisms/Footer';
+import { NotificationBell } from '@/features/notifications/components';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { MarkdownPreview } from '@/shared/components/molecules/MarkdownPreview';
 
@@ -40,6 +41,7 @@ export async function ArticleDetailPageTemplate({ articleId }: Props) {
             userId={userId}
             userName={userName}
             userImage={userImage}
+            actions={<NotificationBell />}
           />
         )}
       </header>

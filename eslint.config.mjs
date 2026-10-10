@@ -55,6 +55,30 @@ const eslintConfig = [
       ],
     },
   },
+  {
+    // shared/ は features/ に依存しない（.claude/rules/architecture.md）
+    // no-restricted-imports は上書きになるため、@/ エイリアスのパターンも含めて再定義する
+    files: ['src/shared/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '^(\\.\\./)+(shared|features|external)/',
+              message:
+                'shared/・features/・external/ は @/ エイリアスで import してください',
+            },
+            {
+              regex: '^@/features/',
+              message:
+                'shared/ から features/ には依存しないでください。必要な部品は props（slot）で受け取ってください',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];
 
 export default eslintConfig;

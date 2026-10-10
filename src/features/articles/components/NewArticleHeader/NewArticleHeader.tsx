@@ -1,4 +1,4 @@
-import { UserDropdown } from '../UserDropdown';
+import { UserDropdown } from '@/shared/components/molecules/UserDropdown';
 
 type Props = {
   onPublish: () => void;
