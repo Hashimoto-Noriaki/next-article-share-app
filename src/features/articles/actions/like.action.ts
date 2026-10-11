@@ -1,5 +1,6 @@
 'use server';
 
+import { fail } from '@/shared/lib/action-result';
 import { auth } from '@/external/auth';
 import {
   likeHandler,
@@ -9,7 +10,7 @@ import {
 export async function likeArticleAction({ articleId }: { articleId: string }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return likeHandler({ articleId, userId });
 }
@@ -21,7 +22,7 @@ export async function unlikeArticleAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return unlikeHandler({ articleId, userId });
 }

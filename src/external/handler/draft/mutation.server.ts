@@ -1,3 +1,5 @@
+import type { ActionResult } from '@/shared/types/action';
+import { ok, fail } from '@/shared/lib/action-result';
 import { draftRepository } from '@/external/repository/draft';
 
 export async function deleteDraftHandler({
@@ -6,18 +8,18 @@ export async function deleteDraftHandler({
 }: {
   draftId: string;
   userId: string;
-}) {
+}): Promise<ActionResult> {
   const draft = await draftRepository.findById(draftId);
   if (!draft) {
-    return { success: false as const, error: '下書きが見つかりません' };
+    return fail('下書きが見つかりません');
   }
   if (draft.authorId !== userId) {
-    return { success: false as const, error: '権限がありません' };
+    return fail('権限がありません');
   }
   if (!draft.isDraft) {
-    return { success: false as const, error: '公開済みの記事は削除できません' };
+    return fail('公開済みの記事は削除できません');
   }
 
   await draftRepository.delete(draftId);
-  return { success: true as const };
+  return ok();
 }

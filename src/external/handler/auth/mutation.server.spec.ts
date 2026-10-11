@@ -60,7 +60,7 @@ describe('signupHandler', () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.user.email).toBe('test@example.com');
+        expect(result.data.email).toBe('test@example.com');
       }
     });
   });

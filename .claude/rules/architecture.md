@@ -62,7 +62,8 @@ app/ → features/ → shared/
 
 - ユーザーが自由入力する値は `external/dto/` の Zod スキーマで `safeParse` する
 - ID を受け取る操作は、対象リソースの所有者チェックを handler で行う（ID だけで他人のリソースを操作させない）
-- 戻り値は `{ success: true, data? }` / `{ success: false, error: string }` の判別可能な型にする
+- 戻り値は `ActionResult<T>`（`@/shared/types/action`）にする。`ok(data)` / `fail(message)` / `validationFail(zodError)`（`@/shared/lib/action-result`）で作る
+- 想定内の失敗（見つからない・権限がない・入力エラー）は `fail` で返し、throw しない。想定外の例外（DB エラーなど）は catch せずに投げ、`app/error.tsx` で受け止める
 
 ## 命名
 

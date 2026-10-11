@@ -1,5 +1,6 @@
 'use server';
 
+import { fail } from '@/shared/lib/action-result';
 import { auth } from '@/external/auth';
 import {
   markAllNotificationsAsReadHandler,
@@ -10,7 +11,7 @@ import { listNotificationsHandler } from '@/external/handler/notification/query.
 export async function listNotificationsAction() {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return listNotificationsHandler({ userId });
 }
@@ -18,7 +19,7 @@ export async function listNotificationsAction() {
 export async function markAllNotificationsAsReadAction() {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return markAllNotificationsAsReadHandler({ userId });
 }
@@ -30,7 +31,7 @@ export async function markNotificationAsReadAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return markNotificationAsReadHandler({ notificationId, userId });
 }

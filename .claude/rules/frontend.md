@@ -57,15 +57,18 @@ className={cn('base-class', condition && 'conditional-class', className)}
 ## Server Actions の書き方
 
 - 認証が必要な Action は必ず冒頭で `auth()` を呼びセッションを検証する
-- 失敗時の戻り値には `as const` を付ける（判別可能な型にするため）
+- 失敗時の戻り値は `fail()` で作る（`ActionResult` の判別可能な型にするため）
+- 呼び出し側は `result.success` で分岐する。フォームの項目ごとのエラーは `result.fieldErrors` をそのまま state に入れる
 
 ```ts
 'use server';
 
+import { fail } from '@/shared/lib/action-result';
+
 export async function myAction({ articleId }: { articleId: string }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return myHandler({ articleId, userId });
 }

@@ -26,7 +26,10 @@ describe('useStock', () => {
 
   describe('toggleStock', () => {
     it('未ストック状態でtoggleするとストック済みになる', async () => {
-      (stockArticleAction as jest.Mock).mockResolvedValue({ success: true });
+      (stockArticleAction as jest.Mock).mockResolvedValue({
+        success: true,
+        data: undefined,
+      });
 
       const { result } = renderHook(() =>
         useStock({ articleId: 'article-1', initialStocked: false }),
@@ -43,7 +46,10 @@ describe('useStock', () => {
     });
 
     it('ストック済み状態でtoggleするとストック解除される', async () => {
-      (unstockArticleAction as jest.Mock).mockResolvedValue({ success: true });
+      (unstockArticleAction as jest.Mock).mockResolvedValue({
+        success: true,
+        data: undefined,
+      });
 
       const { result } = renderHook(() =>
         useStock({ articleId: 'article-1', initialStocked: true }),
@@ -95,7 +101,7 @@ describe('useStock', () => {
       expect(result.current.isLoading).toBe(true);
 
       await act(async () => {
-        resolve!({ success: true });
+        resolve!({ success: true, data: undefined });
       });
       expect(result.current.isLoading).toBe(false);
     });

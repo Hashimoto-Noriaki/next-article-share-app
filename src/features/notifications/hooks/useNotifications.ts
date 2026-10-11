@@ -23,7 +23,7 @@ export function useNotifications() {
     queryFn: async (): Promise<NotificationWithRelations[]> => {
       const result = await listNotificationsAction();
       if (!result.success) return [];
-      return result.notifications as NotificationWithRelations[];
+      return result.data as NotificationWithRelations[];
     },
     staleTime: 1 * 60 * 1000,
   });

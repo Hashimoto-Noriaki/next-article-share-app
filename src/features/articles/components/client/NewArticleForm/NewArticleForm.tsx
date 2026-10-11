@@ -52,16 +52,11 @@ export function NewArticleForm() {
       });
 
       if (!result.success) {
-        if ('errors' in result && Array.isArray(result.errors)) {
-          const fieldErrors: FieldErrors = {};
-          result.errors.forEach(
-            (err: { path: PropertyKey[]; message: string }) => {
-              const field = String(err.path[0]) as keyof FieldErrors;
-              if (field && !fieldErrors[field])
-                fieldErrors[field] = err.message;
-            },
-          );
-          setErrors(fieldErrors);
+        const { title, content, tags } = result.fieldErrors ?? {};
+        if (title || content || tags) {
+          setErrors({ title, content, tags });
+        } else {
+          alert(result.error);
         }
         return;
       }

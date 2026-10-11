@@ -1,3 +1,6 @@
+import type { Article } from '@prisma/client';
+import type { ActionResult } from '@/shared/types/action';
+import { ok, fail, validationFail } from '@/shared/lib/action-result';
 import { prisma } from '@/external/repository/client';
 import { createNotification } from '@/external/service/notification';
 import { articleRepository } from '@/external/repository/article';
@@ -10,17 +13,17 @@ export async function likeHandler({
 }: {
   articleId: string;
   userId: string;
-}) {
+}): Promise<ActionResult> {
   const article = await prisma.article.findUnique({ where: { id: articleId } });
 
-  if (!article) return { success: false, error: '記事が見つかりません' };
+  if (!article) return fail('記事が見つかりません');
   if (article.authorId === userId)
-    return { success: false, error: '自分の記事にはいいねできません' };
+    return fail('自分の記事にはいいねできません');
 
   const existingLike = await prisma.like.findUnique({
     where: { userId_articleId: { userId, articleId } },
   });
-  if (existingLike) return { success: false, error: '既にいいね済みです' };
+  if (existingLike) return fail('既にいいね済みです');
 
   await prisma.$transaction([
     prisma.like.create({ data: { userId, articleId } }),
@@ -37,7 +40,7 @@ export async function likeHandler({
     articleId,
   });
 
-  return { success: true };
+  return ok();
 }
 
 export async function unlikeHandler({
@@ -46,11 +49,11 @@ export async function unlikeHandler({
 }: {
   articleId: string;
   userId: string;
-}) {
+}): Promise<ActionResult> {
   const existingLike = await prisma.like.findUnique({
     where: { userId_articleId: { userId, articleId } },
   });
-  if (!existingLike) return { success: false, error: 'いいねしていません' };
+  if (!existingLike) return fail('いいねしていません');
 
   await prisma.$transaction([
     prisma.like.delete({
@@ -62,7 +65,7 @@ export async function unlikeHandler({
     }),
   ]);
 
-  return { success: true };
+  return ok();
 }
 
 export async function stockHandler({
@@ -71,18 +74,18 @@ export async function stockHandler({
 }: {
   articleId: string;
   userId: string;
-}) {
+}): Promise<ActionResult> {
   const article = await prisma.article.findUnique({ where: { id: articleId } });
-  if (!article) return { success: false, error: '記事が見つかりません' };
+  if (!article) return fail('記事が見つかりません');
 
   const existingStock = await prisma.stock.findUnique({
     where: { userId_articleId: { userId, articleId } },
   });
-  if (existingStock) return { success: false, error: '既にストック済みです' };
+  if (existingStock) return fail('既にストック済みです');
 
   await prisma.stock.create({ data: { userId, articleId } });
 
-  return { success: true };
+  return ok();
 }
 
 export async function unstockHandler({
@@ -91,17 +94,17 @@ export async function unstockHandler({
 }: {
   articleId: string;
   userId: string;
-}) {
+}): Promise<ActionResult> {
   const existingStock = await prisma.stock.findUnique({
     where: { userId_articleId: { userId, articleId } },
   });
-  if (!existingStock) return { success: false, error: 'ストックしていません' };
+  if (!existingStock) return fail('ストックしていません');
 
   await prisma.stock.delete({
     where: { userId_articleId: { userId, articleId } },
   });
 
-  return { success: true };
+  return ok();
 }
 
 export async function createArticleHandler({
@@ -116,15 +119,14 @@ export async function createArticleHandler({
   tags: string[];
   isDraft: boolean;
   userId: string;
-}) {
+}): Promise<ActionResult<Article>> {
   // 下書き上限チェック
   if (isDraft) {
     const draftCount = await articleRepository.countDraftsByUser(userId);
     if (draftCount >= DRAFT_LIMIT) {
-      return {
-        success: false as const,
-        error: `下書きが上限（${DRAFT_LIMIT}件）になりました。この機会に投稿してみませんか？`,
-      };
+      return fail(
+        `下書きが上限（${DRAFT_LIMIT}件）になりました。この機会に投稿してみませんか？`,
+      );
     }
   }
 
@@ -132,7 +134,7 @@ export async function createArticleHandler({
   const schema = isDraft ? draftArticleSchema : createArticleSchema;
   const parsed = schema.safeParse({ title, content, tags, isDraft });
   if (!parsed.success) {
-    return { success: false as const, errors: parsed.error.issues };
+    return validationFail(parsed.error);
   }
 
   const article = await articleRepository.create({
@@ -143,7 +145,7 @@ export async function createArticleHandler({
     authorId: userId,
   });
 
-  return { success: true as const, article };
+  return ok(article);
 }
 
 export async function updateArticleHandler({
@@ -160,19 +162,19 @@ export async function updateArticleHandler({
   tags: string[];
   isDraft?: boolean;
   userId: string;
-}) {
+}): Promise<ActionResult<Article>> {
   const existing = await articleRepository.findAuthorById(articleId);
   if (!existing) {
-    return { success: false as const, error: '記事が見つかりません' };
+    return fail('記事が見つかりません');
   }
   if (existing.authorId !== userId) {
-    return { success: false as const, error: '編集権限がありません' };
+    return fail('編集権限がありません');
   }
 
   const schema = isDraft ? draftArticleSchema : createArticleSchema;
   const parsed = schema.safeParse({ title, content, tags, isDraft });
   if (!parsed.success) {
-    return { success: false as const, errors: parsed.error.issues };
+    return validationFail(parsed.error);
   }
 
   const article = await articleRepository.update(articleId, {
@@ -182,7 +184,7 @@ export async function updateArticleHandler({
     isDraft: parsed.data.isDraft ?? false,
   });
 
-  return { success: true as const, article };
+  return ok(article);
 }
 
 export async function deleteArticleHandler({
@@ -191,15 +193,15 @@ export async function deleteArticleHandler({
 }: {
   articleId: string;
   userId: string;
-}) {
+}): Promise<ActionResult> {
   const existing = await articleRepository.findAuthorById(articleId);
   if (!existing) {
-    return { success: false as const, error: '記事が見つかりません' };
+    return fail('記事が見つかりません');
   }
   if (existing.authorId !== userId) {
-    return { success: false as const, error: '削除権限がありません' };
+    return fail('削除権限がありません');
   }
 
   await articleRepository.delete(articleId);
-  return { success: true as const };
+  return ok();
 }

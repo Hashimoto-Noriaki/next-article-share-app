@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { MarkdownEditor } from '@/features/articles/components/MarkdownEditor';
 import { UserDropdown } from '@/shared/components/molecules/UserDropdown';
+import type { ActionResult } from '@/shared/types/action';
 import { useCurrentUser } from '@/features/users/hooks';
 import { updateArticleAction } from '@/features/articles/actions/article.action';
 
@@ -38,23 +39,15 @@ export function DraftEditForm({
   const { data: user } = useCurrentUser();
 
   const handleResult = (
-    result:
-      | {
-          success: false;
-          errors?: { path: PropertyKey[]; message: string }[];
-          error?: string;
-        }
-      | { success: true },
+    result: ActionResult<unknown>,
     onSuccess: () => void,
   ) => {
     if (!result.success) {
-      if ('errors' in result && Array.isArray(result.errors)) {
-        const fieldErrors: FieldErrors = {};
-        result.errors.forEach((err) => {
-          const field = String(err.path[0]) as keyof FieldErrors;
-          if (field && !fieldErrors[field]) fieldErrors[field] = err.message;
-        });
-        setErrors(fieldErrors);
+      const { title, content, tags } = result.fieldErrors ?? {};
+      if (title || content || tags) {
+        setErrors({ title, content, tags });
+      } else {
+        alert(result.error);
       }
       return;
     }

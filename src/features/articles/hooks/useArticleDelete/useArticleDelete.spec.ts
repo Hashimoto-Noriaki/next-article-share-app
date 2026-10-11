@@ -43,7 +43,10 @@ describe('useArticleDelete', () => {
   });
 
   it('削除成功時はrouter.push("/articles")とrouter.refresh()が呼ばれる', async () => {
-    mockDeleteArticleAction.mockResolvedValue({ success: true });
+    mockDeleteArticleAction.mockResolvedValue({
+      success: true,
+      data: undefined,
+    });
 
     const { result } = renderHook(() =>
       useArticleDelete({ articleId: 'article-1' }),

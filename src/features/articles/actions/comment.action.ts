@@ -1,5 +1,6 @@
 'use server';
 
+import { fail } from '@/shared/lib/action-result';
 import { auth } from '@/external/auth';
 import {
   createCommentHandler,
@@ -16,7 +17,7 @@ export async function createCommentAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return createCommentHandler({ content, userId, articleId });
 }
@@ -30,7 +31,7 @@ export async function updateCommentAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return updateCommentHandler({ commentId, content, userId });
 }
@@ -42,7 +43,7 @@ export async function deleteCommentAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return deleteCommentHandler({ commentId, userId });
 }
