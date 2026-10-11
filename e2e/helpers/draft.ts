@@ -20,7 +20,7 @@ export async function saveDraft(page: Page, article: TestArticle) {
 
   await page.locator('button').filter({ hasText: '下書き保存' }).click();
 
-  await page.waitForURL('/drafts', { timeout: 10000 });
+  await page.waitForURL('/drafts');
 }
 
 /**
@@ -36,5 +36,5 @@ export async function navigateToDraftEdit(page: Page, title: string) {
     .filter({ hasText: '編集する' })
     .click();
 
-  await page.waitForURL(/\/drafts\/[^/]+\/edit/, { timeout: 10000 });
+  await page.waitForURL(/\/drafts\/[^/]+\/edit/);
 }

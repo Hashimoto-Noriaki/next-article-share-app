@@ -51,7 +51,7 @@ export async function login(page: Page, user: TestUser) {
     .click();
 
   // ログイン成功を待つ（URLが変わるまで待機）
-  await page.waitForURL((url) => url.pathname !== '/login', { timeout: 10000 });
+  await page.waitForURL((url) => url.pathname !== '/login');
 }
 
 /**
@@ -80,10 +80,8 @@ export async function signup(page: Page, user: TestUser) {
     .filter({ hasText: '新規登録' })
     .click();
 
-  // 登録成功を待つ（URLが変わるまで待機、タイムアウトを長めに）
-  await page.waitForURL((url) => url.pathname !== '/signup', {
-    timeout: 10000,
-  });
+  // 登録成功を待つ（URLが変わるまで待機）
+  await page.waitForURL((url) => url.pathname !== '/signup');
 }
 
 /**

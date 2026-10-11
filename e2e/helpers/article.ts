@@ -37,7 +37,7 @@ export async function createArticle(page: Page, article: TestArticle) {
 
   await page.locator('button').filter({ hasText: '公開設定へ' }).click();
 
-  await page.waitForURL('/articles', { timeout: 10000 });
+  await page.waitForURL('/articles');
 }
 
 /**
@@ -46,5 +46,5 @@ export async function createArticle(page: Page, article: TestArticle) {
 export async function navigateToArticle(page: Page, title: string) {
   await page.goto('/articles');
   await page.getByText(title).first().click();
-  await page.waitForURL(/\/articles\/[^/]+$/, { timeout: 10000 });
+  await page.waitForURL(/\/articles\/[^/]+$/);
 }
