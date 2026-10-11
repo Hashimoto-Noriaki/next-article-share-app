@@ -3,7 +3,7 @@ import type { ActionFailure, ActionSuccess } from '@/shared/types/action';
 
 export function ok(): ActionSuccess<void>;
 export function ok<T>(data: T): ActionSuccess<T>;
-export function ok<T>(data?: T) {
+export function ok<T>(data?: T): ActionSuccess<T | undefined> {
   return { success: true as const, data };
 }
 
@@ -23,6 +23,6 @@ export function validationFail(zodError: z.ZodError): ActionFailure {
   return {
     success: false,
     error: zodError.issues[0]?.message ?? '入力内容に誤りがあります',
-    fieldErrors,
+    ...(Object.keys(fieldErrors).length > 0 && { fieldErrors }),
   };
 }

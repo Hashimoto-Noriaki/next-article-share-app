@@ -52,8 +52,9 @@ export function NewArticleForm() {
       });
 
       if (!result.success) {
-        if (result.fieldErrors) {
-          setErrors(result.fieldErrors);
+        const { title, content, tags } = result.fieldErrors ?? {};
+        if (title || content || tags) {
+          setErrors({ title, content, tags });
         } else {
           alert(result.error);
         }

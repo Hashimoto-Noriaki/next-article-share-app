@@ -41,14 +41,13 @@ describe('action-result', () => {
       });
     });
 
-    it('pathが空のエラーはfieldErrorsに入れない', () => {
+    it('pathが空のエラーだけのときはfieldErrorsを付けない', () => {
       const parsed = z.string().min(1, '入力してください').safeParse('');
       if (parsed.success) throw new Error('バリデーションが成功してしまった');
 
       expect(validationFail(parsed.error)).toEqual({
         success: false,
         error: '入力してください',
-        fieldErrors: {},
       });
     });
   });
