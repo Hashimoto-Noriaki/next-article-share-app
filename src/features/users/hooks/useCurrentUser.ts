@@ -10,9 +10,14 @@ type User = {
   email: string | null;
 };
 
+export const userKeys = {
+  all: ['users'] as const,
+  current: () => [...userKeys.all, 'current'] as const,
+};
+
 export function useCurrentUser() {
   return useQuery({
-    queryKey: ['currentUser'],
+    queryKey: userKeys.current(),
     queryFn: async (): Promise<User> => {
       const result = await getCurrentUserAction();
       if (!result.success) {
