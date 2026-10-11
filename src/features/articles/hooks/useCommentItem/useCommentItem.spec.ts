@@ -36,7 +36,7 @@ describe('useCommentItem', () => {
     it('更新成功時はisEditingがfalseになりrouter.refresh()が呼ばれる', async () => {
       mockUpdateCommentAction.mockResolvedValue({
         success: true,
-        comment: {
+        data: {
           id: 'comment-1',
           content: '更新後',
           userId: 'user-1',
@@ -108,7 +108,10 @@ describe('useCommentItem', () => {
     });
 
     it('削除成功時はrouter.refresh()が呼ばれる', async () => {
-      mockDeleteCommentAction.mockResolvedValue({ success: true });
+      mockDeleteCommentAction.mockResolvedValue({
+        success: true,
+        data: undefined,
+      });
 
       const { result } = renderHook(() =>
         useCommentItem({

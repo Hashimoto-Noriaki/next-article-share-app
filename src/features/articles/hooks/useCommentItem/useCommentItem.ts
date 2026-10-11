@@ -28,12 +28,7 @@ export function useCommentItem({
         commentId,
         content: editContent,
       });
-      if (!result.success)
-        throw new Error(
-          'errors' in result
-            ? result.errors?.map((e) => e.message).join('\n')
-            : result.error,
-        );
+      if (!result.success) throw new Error(result.error);
       setIsEditing(false);
       router.refresh();
     } catch (error) {

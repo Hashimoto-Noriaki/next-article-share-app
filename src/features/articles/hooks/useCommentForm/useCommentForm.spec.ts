@@ -27,7 +27,7 @@ describe('useCommentForm', () => {
   it('投稿成功時はcontentがリセットされrouter.refresh()が呼ばれる', async () => {
     mockCreateCommentAction.mockResolvedValue({
       success: true,
-      comment: {
+      data: {
         id: 'comment-1',
         content: 'テストコメント',
         userId: 'user-1',
@@ -72,18 +72,11 @@ describe('useCommentForm', () => {
     expect(mockRefresh).not.toHaveBeenCalled();
   });
 
-  it('バリデーションエラー時はerrorsのmessageがalertに表示される', async () => {
+  it('バリデーションエラー時はerrorのmessageがalertに表示される', async () => {
     mockCreateCommentAction.mockResolvedValue({
       success: false,
-      errors: [
-        {
-          message: 'コメント内容を入力してください',
-          code: 'too_small',
-          minimum: 1,
-          inclusive: true,
-          path: ['content'],
-        },
-      ],
+      error: 'コメント内容を入力してください',
+      fieldErrors: { content: 'コメント内容を入力してください' },
     } as Awaited<ReturnType<typeof createCommentAction>>);
 
     const { result } = renderHook(() =>

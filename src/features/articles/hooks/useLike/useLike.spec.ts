@@ -27,7 +27,10 @@ describe('useLike', () => {
 
   describe('toggleLike', () => {
     it('未いいね状態でtoggleするといいね済みになりcountが増える', async () => {
-      (likeArticleAction as jest.Mock).mockResolvedValue({ success: true });
+      (likeArticleAction as jest.Mock).mockResolvedValue({
+        success: true,
+        data: undefined,
+      });
 
       const { result } = renderHook(() =>
         useLike({
@@ -49,7 +52,10 @@ describe('useLike', () => {
     });
 
     it('いいね済み状態でtoggleするといいね解除されcountが減る', async () => {
-      (unlikeArticleAction as jest.Mock).mockResolvedValue({ success: true });
+      (unlikeArticleAction as jest.Mock).mockResolvedValue({
+        success: true,
+        data: undefined,
+      });
 
       const { result } = renderHook(() =>
         useLike({
@@ -115,7 +121,7 @@ describe('useLike', () => {
       expect(result.current.isLoading).toBe(true);
 
       await act(async () => {
-        resolve!({ success: true });
+        resolve!({ success: true, data: undefined });
       });
       expect(result.current.isLoading).toBe(false);
     });

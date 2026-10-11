@@ -18,7 +18,7 @@ export function useCurrentUser() {
       if (!result.success) {
         throw new Error('認証エラー');
       }
-      return result.user;
+      return result.data;
     },
     staleTime: 5 * 60 * 1000,
     retry: false,

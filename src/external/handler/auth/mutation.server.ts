@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
+import type { ActionResult } from '@/shared/types/action';
+import { ok, fail, validationFail } from '@/shared/lib/action-result';
 import { userRepository } from '@/external/repository/user';
 import { passwordResetTokenRepository } from '@/external/repository/auth';
 import { sendPasswordResetEmail } from '@/external/email';
@@ -7,11 +9,15 @@ import { signupSchema, resetPasswordServerSchema } from '@/external/dto/auth';
 
 const TOKEN_EXPIRY_HOURS = 1;
 
-export async function signupHandler(body: unknown) {
+export async function signupHandler(
+  body: unknown,
+): Promise<
+  ActionResult<{ id: string; name: string | null; email: string | null }>
+> {
   // バリデーション
   const parsed = signupSchema.safeParse(body);
   if (!parsed.success) {
-    return { success: false as const, errors: parsed.error.issues };
+    return validationFail(parsed.error);
   }
 
   const { name, email, password } = parsed.data;
@@ -19,10 +25,7 @@ export async function signupHandler(body: unknown) {
   // 重複チェック
   const existing = await userRepository.findByEmail(email);
   if (existing) {
-    return {
-      success: false as const,
-      error: 'このメールアドレスは既に登録されています',
-    };
+    return fail('このメールアドレスは既に登録されています');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,21 +35,19 @@ export async function signupHandler(body: unknown) {
     password: hashedPassword,
   });
 
-  return {
-    success: true as const,
-    user: { id: user.id, name: user.name, email: user.email },
-  };
+  return ok({ id: user.id, name: user.name, email: user.email });
 }
 
-export async function forgotPasswordHandler({ email }: { email: string }) {
+export async function forgotPasswordHandler({
+  email,
+}: {
+  email: string;
+}): Promise<ActionResult> {
   const normalizedEmail = email.toLowerCase();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(normalizedEmail)) {
-    return {
-      success: false as const,
-      error: '有効なメールアドレスを入力してください',
-    };
+    return fail('有効なメールアドレスを入力してください');
   }
 
   const user = await userRepository.findByEmail(normalizedEmail);
@@ -68,7 +69,7 @@ export async function forgotPasswordHandler({ email }: { email: string }) {
   }
 
   // セキュリティのため存在有無に関わらず同じレスポンス
-  return { success: true as const };
+  return ok();
 }
 
 export async function validateResetTokenHandler({ token }: { token: string }) {
@@ -84,40 +85,38 @@ export async function validateResetTokenHandler({ token }: { token: string }) {
   return { valid: true as const };
 }
 
-export async function resetPasswordHandler(body: unknown) {
+export async function resetPasswordHandler(
+  body: unknown,
+): Promise<ActionResult> {
   const parsed = resetPasswordServerSchema.safeParse(body);
   if (!parsed.success) {
-    return { success: false as const, errors: parsed.error.issues };
+    return validationFail(parsed.error);
   }
 
   const { token, password } = parsed.data;
 
   const resetToken = await passwordResetTokenRepository.findByToken(token);
   if (!resetToken) {
-    return {
-      success: false as const,
-      error:
-        '無効または期限切れのリンクです。再度パスワードリセットをリクエストしてください。',
-    };
+    return fail(
+      '無効または期限切れのリンクです。再度パスワードリセットをリクエストしてください。',
+    );
   }
 
   if (new Date() > resetToken.expires) {
     await passwordResetTokenRepository.deleteById(resetToken.id);
-    return {
-      success: false as const,
-      error:
-        'リンクの有効期限が切れています。再度パスワードリセットをリクエストしてください。',
-    };
+    return fail(
+      'リンクの有効期限が切れています。再度パスワードリセットをリクエストしてください。',
+    );
   }
 
   const user = await userRepository.findByEmail(resetToken.email);
   if (!user) {
-    return { success: false as const, error: 'ユーザーが見つかりませんでした' };
+    return fail('ユーザーが見つかりませんでした');
   }
 
   const hashedPassword = await bcrypt.hash(password, 12);
   await userRepository.updatePassword(user.id, hashedPassword);
   await passwordResetTokenRepository.deleteByEmail(resetToken.email);
 
-  return { success: true as const };
+  return ok();
 }

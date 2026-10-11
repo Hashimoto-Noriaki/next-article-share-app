@@ -18,12 +18,7 @@ export function useCommentForm({ articleId }: UseCommentFormParams) {
 
     try {
       const result = await createCommentAction({ articleId, content });
-      if (!result.success)
-        throw new Error(
-          'errors' in result
-            ? result.errors?.map((e) => e.message).join('\n')
-            : result.error,
-        );
+      if (!result.success) throw new Error(result.error);
 
       setContent('');
       router.refresh();

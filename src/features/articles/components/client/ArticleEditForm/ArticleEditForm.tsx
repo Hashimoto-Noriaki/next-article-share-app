@@ -54,16 +54,10 @@ export function ArticleEditForm({
       });
 
       if (!result.success) {
-        if ('errors' in result && Array.isArray(result.errors)) {
-          const fieldErrors: FieldErrors = {};
-          result.errors.forEach(
-            (err: { path: PropertyKey[]; message: string }) => {
-              const field = String(err.path[0]) as keyof FieldErrors;
-              if (field && !fieldErrors[field])
-                fieldErrors[field] = err.message;
-            },
-          );
-          setErrors(fieldErrors);
+        if (result.fieldErrors) {
+          setErrors(result.fieldErrors);
+        } else {
+          alert(result.error);
         }
         return;
       }

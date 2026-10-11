@@ -1,5 +1,6 @@
 'use server';
 
+import { fail } from '@/shared/lib/action-result';
 import { auth } from '@/external/auth';
 import {
   stockHandler,
@@ -9,7 +10,7 @@ import {
 export async function stockArticleAction({ articleId }: { articleId: string }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return stockHandler({ articleId, userId });
 }
@@ -21,7 +22,7 @@ export async function unstockArticleAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return unstockHandler({ articleId, userId });
 }

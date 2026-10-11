@@ -1,5 +1,6 @@
 'use server';
 
+import { fail } from '@/shared/lib/action-result';
 import { auth } from '@/external/auth';
 import {
   createArticleHandler,
@@ -21,7 +22,7 @@ export async function createArticleAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return createArticleHandler({ title, content, tags, isDraft, userId });
 }
@@ -41,7 +42,7 @@ export async function updateArticleAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return updateArticleHandler({
     articleId,
@@ -60,7 +61,7 @@ export async function deleteArticleAction({
 }) {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { success: false as const, error: '認証が必要です' };
+  if (!userId) return fail('認証が必要です');
 
   return deleteArticleHandler({ articleId, userId });
 }
