@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/shared/components/atoms/Button';
@@ -12,7 +13,7 @@ import { NotificationBell } from '@/features/notifications/components';
 import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { Footer } from '@/shared/components/organisms/Footer';
 import { updateUserSchema, UpdateUserInput } from '@/external/dto/user';
-import { useCurrentUser } from '@/features/users/hooks';
+import { useCurrentUser, userKeys } from '@/features/users/hooks';
 import {
   updateUserProfileAction,
   updateUserImageAction,
@@ -21,6 +22,7 @@ import styles from './ProfileSettingsForm.module.css';
 
 export function ProfileSettingsForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [success, setSuccess] = useState('');
   const [serverError, setServerError] = useState('');
   const [userImage, setUserImage] = useState<string | null>(null);
@@ -91,6 +93,7 @@ export function ProfileSettingsForm() {
 
       setUserImage(url);
       setSuccess('プロフィール画像を更新しました');
+      queryClient.invalidateQueries({ queryKey: userKeys.current() });
     } catch (error) {
       console.error('アップロードエラー:', error);
       setServerError('画像のアップロードに失敗しました');
@@ -115,6 +118,7 @@ export function ProfileSettingsForm() {
 
     setSuccess('プロフィールを更新しました');
     setUserName(data.name || '');
+    queryClient.invalidateQueries({ queryKey: userKeys.current() });
   };
 
   if (isUserLoading) {
