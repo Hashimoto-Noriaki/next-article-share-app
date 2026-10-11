@@ -5,10 +5,14 @@ const isCI = process.env.CI === 'true';
 
 export default defineConfig({
   testDir: './e2e',
-  timeout: 30000,
+  // ローカルの dev サーバーは初回アクセス時にページをコンパイルするため、CI より長めに待つ
+  timeout: isCI ? 30000 : 60000,
+  expect: { timeout: isCI ? 5000 : 10000 },
   globalTeardown: './e2e/global-teardown.ts',
   use: {
     baseURL: 'http://localhost:3000',
+    // waitForURL / goto の待ち時間。各テストでは timeout を直接書かずにこの値を使う
+    navigationTimeout: isCI ? 10000 : 30000,
     headless: true,
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',

@@ -38,7 +38,7 @@ test.describe('下書き機能', () => {
     await page.locator('button').filter({ hasText: '下書き保存' }).click();
 
     // /drafts にリダイレクトされる
-    await page.waitForURL('/drafts', { timeout: 10000 });
+    await page.waitForURL('/drafts');
 
     // 更新されたタイトルが表示される
     await expect(page.getByText(updatedTitle).first()).toBeVisible();
@@ -58,7 +58,7 @@ test.describe('下書き機能', () => {
     await page.locator('button').filter({ hasText: '公開する' }).click();
 
     // /articles にリダイレクトされる
-    await page.waitForURL('/articles', { timeout: 10000 });
+    await page.waitForURL('/articles');
 
     // 公開した記事がリストに表示される
     await expect(page.getByText(draft.title).first()).toBeVisible();
@@ -81,7 +81,7 @@ test.describe('下書き機能', () => {
       .click();
 
     // リロード後に下書きが消えている
-    await page.waitForURL('/drafts', { timeout: 10000 });
+    await page.waitForURL('/drafts');
     await expect(page.getByText(draft.title)).not.toBeVisible();
   });
 });
