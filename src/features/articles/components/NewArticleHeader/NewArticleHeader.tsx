@@ -1,4 +1,4 @@
-import { UserDropdown } from '@/shared/components/molecules/UserDropdown';
+import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 
 type Props = {
   onPublish: () => void;
@@ -37,10 +37,11 @@ export function NewArticleHeader({
         >
           {isSubmitting ? '投稿中...' : '公開設定へ'}
         </button>
-        <UserDropdown
+        <NavigationHeader
           userId={userId}
           userName={userName}
           userImage={userImage}
+          showNewArticleLink={false}
         />
       </div>
     </header>
