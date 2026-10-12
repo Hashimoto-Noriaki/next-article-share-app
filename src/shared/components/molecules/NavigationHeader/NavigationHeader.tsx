@@ -8,6 +8,7 @@ type Props = {
   userImage?: string | null;
   actions?: ReactNode;
   showNewArticleLink?: boolean;
+  as?: 'nav' | 'div';
 };
 
 export function NavigationHeader({
@@ -16,9 +17,10 @@ export function NavigationHeader({
   userImage,
   actions,
   showNewArticleLink = true,
+  as: Component = 'nav',
 }: Props) {
   return (
-    <nav className="flex items-center gap-5 text-white font-bold">
+    <Component className="flex items-center gap-5 text-white font-bold">
       {showNewArticleLink && (
         <Link href="/articles/new" className="hover:text-amber-400">
           新規投稿
@@ -26,6 +28,6 @@ export function NavigationHeader({
       )}
       {actions}
       <UserDropdown userId={userId} userName={userName} userImage={userImage} />
-    </nav>
+    </Component>
   );
 }

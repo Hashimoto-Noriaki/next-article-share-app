@@ -27,11 +27,12 @@ export function ArticleListHeader({ userId, userName, userImage }: Props) {
             エンジニア同士で有益な記事を共有しよう
           </p>
         </div>
-        <div className="flex items-center gap-5 text-white text-lg font-bold p-10">
+        <nav className="flex items-center gap-5 text-white text-lg font-bold p-10">
           <Link href="/tutorial" className="hover:text-amber-400">
             利用説明
           </Link>
           <NavigationHeader
+            as="div"
             userId={userId}
             userName={userName}
             userImage={userImage}
@@ -40,7 +41,7 @@ export function ArticleListHeader({ userId, userName, userImage }: Props) {
           <button onClick={handleLogout} className="hover:text-amber-400">
             ログアウト
           </button>
-        </div>
+        </nav>
       </div>
     </header>
   );
