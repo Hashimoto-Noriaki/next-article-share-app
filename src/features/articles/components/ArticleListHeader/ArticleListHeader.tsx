@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { logout } from '@/features/auth/actions/auth.action';
-import { UserDropdown } from '@/shared/components/molecules/UserDropdown';
+import { NavigationHeader } from '@/shared/components/molecules/NavigationHeader';
 import { NotificationBell } from '@/features/notifications/components';
 
 type Props = {
@@ -27,35 +27,20 @@ export function ArticleListHeader({ userId, userName, userImage }: Props) {
             エンジニア同士で有益な記事を共有しよう
           </p>
         </div>
-        <nav>
-          <ul className="flex items-center gap-5 text-white text-lg font-bold p-10">
-            <li>
-              <Link href="/tutorial" className="hover:text-amber-400">
-                利用説明
-              </Link>
-            </li>
-            <li>
-              <NotificationBell />
-            </li>
-            <li>
-              <Link href="/articles/new" className="hover:text-amber-400">
-                新規投稿
-              </Link>
-            </li>
-            <li>
-              <UserDropdown
-                userId={userId}
-                userName={userName}
-                userImage={userImage}
-              />
-            </li>
-            <li>
-              <button onClick={handleLogout} className="hover:text-amber-400">
-                ログアウト
-              </button>
-            </li>
-          </ul>
-        </nav>
+        <div className="flex items-center gap-5 text-white text-lg font-bold p-10">
+          <Link href="/tutorial" className="hover:text-amber-400">
+            利用説明
+          </Link>
+          <NavigationHeader
+            userId={userId}
+            userName={userName}
+            userImage={userImage}
+            actions={<NotificationBell />}
+          />
+          <button onClick={handleLogout} className="hover:text-amber-400">
+            ログアウト
+          </button>
+        </div>
       </div>
     </header>
   );

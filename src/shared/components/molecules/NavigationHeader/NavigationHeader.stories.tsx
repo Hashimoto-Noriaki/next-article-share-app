@@ -30,3 +30,11 @@ export const WithActions: Story = {
     actions: <button type="button">🔔</button>,
   },
 };
+
+export const WithoutNewArticleLink: Story = {
+  args: {
+    userId: '1',
+    userName: 'テストユーザー',
+    showNewArticleLink: false,
+  },
+};
