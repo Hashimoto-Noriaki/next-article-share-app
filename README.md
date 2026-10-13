@@ -42,7 +42,7 @@ AI の出力を「人が守るルール」ではなく「仕組みが守るル�
 | フェーズ               | 仕組み                                                                                                              |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | 開発中（規約）         | CLAUDE.md・`.claude/rules/` でプロジェクトの規約を共有                                                              |
-| 開発中（スキル）       | `.claude/skills/`：`/smart-commit`・`/pr-description`・`/create-issue`・`/test`                                     |
+| 開発中（スキル）       | `.claude/skills/`：`/smart-commit`・`/pr-description`・`/create-issue`・`/lint-type-test`                           |
 | 開発中（エージェント） | `.claude/agents/`：レビュー用（code / security / architecture）と Playwright Agents（planner / generator / healer） |
 | コマンド実行時         | `settings.json` で権限を限定、hooks で本番環境への操作をブロック                                                    |
 | CI                     | lint（層の依存方向を含む）・型チェック・Jest・Semgrep・E2E（Playwright）                                            |

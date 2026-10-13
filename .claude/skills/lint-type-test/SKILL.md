@@ -1,0 +1,38 @@
+---
+name: lint-type-test
+description: lint・Prettier・型チェック・Jest を順番に実行して結果を報告する
+---
+
+# Lint Type Test
+
+lint・Prettier・型チェック・Jest を順番に実行し、結果をまとめて報告する。CI（`.github/workflows/ci.yml`）と同じ順番。
+
+## Steps
+
+1. `npm run lint` を実行する
+2. `npm run format:check` を実行する
+3. `npm run type-check` を実行する
+4. `npm run test` を実行する
+
+各ステップは前のステップが失敗しても続けて実行する。
+
+## 結果フォーマット
+
+```markdown
+## テスト結果
+
+| チェック   | 結果              |
+| ---------- | ----------------- |
+| lint       | ✅ 通過 / ❌ 失敗 |
+| Prettier   | ✅ 通過 / ❌ 失敗 |
+| type-check | ✅ 通過 / ❌ 失敗 |
+| Jest       | ✅ 通過 / ❌ 失敗 |
+
+### ❌ エラー詳細
+
+（失敗したチェックのエラーメッセージをここに記載。Prettier が失敗した場合は対象ファイルと `npx prettier --write <ファイル>` で直せることを書く）
+
+### 総評
+
+全チェック通過 or 修正が必要な箇所を簡潔に伝える。
+```

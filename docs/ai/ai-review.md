@@ -157,19 +157,20 @@ PreToolUse フックとして、Claude が Bash コマンドを実行する直�
 
 生成される構成：`概要 / 変更内容 / テスト方法 / 関連 Issue`
 
-### `/test` — lint・型チェック・Jest を一括実行
+### `/lint-type-test` — lint・Prettier・型チェック・Jest を一括実行
 
-3 つのチェックを順番に実行し、結果を表形式で報告します。
+CI（`.github/workflows/ci.yml`）と同じ順番で 4 つのチェックを実行し、結果を表形式で報告します。E2E は含みません。
 
 ```bash
-/test
+/lint-type-test
 ```
 
-| チェック   | コマンド             |
-| ---------- | -------------------- |
-| lint       | `npm run lint`       |
-| type-check | `npm run type-check` |
-| Jest       | `npm run test`       |
+| チェック   | コマンド               |
+| ---------- | ---------------------- |
+| lint       | `npm run lint`         |
+| Prettier   | `npm run format:check` |
+| type-check | `npm run type-check`   |
+| Jest       | `npm run test`         |
 
 各ステップは前が失敗しても続けて実行し、まとめて報告します。
 
