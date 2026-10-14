@@ -33,10 +33,10 @@ env:
   AUTH_SECRET: 'e2e-dummy-secret'
   AUTH_TRUST_HOST: 'true'
   APP_URL: 'http://localhost:3000'
-  GITHUB_ID: 'dummy'
-  GITHUB_SECRET: 'dummy'
-  GOOGLE_ID: 'dummy'
-  GOOGLE_SECRET: 'dummy'
+  AUTH_GITHUB_ID: 'dummy'
+  AUTH_GITHUB_SECRET: 'dummy'
+  AUTH_GOOGLE_ID: 'dummy'
+  AUTH_GOOGLE_SECRET: 'dummy'
 
 jobs:
   e2e:

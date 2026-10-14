@@ -54,15 +54,15 @@ jobs:
             --allow-unauthenticated \
             --update-env-vars "NODE_ENV=production" \
             --update-env-vars "APP_URL=${{ secrets.STG_APP_URL }}" \
-            --update-env-vars "NEXTAUTH_URL=${{ secrets.STG_NEXTAUTH_URL }}" \
-            --update-env-vars "NEXTAUTH_SECRET=${{ secrets.STG_NEXTAUTH_SECRET }}" \
+            --update-env-vars "AUTH_URL=${{ secrets.STG_NEXTAUTH_URL }}" \
+            --update-env-vars "AUTH_SECRET=${{ secrets.STG_NEXTAUTH_SECRET }}" \
             --update-env-vars "DATABASE_URL=${{ secrets.STG_DATABASE_URL }}" \
             --update-env-vars "DIRECT_URL=${{ secrets.STG_DIRECT_URL }}" \
             --update-env-vars "JWT_SECRET=${{ secrets.STG_JWT_SECRET }}" \
-            --update-env-vars "OAUTH_GITHUB_ID=${{ secrets.OAUTH_GITHUB_ID }}" \
-            --update-env-vars "OAUTH_GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_SECRET }}" \
-            --update-env-vars "OAUTH_GOOGLE_ID=${{ secrets.OAUTH_GOOGLE_ID }}" \
-            --update-env-vars "OAUTH_GOOGLE_SECRET=${{ secrets.OAUTH_GOOGLE_SECRET }}" \
+            --update-env-vars "AUTH_GITHUB_ID=${{ secrets.OAUTH_GITHUB_ID }}" \
+            --update-env-vars "AUTH_GITHUB_SECRET=${{ secrets.OAUTH_GITHUB_SECRET }}" \
+            --update-env-vars "AUTH_GOOGLE_ID=${{ secrets.OAUTH_GOOGLE_ID }}" \
+            --update-env-vars "AUTH_GOOGLE_SECRET=${{ secrets.OAUTH_GOOGLE_SECRET }}" \
             --update-env-vars "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" \
             --update-env-vars "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" \
             --update-env-vars "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" \
