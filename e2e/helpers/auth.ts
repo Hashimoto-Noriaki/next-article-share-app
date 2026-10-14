@@ -56,11 +56,13 @@ export async function login(page: Page, user: TestUser) {
 
 /**
  * ログアウトする
+ * ログアウトボタンは記事一覧ページのヘッダーにしかないため、先に /articles へ移動する
+ * ログアウト後は /login にリダイレクトされる
  */
 export async function logout(page: Page) {
-  // ユーザーメニューを開く
-  await page.click('[data-testid="user-menu"]');
-  await page.click('text=ログアウト');
+  await page.goto('/articles');
+  await page.getByRole('button', { name: 'ログアウト', exact: true }).click();
+  await page.waitForURL('/login', { timeout: 10000 });
 }
 
 /**
@@ -82,18 +84,6 @@ export async function signup(page: Page, user: TestUser) {
 
   // 登録成功を待つ（URLが変わるまで待機）
   await page.waitForURL((url) => url.pathname !== '/signup');
-}
-
-/**
- * ログイン状態を確認する
- */
-export async function isLoggedIn(page: Page): Promise<boolean> {
-  try {
-    await page.waitForSelector('[data-testid="user-menu"]', { timeout: 5000 });
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 /**

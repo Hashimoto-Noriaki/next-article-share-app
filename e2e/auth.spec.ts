@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { createTestUser, signup, login } from './helpers/auth';
+import { createTestUser, signup, login, logout } from './helpers/auth';
 
 test.describe('認証フロー', () => {
   test('新規登録できる', async ({ page }) => {
@@ -23,6 +23,17 @@ test.describe('認証フロー', () => {
 
     // ログインページから離れた
     await expect(page).not.toHaveURL('/login');
+  });
+
+  test('ログアウトできる', async ({ page }) => {
+    const user = createTestUser();
+    await signup(page, user);
+
+    await logout(page);
+
+    // ログアウト後に書き戻されたセッションで復活していないことを確認（#485）
+    await page.goto('/articles');
+    await expect(page).toHaveURL(/\/login(\?|$)/);
   });
 
   test('不正な認証情報でエラーが表示される', async ({ page }) => {
