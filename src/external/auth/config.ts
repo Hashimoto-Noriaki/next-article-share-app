@@ -15,17 +15,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     maxAge: 60 * 60 * 24 * 7,
   },
   providers: [
-    // GitHub OAuth
+    // GitHub OAuth（AUTH_GITHUB_ID / AUTH_GITHUB_SECRET を自動で読む）
     GitHub({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
       allowDangerousEmailAccountLinking: true,
     }),
 
-    // Google OAuth
+    // Google OAuth（AUTH_GOOGLE_ID / AUTH_GOOGLE_SECRET を自動で読む）
     Google({
-      clientId: process.env.GOOGLE_ID!,
-      clientSecret: process.env.GOOGLE_SECRET!,
       allowDangerousEmailAccountLinking: true,
     }),
 
