@@ -70,6 +70,18 @@ E2E テストは [Playwright Agents](https://playwright.dev/docs/test-agents) �
 - 外部ライブラリの機能（Zod, React Hook Formなど）
 - UIの変更が頻繁に発生する箇所
 
+## E2E の対象外
+
+E2E を書くかどうかは次の観点で判断する。
+
+- 外部サービス（Cloudinary・Gmail）を実際に呼ぶ処理は E2E にしない。CI の E2E（`.github/workflows/e2e.yml`）ではこれらの認証情報を設定していないため
+- 外部サービスを呼ぶ前の入力検証・認可は、handler と dto の Jest で確認する
+
+| 対象                              | E2E にしない理由                      | 代わりのテスト                                                                                                                                                  |
+| --------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 画像アップロード（`/api/upload`） | Cloudinary へのアップロードが発生する | `src/external/dto/upload/upload.dto.spec.ts`・`src/external/handler/upload/mutation.server.spec.ts`（許可フォルダ・不正フォルダ・未指定・ファイル形式／サイズ） |
+| パスワードリセットメールの送信    | Gmail でのメール送信が発生する        | `src/external/handler/auth/mutation.server.spec.ts`（送信処理はモック）                                                                                         |
+
 ## カバレッジ目標
 
 - 単体テスト: C1カバレッジ（分岐網羅）

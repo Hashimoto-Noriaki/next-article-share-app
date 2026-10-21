@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cloudinary } from '@/external/cloudinary';
 import { auth } from '@/external/auth';
+import { uploadImageHandler } from '@/external/handler/upload/mutation.server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,45 +10,20 @@ export async function POST(request: NextRequest) {
     }
 
     const formData = await request.formData();
-    const file = formData.get('file') as File | null;
-    const folder = (formData.get('folder') as string) || 'uploads';
-
-    if (!file) {
-      return NextResponse.json(
-        { message: 'ファイルが選択されていません' },
-        { status: 400 },
-      );
-    }
-
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      return NextResponse.json(
-        { message: 'ファイルサイズは5MB以下にしてください' },
-        { status: 400 },
-      );
-    }
-
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        { message: 'JPEG、PNG、GIF、WebP形式のみアップロード可能です' },
-        { status: 400 },
-      );
-    }
-
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const base64 = `data:${file.type};base64,${buffer.toString('base64')}`;
-
-    const result = await cloudinary.uploader.upload(base64, {
-      folder: folder,
-      resource_type: 'image',
+    const result = await uploadImageHandler({
+      userId: session.user.id,
+      file: formData.get('file'),
+      folder: formData.get('folder'),
     });
+
+    if (!result.success) {
+      return NextResponse.json({ message: result.error }, { status: 400 });
+    }
 
     return NextResponse.json({
       message: 'アップロードが完了しました',
-      url: result.secure_url,
-      publicId: result.public_id,
+      url: result.data.url,
+      publicId: result.data.publicId,
     });
   } catch (error) {
     console.error('アップロードエラー:', error);
