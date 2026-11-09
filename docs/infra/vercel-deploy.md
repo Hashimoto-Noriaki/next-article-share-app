@@ -150,10 +150,11 @@ stg・本番それぞれの OAuth App / クライアントに登録する。
 
 どちらも次の順で実行する。
 
-1. `vercel pull --environment=production` … Vercel の環境変数とプロジェクト設定を取得
-2. `vercel build --prod` … ランナー上でビルド（`vercel.json` の `buildCommand` で `prisma generate` も実行）。Sensitive の環境変数は `vercel pull` で値を取れないことがあるため、`DATABASE_URL` は `*_MIGRATE_DATABASE_URL` から直接渡す
-3. `npm ci` → `npx prisma migrate deploy` … **ビルドが通った場合のみ** DB をマイグレーション
-4. `vercel deploy --prebuilt --prod` … ビルド済みの成果物をデプロイ
+1. `npm ci` … 依存関係をインストール（`vercel build` より前に実行する。後で実行すると `prisma generate` の生成物が消え、デプロイが失敗する）
+2. `vercel pull --environment=production` … Vercel の環境変数とプロジェクト設定を取得
+3. `vercel build --prod` … ランナー上でビルド（`vercel.json` の `buildCommand` で `prisma generate` も実行）。Sensitive の環境変数は `vercel pull` で値を取れないことがあるため、`DATABASE_URL` は `*_MIGRATE_DATABASE_URL` から直接渡す
+4. `npx prisma migrate deploy` … **ビルドが通った場合のみ** DB をマイグレーション
+5. `vercel deploy --prebuilt --prod` … ビルド済みの成果物をデプロイ
 
 - 本番は draft / prerelease の Release では動かない
 - `concurrency` で同じ環境へのデプロイは直列化している（実行中のデプロイはキャンセルしない）
