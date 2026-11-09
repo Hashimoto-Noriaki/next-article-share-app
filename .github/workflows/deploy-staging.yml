@@ -47,8 +47,11 @@ jobs:
       - name: Pull Vercel environment
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_STG_TOKEN }}
 
+      # Sensitive の環境変数は vercel pull で値を取れないことがあるため、prisma generate 用に直接渡す
       - name: Build
         run: vercel build --prod --token=${{ secrets.VERCEL_STG_TOKEN }}
+        env:
+          DATABASE_URL: ${{ secrets.STG_MIGRATE_DATABASE_URL }}
 
       # ビルドが通ってからマイグレーションを流す（Neon の Direct URL を使う）
       - name: Install dependencies

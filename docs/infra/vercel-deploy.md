@@ -52,6 +52,7 @@ GitHub Release を公開
 ## Step 2: Vercel プロジェクトを 2 つ作成
 
 stg 用・本番用で同じ手順を 2 回行う（例: `article-share-stg` / `article-share-prod`）。
+**2 つのプロジェクトは同じ Vercel チームに作成する**（`VERCEL_ORG_ID` を共有しているため、別チームだとデプロイが失敗する）。
 
 1. [vercel.com](https://vercel.com) で **Add New... > Project** から本リポジトリを Import する
    - 作成直後に 1 回自動ビルドが走るが、環境変数が未設定なので失敗してよい
@@ -112,15 +113,15 @@ rm -rf .vercel
 
 リポジトリの **Settings > Secrets and variables > Actions** に登録する。
 
-| シークレット名              | 内容                                |
-| --------------------------- | ----------------------------------- |
-| `VERCEL_STG_TOKEN`          | stg 用の Vercel アクセストークン    |
-| `VERCEL_PROD_TOKEN`         | 本番用の Vercel アクセストークン    |
-| `VERCEL_ORG_ID`             | `.vercel/project.json` の `orgId`   |
-| `VERCEL_STG_PROJECT_ID`     | stg プロジェクトの `projectId`      |
-| `VERCEL_PROD_PROJECT_ID`    | 本番プロジェクトの `projectId`      |
-| `STG_MIGRATE_DATABASE_URL`  | Neon `staging` の **Direct** URL    |
-| `PROD_MIGRATE_DATABASE_URL` | Neon `production` の **Direct** URL |
+| シークレット名              | 内容                                                               |
+| --------------------------- | ------------------------------------------------------------------ |
+| `VERCEL_STG_TOKEN`          | stg 用の Vercel アクセストークン                                   |
+| `VERCEL_PROD_TOKEN`         | 本番用の Vercel アクセストークン                                   |
+| `VERCEL_ORG_ID`             | `.vercel/project.json` の `orgId`（stg・本番で一致することを確認） |
+| `VERCEL_STG_PROJECT_ID`     | stg プロジェクトの `projectId`                                     |
+| `VERCEL_PROD_PROJECT_ID`    | 本番プロジェクトの `projectId`                                     |
+| `STG_MIGRATE_DATABASE_URL`  | Neon `staging` の **Direct** URL                                   |
+| `PROD_MIGRATE_DATABASE_URL` | Neon `production` の **Direct** URL                                |
 
 アプリ用の環境変数（`AUTH_*` など）は Vercel 側にあるので、GitHub Secrets には入れない。
 
@@ -150,7 +151,7 @@ stg・本番それぞれの OAuth App / クライアントに登録する。
 どちらも次の順で実行する。
 
 1. `vercel pull --environment=production` … Vercel の環境変数とプロジェクト設定を取得
-2. `vercel build --prod` … ランナー上でビルド（`vercel.json` の `buildCommand` で `prisma generate` も実行）
+2. `vercel build --prod` … ランナー上でビルド（`vercel.json` の `buildCommand` で `prisma generate` も実行）。Sensitive の環境変数は `vercel pull` で値を取れないことがあるため、`DATABASE_URL` は `*_MIGRATE_DATABASE_URL` から直接渡す
 3. `npm ci` → `npx prisma migrate deploy` … **ビルドが通った場合のみ** DB をマイグレーション
 4. `vercel deploy --prebuilt --prod` … ビルド済みの成果物をデプロイ
 
@@ -169,11 +170,15 @@ stg・本番それぞれの OAuth App / クライアントに登録する。
    - [ ] 記事の作成・編集・削除ができる
    - [ ] 画像アップロードができる（Cloudinary）
    - [ ] メール送信が届く（Gmail）
-4. 問題なければ Release を作成して本番へデプロイする
+4. 問題なければ、**QA したコミット**を指定して Release を作成し、本番へデプロイする
 
    ```bash
-   gh release create v1.0.0 --target master --generate-notes
+   # QA した Deploy Staging の実行に表示されているコミット SHA を指定する
+   gh release create v1.0.0 --target <QA 済みのコミット SHA> --generate-notes
    ```
+
+   - `--target master` だと、QA の後にマージされた未確認のコミットまで本番に出てしまう
+   - 既存のタグを使う場合は、そのタグが QA 済みのコミットを指していることを確認する
 
 5. **Actions > Deploy Production** が success になったら、本番でも 3. と同じ確認を行う
 
@@ -188,7 +193,11 @@ Vercel ダッシュボードの **Deployments** から直前のデプロイを�
 
 ### マイグレーションを手動で流す（緊急時）
 
+`prisma migrate deploy` は作業ツリーにあるマイグレーションをすべて適用する。未リリースのマイグレーションを流さないよう、復旧対象のリリースを checkout してから実行し、適用内容が稼働中のアプリと互換であることを事前に確認する。
+
 ```bash
+git checkout <復旧対象のリリースタグ>
+DATABASE_URL="<Neon の Direct URL>" npx prisma migrate status   # 適用される内容を確認
 DATABASE_URL="<Neon の Direct URL>" npx prisma migrate deploy
 ```
 
