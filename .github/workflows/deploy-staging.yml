@@ -23,7 +23,11 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    timeout-minutes: 20
+    # master への push で CI が成功したときだけ動かす（PR の CI や失敗時は除外）
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push'
 
     steps:
       - name: Checkout
@@ -41,10 +45,19 @@ jobs:
         run: npm install --global vercel@${{ env.VERCEL_CLI_VERSION }}
 
       - name: Pull Vercel environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_STG_TOKEN }}
 
       - name: Build
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_STG_TOKEN }}
+
+      # ビルドが通ってからマイグレーションを流す（Neon の Direct URL を使う）
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Migrate database
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.STG_MIGRATE_DATABASE_URL }}
 
       - name: Deploy to Vercel (Staging)
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_STG_TOKEN }}
