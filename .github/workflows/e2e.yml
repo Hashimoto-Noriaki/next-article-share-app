@@ -43,7 +43,8 @@ permissions:
 
 jobs:
   e2e:
-    runs-on: ubuntu-latest
+    # Playwright 1.57 は Ubuntu 26.04 に未対応のため固定する
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     services:
