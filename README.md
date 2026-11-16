@@ -286,3 +286,5 @@ CI では `.github/workflows/e2e.yml` が E2E を実行します。
 - **環境**：Postgres をサービスコンテナで起動し、`prisma migrate deploy` でテーブルを作成。`playwright.config.ts` の `webServer` で本番ビルド（`npm run build:ci && npm start`）を起動してからテストする（`CI=true` のときだけ。ローカルは起動済みの dev サーバーを使う）
 - **環境変数**：すべてテスト専用のダミー値を `e2e.yml` に直接書いている（Secrets 不要）
 - **失敗したとき**：Actions の Artifact から `playwright-report/` をダウンロードし、`npx playwright show-report <展開先>/playwright-report` で確認する
+
+stg・本番環境向けのリグレッションテスト（テストケースと E2E）は、別リポジトリの [qa-automation](https://github.com/Hashimoto-Noriaki/qa-automation) で管理しています。役割分担は [テスト戦略](docs/test/test_strategy.md#デプロイ済み環境のテスト) を参照。
